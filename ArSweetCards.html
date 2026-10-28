@@ -848,7 +848,7 @@ function ponCodigo(id, c){
 }
 
 /* ---------- Solo PC: ventana para escribir el código ---------- */
-const URL_NGART = "https://ngartstudi.online", URL_VIKKI = "https://www.instagram.com/itsvikki22/";   // códigos secretos
+const URL_NGART = "https://ngartstudio.online", URL_VIKKI = "https://www.instagram.com/itsvikki22/";   // códigos secretos
 const msgCod = (t, err) => { $("cMsg").textContent = t; $("cMsg").classList.toggle("err", !!err); };
 const irA = url => { const w = window.open(url, "_blank"); if(w){ try{ w.opener = null; }catch(e){} } else location.href = url; };
 function abrirCodigo(){ $("cInp").value = ""; msgCod(""); $("pCod").hidden = false; setTimeout(() => $("cInp").focus(), 60); }
