@@ -1,0 +1,153 @@
+/* Este CSS y el Index2 Esta echo por Harold Gonzalez*/
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+
+body {
+background-color: #ff9195;    
+}
+
+.form-login {
+  width: 400px;
+  background: white;
+  padding: 30px;
+  margin: auto; 
+  margin-top: 100px;
+  border-radius: 50px;
+  font-family: 'calibri';
+  color:#ff9195;
+  box-shadow: 7px 13px 37px #833c4a;
+}
+
+.form-login h4 {
+ font-size: 22px;
+ margin-bottom: 20px;
+ text-align: center;
+
+}
+
+.botones {
+    width: 100%;
+    background: #ff9195;
+    padding: 10px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+    border: 1px solid #ff9195;
+    font-family: 'calibri';
+    font-size: 18px;
+    color: white;
+}
+
+.botones:hover {
+    background-color: #833c4a;
+    border-color: #833c4a; 
+    outline: none;        
+    cursor: pointer;
+    }
+
+.botones:focus {
+    outline: none; 
+    border: 1px solid transparent; 
+    background-color: #ff9da1; 
+}
+
+.botones::placeholder {
+    color: white;
+    opacity: 60%;
+}
+
+.botones:hover::placeholder {
+    color: white;
+    opacity: 100%;
+}
+
+.botones:focus::placeholder {
+    color: white;
+    opacity: 100%;
+}
+
+.form-login p {
+    height: 40px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 40px;
+}
+
+.form-login a {
+   color: #ba5d73;
+   text-decoration: none;
+
+}
+
+
+.form-login a:hover {
+   color: #833c4a;
+   text-decoration: underline;
+
+}
+
+.form-login .botons {
+    width: 100%;
+    border-radius: 50px;
+    background-color: white;
+    border: 4px solid #ff9195;
+    padding: 12px;
+    color: #ff9195;
+    font-family: 16px;
+    margin: 16px auto; 
+    display: block; 
+    font-size: 16px;
+}
+
+.form-login .botons:hover {
+    width: 100%;
+    border-radius: 50px;
+    background-color: #ff9195;
+    border: 4px solid #ff9195;
+    padding: 12px;
+    color: white;
+    font-family: 16px;
+    margin: 16px auto; 
+    display: block; 
+    font-size: 16px;
+}
+
+.form-login .botons2 {
+    width: 100%;
+    border-radius: 50px;
+    background-color: white;
+    border: 4px solid #ff9195;
+    padding: 12px;
+    color: #ff9195;
+    font-family: 16px;
+    margin: 16px auto; 
+    display: block; 
+    font-size: 16px;
+}
+
+.form-login .botons2:hover {
+    width: 100%;
+    border-radius: 50px;
+    background-color: #ff9195;
+    border: 4px solid #ff9195;
+    padding: 12px;
+    color: white;
+    font-family: 16px;
+    margin: 16px auto; 
+    display: block; 
+    font-size: 16px;
+}
+
+/* Profe esta parte es Ia, era solo para poner el icono :D no me baje nota plisssssss */
+.icono-superior {
+    position: absolute;
+    top: 22px;         /* Sube el logo para que quede a mitad de camino */
+    left: 50%;          /* Lo mueve al centro */
+    transform: translateX(-50%); /* Ajuste perfecto para centrar */
+    width: 90px;        /* Tamaño ajustable según tu imagen */
+    height: auto;
+}

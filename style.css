@@ -1,0 +1,119 @@
+/* Este CSS y el Index1 Esta echo por Ligia Bermeo Blaco*/
+
+*{
+    margin: 0; 
+    padding: 0;
+    box-sizing: border-box; 
+}
+
+body{
+    background-color: #FF9195;
+}
+.forms-register {
+    width: 400px;
+    background: white;
+    padding: 30px;
+    margin: auto;
+    margin-top: 100px;
+    border-radius: 50px;
+    font-family: 'calibri';
+    color: #FF9195;
+    box-shadow: 7px 13px 37px #843C4A;
+}
+
+.forms-register h4 {
+font-size: 22px ;
+margin-bottom: 20px;
+text-align: center;
+}
+
+.controls {
+    width: 100%;
+    background:#FF9195;
+    padding: 10px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+    border: 1px solid #FF9195;
+    font-family: 'calibri';
+    font-size: 18px;
+    color: white;
+}
+
+.controls:hover {
+    background-color: #843C4A;
+    border-color: #843C4A;
+    outline: none;
+    cursor: pointer;
+}
+
+.controls:focus {
+    background-color: #FF9195;
+    border-color: #FF9195;
+    outline: none;
+    }
+
+.controls::placeholder {
+    color: white;
+    opacity: 60%;
+}
+
+.controls:hover::placeholder {
+    color: white; 
+    opacity: 100%;
+}
+
+.controls:focus::placeholder {
+    color: white; 
+    opacity: 100%;
+}
+
+.forms-register p {
+height: 40px;
+text-align: center;
+font-size: 18px;
+line-height: 40px;
+}
+
+.forms-register a {
+    color:#843C4A;
+    text-decoration: none;
+    }
+
+.forms-register a:hover {
+    color:#843C4A;
+    text-decoration: underline;
+
+}
+
+.forms-register .bottoms {
+    width: 100% ;
+    background:#FF9195;
+    border: none;
+    border-radius: 50px;
+    padding: 12px;
+    color: white;
+    margin-left: 16px 0;
+    font-size: 16px;
+    display: block;
+
+}
+
+.forms-register .bottoms:hover {
+    background:#843C4A;
+    border: none;
+    border-radius: 50px;
+    padding: 12px;
+    color: white;
+    margin-left: 16px 0;
+    font-size: 16px;
+    display: block;
+    }
+
+    .icono-superior {
+    position: absolute;
+    top: 22px;         
+    left: 50%;          
+    transform: translateX(-50%); 
+    width: 90px;        
+    height: auto;
+    }

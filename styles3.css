@@ -1,0 +1,486 @@
+
+*{
+    box-sizing: border-box;
+    font-family: poppins, sans-serif;
+}
+/*Icono osea logo pues :D*/
+
+.icono{
+    margin-right: auto;
+    
+}
+
+.icono{
+    z-index: 1;
+    width: 30px;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.icono:hover{
+   transform: translatey(-10px);  
+   cursor: pointer;    
+}
+
+.icono a{
+    display: block;
+    padding: 0;
+    background-color: transparent;
+}
+/*Tamaño para eñ icono*/
+.icono img{
+    width: 70px;
+    height: auto;
+}
+
+/* icono poscicion*/
+
+.menudesplegableicon  {
+    z-index: 999;
+   display: flex;
+   align-items: center;
+   margin-bottom: 10px;
+   font-size: 15px;
+   list-style: none;
+   width: 70%;
+   justify-content: left;
+   gap: 5px;
+   padding: 10px 20px;
+   height: 50px;
+}
+
+
+.menudesplegableicon li:not(.icono-item) a:hover{
+    background-color: transparent;
+}
+
+/* no me acuerdo*/
+
+.desplegable {
+    display: flex;
+    justify-content: right;
+    
+}
+/*Items Principales*/
+
+.menudesplegable{
+   display: flex;
+   align-items: center;
+   margin-bottom: 10px;
+   font-size: 15px;
+   list-style: none;
+   background-color: white;
+   border-radius: 100px;
+   width: 30%;
+   justify-content: center;
+   gap: 5px;
+   padding: 10px 20px;
+   height: 50px;
+   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.menudesplegable:hover {
+   transform: translatey(-10px);  
+   cursor: pointer;
+
+}
+
+.menudesplegable li{
+    position: relative;
+    list-style: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+}
+
+
+.menudesplegable li a{
+    display: block;
+    padding: 8px 10px;
+    text-decoration: none;
+    color: #ff9195;
+    border-radius: 5px;
+}
+
+.menudesplegable li:hover{
+   transform: translatey(-10px);  
+   cursor: pointer;
+}
+
+.menudesplegable li:not(.icono-item) a:hover{
+    background-color: transparent;
+}
+
+/* MI CUENTA XD */
+
+.menudesplegable2  {
+   display: flex;
+   align-items: center;
+   margin-bottom: 10px;
+   font-size: 15px;
+   list-style: none;
+   border-radius: 100px;
+   width: 5%;
+   justify-content: center;
+   gap: 5px;
+   padding: 10px 20px;
+   height: 50px;
+   transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+}
+
+.menudesplegable2 li{
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    list-style: none;
+}
+
+
+.menudesplegable2 li a{
+    display: block;
+    padding: 8px 10px;
+    text-decoration: none;
+    color: #ff9195;
+    border-radius: 5px;
+}
+
+.menudesplegable2 li:hover{
+   transform: translatey(-10px);  
+   cursor: pointer;
+}
+
+.menudesplegable2 li:not(.icono-item) a:hover{
+    background-color: transparent;
+}
+/*Sub items*/
+.menud2{
+   list-style: none;
+   position: relative;
+}
+
+
+.submenu{
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    margin: 0px;
+    padding: 5px;
+    list-style: none;
+    border-radius: 5px;
+    min-width: 220px;
+    background-color: #833c4a;
+    color: #ff9195;
+    z-index: 9999;
+}
+
+.submenu li{
+    display: block;
+
+}
+
+.submenu li a{
+    display: block;
+    width: 100%;
+    color: #ff9195;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 50px;
+}
+
+.submenu li a:hover{
+    background-color: #833c4a;
+    color: white;
+}
+
+.dropdown:hover .submenu{
+   display: block;
+   color: #833c4a;
+
+}
+
+/* Letras que cambien de color pues :D*/
+
+.menud :hover{
+    color: #833c4a;
+}
+
+.dropdown a:hover{
+    color: #833c4a;
+}
+
+.slider {
+    width: 1300px;  
+    height: 1500px; 
+    position: absolute;
+    top: 0;
+    right: 0;     
+    margin: 0;     
+    overflow: hidden;
+    z-index: -1;
+
+    -webkit-mask-image: url('bgnewslider.svg');
+    mask-image: url('bgnewslider.svg');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.slider:hover{
+   transform: translatey(-10px);  
+   cursor: pointer;
+}
+
+.slides {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    animation: SliderAuto 20s infinite;
+}
+
+.slide {
+    width: 100%;
+    flex: 0 0 100%;
+    height: 100%;
+}
+
+.slide img{
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+/* Animacion Xd */
+
+@keyframes SliderAuto{
+    0%{ transform: translateX(0%); }
+    30%{ transform: translateX(-100%); }
+    60%{ transform: translateX(-200%); }
+    100%{ transform: translateX(0%); }
+}
+
+.navegation{
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.navegation label {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin: 15px;
+    background-color: white;
+    border: 100%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.navegation label:hover {
+   transform: scale(1.2);
+   background-color: #833c4a;
+}
+
+.navegation label:nth-child(1) {
+   animation: punto1 15s infinite;
+}
+
+.navegation label:nth-child(2) {
+   animation: punto2 15s infinite;
+}
+
+/* animacion para los puntos :D*/
+
+@keyframes punto1 {
+    0%{transform :translateX(0%); }
+    20%{transform :translateX(-100%);}
+    40%{transform :translateX(-200%);}
+    60%{transform :translateX(-300%);}
+    80%{ transform :translateX(-400%);}
+    100%{ transform :translateX(0%);}
+}
+
+@keyframes punto2 {
+   
+}
+
+
+.grid-container {
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px; 
+    margin: 0;
+    width: auto; 
+    margin: 0 auto; 
+    text-align: center;
+}
+
+
+.product-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        text-align: center;
+
+}
+
+.product-item {
+    width: auto; /* O un ancho fijo como 150px */
+    margin: 0 auto; /* Refuerzo manual */
+    display: grid;
+    justify-items: center;
+    gap: 15px;
+    background-color: #833c4a;
+    color: white;
+    padding: 30px;
+    border-radius: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+}
+
+.product-item:hover {
+   transform: translatey(-10px);  
+   box-shadow: 0 10px 20px #ff9195;
+   cursor: pointer;
+}
+
+
+
+/*Tamaño para eñ icono*/
+.dropdown img{
+    width: 70px;
+    height: auto;
+}
+
+ /*logo principal */
+.logos{
+    display: flex;
+    margin-right: auto;
+    
+}
+
+.logos{
+    width: 30px;
+    height: auto;
+    display: block;
+}
+
+.logos a{
+    display: block;
+    padding: 0;
+    background-color: transparent;
+}
+/*Tamaño para eñ logo*/
+.logos img{
+    width: 800px;
+    height: auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.logos img:hover {
+   transform: translatey(-10px);  
+   cursor: pointer;
+}
+
+.yb {
+    width: 300px;  
+    height: 500px; 
+    position: absolute;
+    top: 0;
+    left: 0; 
+    margin: 0;     
+    overflow: hidden;
+    z-index: -0;
+}
+
+.yb img{
+    position: absolute;
+    left: 0;
+}
+
+
+.bottoms {
+   width: 150px; 
+    background: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px;
+    color: #ff9195;
+    border:solid#FF9195;
+    font-size: 16px;
+    display: block;
+    cursor: pointer;
+    margin: 0;           
+    position: relative;  
+    left: 325px;         
+    top: 0px; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;   
+}
+
+
+.bottoms:hover {
+    background:#843C4A;
+    border: none;
+    border-radius: 50px;
+    padding: 12px;
+    color: white;
+    margin-left: 16px 0;
+    font-size: 16px;
+    display: block;
+    transform: translatey(-10px);  
+    cursor: pointer;
+    }
+
+.text1 {
+  display: flex;
+  text-align: center;      
+  height: 50px;
+  width: auto;
+  padding: 10%;
+  color: #833c4a;
+  font-size: 20px;
+}
+/* Footer aqui pe :D*/
+.footer {
+  justify-items: center;
+  text-decoration: none;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+
+}
+
+.footer li{
+   list-style: none;
+}
+
+.footer ul{
+  display: flex;      
+  list-style: none;    
+  padding: 0;         
+  gap: 20px;
+}
+.iconospie img {
+    width: 30px;
+    height: auto; 
+}
+
+.icopie {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.icopie:hover{
+   transform: translatey(-10px);  
+   cursor: pointer;    
+}
+
+
+

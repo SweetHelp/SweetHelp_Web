@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página con Termómetro</title>
+    <style>
+        /* --- TU CÓDIGO CSS ORIGINAL (SIN MODIFICACIONES) --- */
+        *{
+            box-sizing: border-box;
+            font-family: poppins, sans-serif;
+        }
+        /*Icono osea logo pues :D*/
+
+        .icono{
+            margin-right: auto;
+            
+        }
+
+        .icono{
+            z-index: 1;
+            width: 30px;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .icono:hover{
+           transform: translatey(-10px);  
+           cursor: pointer;    
+        }
+
+        .icono a{
+            display: block;
+            padding: 0;
+            background-color: transparent;
+        }
+        /*Tamaño para eñ icono*/
+        .icono img{
+            width: 70px;
+            height: auto;
+        }
+
+        /* icono poscicion*/
+
+        .menudesplegableicon  {
+           display: flex;
+           align-items: center;
+           margin-bottom: 10px;
+           font-size: 15px;
+           list-style: none;
+           width: 70%;
+           justify-content: left;
+           gap: 5px;
+           padding: 10px 20px;
+           height: 50px;
+        }
+
+
+        .menudesplegableicon li:not(.icono-item) a:hover{
+            background-color: transparent;
+        }
+
+        /* no me acuerdo*/
+
+        .desplegable {
+            display: flex;
+            justify-content: right;
+            
+        }
+        /*Items Principales*/
+
+        .menudesplegable{
+           display: flex;
+           align-items: center;
+           margin-bottom: 10px;
+           font-size: 15px;
+           list-style: none;
+           background-color: white;
+           border-radius: 100px;
+           width: 30%;
+           justify-content: center;
+           gap: 5px;
+           padding: 10px 20px;
+           height: 50px;
+           transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .menudesplegable:hover {
+           transform: translatey(-10px);  
+           cursor: pointer;
+
+        }
+
+        .menudesplegable li{
+            position: relative;
+            list-style: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        }
+
+
+        .menudesplegable li a{
+            display: block;
+            padding: 8px 10px;
+            text-decoration: none;
+            color: #ff9195;
+            border-radius: 5px;
+        }
+
+        .menudesplegable li:hover{
+           transform: translatey(-10px);  
+           cursor: pointer;
+        }
+
+        .menudesplegable li:not(.icono-item) a:hover{
+            background-color: transparent;
+        }
+
+        /* MI CUENTA XD */
+
+        .menudesplegable2  {
+           display: flex;
+           align-items: center;
+           margin-bottom: 10px;
+           font-size: 15px;
+           list-style: none;
+           border-radius: 100px;
+           width: 5%;
+           justify-content: center;
+           gap: 5px;
+           padding: 10px 20px;
+           height: 50px;
+           transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        }
+
+        .menudesplegable2 li{
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            list-style: none;
+        }
+
+
+        .menudesplegable2 li a{
+            display: block;
+            padding: 8px 10px;
+            text-decoration: none;
+            color: #ff9195;
+            border-radius: 5px;
+        }
+
+        .menudesplegable2 li:hover{
+           transform: translatey(-10px);  
+           cursor: pointer;
+        }
+
+        .menudesplegable2 li:not(.icono-item) a:hover{
+            background-color: transparent;
+        }
+        /*Sub items*/
+        .menud2{
+           list-style: none;
+           position: relative;
+        }
+
+
+        .submenu{
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0px;
+            margin: 0px;
+            padding: 5px;
+            list-style: none;
+            border-radius: 5px;
+            min-width: 220px;
+            background-color: #833c4a;
+            color: #ff9195;
+            z-index: 9999;
+        }
+
+        .submenu li{
+            display: block;
+
+        }
+
+        .submenu li a{
+            display: block;
+            width: 100%;
+            color: #ff9195;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 50px;
+        }
+
+        .submenu li a:hover{
+            background-color: #833c4a;
+            color: white;
+        }
+
+        .dropdown:hover .submenu{
+           display: block;
+           color: #833c4a;
+
+        }
+
+        /* Letras que cambien de color pues :D*/
+
+        .menud :hover{
+            color: #833c4a;
+        }
+
+        .dropdown a:hover{
+            color: #833c4a;
+        }
+
+        .slider {
+            width: 1300px;  
+            height: 1500px; 
+            position: absolute;
+            top: 0;
+            right: 0;     
+            margin: 0;     
+            overflow: hidden;
+            z-index: -1;
+
+            -webkit-mask-image: url('bgnewslider.svg');
+            mask-image: url('bgnewslider.svg');
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .slider:hover{
+           transform: translatey(-10px);  
+           cursor: pointer;
+        }
+
+        .slides {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            animation: SliderAuto 20s infinite;
+        }
+
+        .slide {
+            width: 100%;
+            flex: 0 0 100%;
+            height: 100%;
+        }
+
+        .slide img{
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* Animacion Xd */
+
+        @keyframes SliderAuto{
+            0%{ transform: translateX(0%); }
+            30%{ transform: translateX(-100%); }
+            60%{ transform: translateX(-200%); }
+            100%{ transform: translateX(0%); }
+        }
+
+        .navegation{
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .navegation label {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            margin: 15px;
+            background-color: white;
+            border: 100%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .navegation label:hover {
+           transform: scale(1.2);
+           background-color: #833c4a;
+        }
+
+        .navegation label:nth-child(1) {
+           animation: punto1 15s infinite;
+        }
+
+        .navegation label:nth-child(2) {
+           animation: punto2 15s infinite;
+        }
+
+        /* animacion para los puntos :D*/
+
+        @keyframes punto1 {
+            0%{transform :translateX(0%); }
+            20%{transform :translateX(-100%);}
+            40%{transform :translateX(-200%);}
+            60%{transform :translateX(-300%);}
+            80%{ transform :translateX(-400%);}
+            100%{ transform :translateX(0%);}
+        }
+
+        @keyframes punto2 {
+           
+        }
+
+
+        .grid-container {
+            align-items: center;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px; 
+            margin: 0;
+            width: auto; 
+            margin: 0 auto; 
+        }
+
+
+        .product-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .product-item {
+            width: auto; /* O un ancho fijo como 150px */
+            margin: 0 auto; /* Refuerzo manual */
+            display: grid;
+            justify-items: center;
+            gap: 15px;
+            background-color: #833c4a;
+            color: white;
+            padding: 30px;
+            border-radius: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-item:hover {
+           transform: translatey(-10px);  
+           box-shadow: 0 10px 20px #ff9195;
+           cursor: pointer;
+        }
+
+
+
+        /*Tamaño para eñ icono*/
+        .dropdown img{
+            width: 70px;
+            height: auto;
+        }
+
+         /*logo principal */
+        .logos{
+            display: flex;
+            margin-right: auto;
+            
+        }
+
+        .logos{
+            width: 30px;
+            height: auto;
+            display: block;
+        }
+
+        .logos a{
+            display: block;
+            padding: 0;
+            background-color: transparent;
+        }
+        /*Tamaño para eñ logo*/
+        .logos img{
+            width: 800px;
+            height: auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .logos img:hover {
+           transform: translatey(-10px);  
+           cursor: pointer;
+        }
+
+        .yb {
+            width: 300px;  
+            height: 500px; 
+            position: absolute;
+            top: 0;
+            left: 0; 
+            margin: 0;     
+            overflow: hidden;
+            z-index: -0;
+        }
+
+        .yb img{
+            position: absolute;
+            left: 0;
+        }
+
+
+        .bottoms {
+           width: 150px; 
+            background: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px;
+            color: #ff9195;
+            border:solid#FF9195;
+            font-size: 16px;
+            display: block;
+            cursor: pointer;
+            margin: 0;                   
+            position: relative;  
+            left: 325px;         
+            top: 0px; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;   
+        }
+
+
+        .bottoms:hover {
+            background:#843C4A;
+            border: none;
+            border-radius: 50px;
+            padding: 12px;
+            color: white;
+            margin-left: 16px 0;
+            font-size: 16px;
+            display: block;
+            transform: translatey(-10px);  
+            cursor: pointer;
+            }
+
+        .text1 {
+          display: flex;
+          text-align: center;      
+          height: 50px;
+          width: auto;
+          padding: 10%;
+          color: #833c4a;
+          font-size: 20px;
+        }
+        /* Footer aqui pe :D*/
+        .footer {
+          justify-items: center;
+          text-decoration: none;
+          position: relative;
+          align-items: center;
+          justify-content: center;
+          margin: 10px 0;
+
+        }
+
+        .footer li{
+           list-style: none;
+        }
+
+        .footer ul{
+          display: flex;      
+          list-style: none;    
+          padding: 0;         
+          gap: 20px;
+        }
+        .iconospie img {
+            width: 30px;
+            height: auto; 
+        }
+
+        .icopie {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .icopie:hover{
+           transform: translatey(-10px);  
+           cursor: pointer;    
+        }
+
+        /* --- ESTILOS DEL TERMÓMETRO (ENCAPSULADOS PARA EVITAR CONFLICTOS) --- */
+        .termometro-section {
+            --glass-color: #844B00;
+            --mercury-color: #F9D16E; 
+            --border-color: #FFAA00;
+            --text-color: #864f02;
+            --button-color: #D17F09;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 100px;
+            position: relative;
+            background-color: transparent;
+        }
+
+        .termometro-main-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .termometro-wrapper {
+            position: relative;
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .termometro-tube {
+            position: relative;
+            width: 70px; 
+            height: 0;
+            background: var(--glass-color);
+            border-radius: 40px 40px 0 0;
+            z-index: 2;
+            margin-bottom: -20px; 
+            overflow: hidden;
+            opacity: 0;
+            transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s;
+        }
+
+        .revealed .termometro-tube {
+            height: 300px; 
+            border: 6px solid var(--border-color);
+            border-bottom: none;
+            opacity: 1;
+        }
+
+        .termometro-mercury {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 0%;
+            background: var(--mercury-color);
+            transition: height 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition-delay: 0.6s;
+        }
+
+        .termometro-bulb {
+            position: relative;
+            width: 130px; 
+            height: 130px; 
+            background: #F9D16E;
+            border-radius: 50%;
+            border: 6px solid var(--border-color);
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .termometro-scale {
+            position: absolute;
+            left: 140px;
+            bottom: 140px; 
+            height: 270px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 700;
+            color: #555;
+            opacity: 0;
+            transition: 0.6s;
+            transition-delay: 1s;
+        }
+
+        .revealed .termometro-scale { opacity: 1; }
+
+        .termometro-btn-action {
+            padding: 12px 45px;
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: white;
+            background-color: var(--button-color);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s;
+        }
+
+        .termometro-btn-action:hover { transform: translateY(-5px); }
+    </style>
+</head>
+<body>
+
+    <!-- NAVEGACIÓN -->
+    <nav class="desplegable">
+        <ul class="menudesplegableicon">
+            <li class="icono"> <a href=""><img src="iconow.svg" alt="logo" onerror="this.src='https://via.placeholder.com/70'"></a></li>
+        </ul>
+
+        <ul class="menudesplegable">
+            <li class="menud"><a href="index.html"> Incio</a> </li>
+            <li class="menud"><a href="">|</a></li>
+            <li class="menud"><a href="#">Productos</a></li>
+            <li class="menud"><a href="">|</a></li>
+            <li class="dropdown"><a href="#">Sobre Nosotros</a>      
+                <ul class="submenu">
+                  <li><a href="">Informacion</a></li>
+                  <li><a href="">Equipo</a></li>
+                  <li><a href="">Contacto</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <ul class="menudesplegable2">
+            <li class="dropdown"> <a href=""><img src="iconoperfil.png" alt="iconperfil" onerror="this.src='https://via.placeholder.com/50'"></a>     
+                <ul class="submenu">
+                  <li><a href="">Editar</a></li>
+                  <li><a href="iniciaroregistrarse.html">Salir</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- SECCIÓN TERMÓMETRO -->
+    <section class="termometro-section">
+        <div class="termometro-main-container" id="termometroMain">
+            <div class="termometro-wrapper">
+                <div class="termometro-scale">
+                    <span>500</span>
+                    <span>375</span>
+                    <span>250</span>
+                    <span>125</span>
+                    <span>0</span>
+                </div>
+                <div class="termometro-tube">
+                    <div class="termometro-mercury" id="mercuryElement"></div>
+                </div>
+                <div class="termometro-bulb">
+                    <div class="termometro-kits-label" id="kitsLabelElement" style="color:#864f02; text-align:center; font-weight:800;">???</div>
+                </div>
+            </div>
+            <button class="termometro-btn-action" id="termometroBtn" onclick="toggleTermometro()">Ver Progreso</button>
+        </div>
+    </section>
+
+    <script>
+        (function() {
+            const mercury = document.getElementById('mercuryElement');
+            const kitsLabel = document.getElementById('kitsLabelElement');
+            const container = document.getElementById('termometroMain');
+            const btn = document.getElementById('termometroBtn');
+            
+            let isRevealed = false;
+
+            window.toggleTermometro = function() {
+                if (!isRevealed) {
+                    container.classList.add('revealed');
+                    btn.innerText = 'Ocultar';
+                    setTimeout(() => { mercury.style.height = '87%'; }, 100);
+                    setTimeout(() => { kitsLabel.innerHTML = `Kits<br>435 / 500`; }, 800);
+                    isRevealed = true;
+                } else {
+                    container.classList.remove('revealed');
+                    btn.innerText = 'Ver Progreso';
+                    mercury.style.height = '0%';
+                    kitsLabel.innerHTML = `???`;
+                    isRevealed = false;
+                }
+            };
+        })();
+    </script>
+</body>
+</html>
