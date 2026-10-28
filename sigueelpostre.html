@@ -317,6 +317,7 @@
         #shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; margin-top: 18px; }
         .shop-card { background: #fff; border: 2px solid var(--accent-color); border-radius: 20px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
         .shop-card.on { border-color: #4ade80; background: #f0fff5; }
+        .shop-card.locked { border-style: dashed; } .shop-card.locked .shop-prev { filter: grayscale(1) opacity(.5); }
         .shop-prev { position: relative; left: auto; top: auto; margin: 0; max-height: none; flex: none; width: 160px; height: 130px; transform: none; display: block;
             border: 2px solid var(--accent-color); border-radius: 16px; background: radial-gradient(circle at 50% 62%, #fff6f7, #ffe1e6); }
         .shop-prev img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; }
@@ -982,6 +983,10 @@
             // Sombreros
             { archivo: "acc_gorro.svg", titulo: "Gorro dulce", categoria: "sombrero", descripcion: "Un gorrito de merengue | Sugar Snake.", precio: 10 },
             { archivo: "acc_corona.svg", titulo: "Corona de caramelo", categoria: "sombrero", descripcion: "Solo para la realeza azucarada | Sugar Snake.", precio: 50 },
+            // Exclusivos de ArSweetCards: se desbloquean escaneando la carta (sin precio). exclusivo = personaje, carta = nombre de la carta
+            { archivo: "merenguitahat.svg", titulo: "Sombrero de Merenguita", categoria: "sombrero", descripcion: "Recompensa exclusiva de la carta Sneake Merenguita | ArSweetCards.", precio: 0, exclusivo: "merenguita", carta: "Sneake Merenguita" },
+            { archivo: "mandarinahat.svg", titulo: "Sombrero de Mandarina", categoria: "sombrero", descripcion: "Recompensa exclusiva de la carta Sneake Mandarina | ArSweetCards.", precio: 0, exclusivo: "mandarina", carta: "Sneake Mandarina" },
+            { archivo: "frambuesahat.svg", titulo: "Sombrero de Frambuesa", categoria: "sombrero", descripcion: "Recompensa exclusiva de la carta Sneake Frambuesa | ArSweetCards.", precio: 0, exclusivo: "frambuesa", carta: "Sneake Frambuesa" },
 
             // Caras
 { archivo: "snakegafa.svg", titulo: "Lentes de sol", categoria: "cara", descripcion: "Para serpientes con mucho estilo | Sugar Snake.", precio: 25 },
@@ -1259,10 +1264,21 @@
             x.addEventListener('change', () => { audio(); if (!muted && AC) sfx.eat(); });   // sonidito de prueba al soltar
         })();
 
+        // ===================== CONEXIÓN CON ArSweetCards =====================
+        // ArSweetCards.html guarda en el localStorage la clave 'sweetHelpScans' = {"merenguita": fecha, "mandarina": fecha, "frambuesa": fecha}
+        // cuando escaneas esa carta. Funciona si los dos HTML están en la misma carpeta/sitio (mismo origen).
+        const SH_KEY = 'sweetHelpScans', SH_PERSONAJES = ['merenguita', 'mandarina', 'frambuesa'];
+        const shLeer = () => { try { return JSON.parse(localStorage.getItem(SH_KEY) || '{}') || {}; } catch (e) { return {}; } };
+        let shCache = shLeer();
+        const shRefresh = () => { shCache = shLeer(); };
+        const shHas = k => !!shCache[k];
+        const shCount = () => SH_PERSONAJES.filter(shHas).length;
+        addEventListener('storage', e => { if (e.key === SH_KEY) shRefresh(); });
+
         // ===================== TIENDA / ACCESORIOS =====================
         // La lista se edita arriba del todo (ACCESORIOS). El id de cada accesorio es su archivo.
         // Los accesorios comprados son compartidos; cada jugador (J1 / J2) equipa los suyos por separado.
-        const SHOP_ITEMS = ACCESORIOS.map(a => ({ id: a.archivo, title: a.titulo, cat: a.categoria, desc: a.descripcion, price: a.precio, svg: a.archivo }));
+        const SHOP_ITEMS = ACCESORIOS.map(a => ({ id: a.archivo, title: a.titulo, cat: a.categoria, desc: a.descripcion, price: a.precio, svg: a.archivo, excl: a.exclusivo, carta: a.carta }));
         const accImgs = {};
         SHOP_ITEMS.forEach(it => { accImgs[it.id] = load(it.svg); });
         let coins = 0, owned = [], equipped = [], equipped2 = [], shopOpen = false, shopPl = 1;
@@ -1287,10 +1303,11 @@
             coins += n * (MODE.xp || 1); ST.coin += Math.max(0, n); saveShop(); showCoins();
             const b = coinEl.closest('.counter-box'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
         }
-        const equippedImgs = pl => eqList(pl).map(id => accImgs[id]).filter(im => im && im.ok);
+        const accLock = id => { const it = SHOP_ITEMS.find(i => i.id === id); return !!(it && it.excl && !shHas(it.excl)); };
+        const equippedImgs = pl => eqList(pl).filter(id => !accLock(id)).map(id => accImgs[id]).filter(im => im && im.ok);
         function buyItem(id) {
             const it = SHOP_ITEMS.find(i => i.id === id);
-            if (!it || owned.includes(id) || coins < it.price) return;
+            if (!it || it.excl || owned.includes(id) || coins < it.price) return;
             coins -= it.price; owned.push(id); setEq(shopPl, eqList(shopPl).concat(id));
             saveShop(); showCoins(); renderShop(); S('kit');
         }
@@ -1344,25 +1361,28 @@
             shopRaf = requestAnimationFrame(shopAnim);
         }
         function renderShop() {
+            shRefresh();
             const grid = document.getElementById('shop-grid');
             grid.innerHTML = ''; shopPrevs = [];
             SHOP_ITEMS.forEach(it => {
-                const has = owned.includes(it.id), on = eqList(shopPl).includes(it.id);
-                const card = document.createElement('div'); card.className = 'shop-card' + (on ? ' on' : '');
+                const lock = !!it.excl && !shHas(it.excl);   // exclusivo de ArSweetCards todavía sin escanear
+                const has = it.excl ? !lock : owned.includes(it.id), on = eqList(shopPl).includes(it.id);
+                const card = document.createElement('div'); card.className = 'shop-card' + (on ? ' on' : '') + (lock ? ' locked' : '');
                 const prev = document.createElement('canvas'); prev.className = 'shop-prev'; prev.width = 320; prev.height = 260;
                 shopPrevs.push({ cv: prev, it });
                 const h = document.createElement('h3'); h.textContent = it.title;
-                const d = document.createElement('p'); d.textContent = it.desc;
-                const c = document.createElement('small'); c.textContent = it.cat || '';
+                const d = document.createElement('p'); d.textContent = lock ? 'Escanea la carta ' + it.carta + ' en ArSweetCards para desbloquearlo.' : it.desc;
+                const c = document.createElement('small'); c.textContent = (it.cat || '') + (it.excl ? ' · exclusivo' : '');
                 card.append(prev, h, c, d);
-                if (!has) {
+                if (!has && !it.excl) {
                     const pr = document.createElement('div'); pr.className = 'shop-price';
                     pr.innerHTML = '<img src="sweetcoin.svg" alt="" onerror="this.style.display=\'none\'"><span></span>';
                     pr.lastChild.textContent = it.price;
                     card.append(pr);
                 }
                 const btn = document.createElement('button'); btn.className = 'shop-btn';
-                if (!has) { btn.textContent = coins >= it.price ? 'COMPRAR' : 'Faltan ' + (it.price - coins); btn.disabled = coins < it.price; btn.onclick = () => buyItem(it.id); }
+                if (lock) { btn.textContent = '🔒 BLOQUEADO'; btn.disabled = true; }
+                else if (!has) { btn.textContent = coins >= it.price ? 'COMPRAR' : 'Faltan ' + (it.price - coins); btn.disabled = coins < it.price; btn.onclick = () => buyItem(it.id); }
                 else { btn.textContent = on ? 'QUITAR' : 'EQUIPAR'; btn.onclick = () => toggleEquip(it.id); }
                 card.append(btn);
                 grid.append(card);
@@ -4125,7 +4145,8 @@
             { id: 'a22', ic: '💖', n: 'Rescate completado', d: 'Completa el modo Historia y salva a Merenguita.', v: () => ST.win, max: 1 },
             { id: 'a23', ic: '🌟', n: 'Leyenda dulce', d: 'Llega al nivel 25 con una serpiente.', v: lvMax, max: 25 },
             { id: 'a24', ic: '👸', n: 'Golosa legendaria', d: 'Come 1000 postres en total.', v: () => ST.ate, max: 1000 },
-            { id: 'a25', ic: '🎤', n: 'Voz de estrella', d: 'Consigue las 5 estrellas de Merenguita (un jefe de la Historia por estrella).', v: starsN, max: 5 }
+            { id: 'a25', ic: '🎤', n: 'Voz de estrella', d: 'Consigue las 5 estrellas de Merenguita (un jefe de la Historia por estrella).', v: starsN, max: 5 },
+            { id: 'a26', ic: '📷', n: 'Cazacartas Sweet Help', d: 'Escanea a Merenguita, Mandarina y Frambuesa con ArSweetCards.', v: shCount, max: 3, lv: 52 }
         ];
         const fmtT = s => s >= 3600 ? +(s / 3600).toFixed(1) + ' h' : s >= 60 ? Math.floor(s / 60) + ' min' : Math.floor(s) + ' s';
         const mkS = (id, ic, v, desc, rows, f) => rows.forEach(([max, n, lv], i) => ACH.push({ id: id + i, ic, n, d: desc(f ? f(max) : max), v, max, lv, f }));
@@ -4177,6 +4198,7 @@
         }
         function achCheck() {
             try {
+                shRefresh();   // por si escaneaste cartas en ArSweetCards mientras tanto
                 const quiet = ST.ver !== 3; ST.ver = 3;   // al agregar logros nuevos, los que ya cumplías se marcan sin avisos
                 if (gameActive && players.length) { ST.runBest = Math.max(ST.runBest || 0, ...players.map(p => p.eaten || 0)); ST.runKillsBest = Math.max(ST.runKillsBest || 0, ...players.map(p => p.kills || 0)); if (twoP && players.length > 1) ST.duo = 1; }
                 if (ST.win && !ST.wins) ST.wins = 1;
