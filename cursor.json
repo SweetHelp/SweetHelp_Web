@@ -1,0 +1,44 @@
+{
+  "activado": true,
+
+  "porDefecto": {
+    "imagen": "pinkymouse.svg",
+    "x": 8,
+    "y": 4,
+    "respaldo": "auto"
+  },
+
+  "reglas": [
+    {
+      "nombre": "Botones y enlaces",
+      "selector": "a, button, summary, [data-agregar], .flecha, .agregar, .ic-btn, .cat-mas, .pinky-flota, .cat-filtro",
+      "imagen": "pinkymouse.svg",
+      "x": 8,
+      "y": 4,
+      "respaldo": "pointer"
+    },
+    {
+      "nombre": "Postre 3D (agarrar para girar)",
+      "selector": ".visor",
+      "imagen": "pinkymouse.svg",
+      "x": 8,
+      "y": 4,
+      "respaldo": "grab"
+    },
+    {
+      "nombre": "Campos de texto",
+      "selector": "input[type=text], input[type=email], input[type=search], textarea",
+      "respaldo": "text"
+    }
+  ],
+
+  "estados": {
+    "ocupado": {
+      "nombre": "Mientras se arma y se agrega el postre (body.ocupado)",
+      "imagen": "pinkymouse.svg",
+      "x": 8,
+      "y": 4,
+      "respaldo": "progress"
+    }
+  }
+}
