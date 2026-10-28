@@ -154,7 +154,7 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
 
 <div id="ar">
   <a-scene id="escenaAr" embedded background="transparent: true"
-    mindar-image="imageTargetSrc: targets.mind; autoStart: false; uiLoading: no; uiScanning: no; uiError: no; maxTrack: 1; filterMinCF: 0.0001; filterBeta: 0.001;"
+    mindar-image="imageTargetSrc: targets.mind; autoStart: false; uiLoading: no; uiScanning: no; uiError: no; maxTrack: 1; warmupTolerance: 3; missTolerance: 12;"
     color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights: true, alpha: true"
     vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
     <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;"></a-camera>
@@ -414,6 +414,18 @@ function abrirVisor(c){
 $("vX").onclick = () => { $("vis").hidden = true; };
 
 /* ---------- AR: imagen flotante sobre cada carta ---------- */
+/* Pide a la cámara más resolución y enfoque continuo: con dibujos planos, a 640x480 la carta casi no se reconoce */
+(function(){
+  const md = navigator.mediaDevices; if(!md || !md.getUserMedia) return;
+  const gum = md.getUserMedia.bind(md);
+  md.getUserMedia = function(c){
+    if(c && c.video){
+      const v = typeof c.video === "object" ? c.video : {};
+      c = Object.assign({}, c, { video: Object.assign({}, v, { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 }, advanced: [{ focusMode: "continuous" }] }) });
+    }
+    return gum(c).catch(() => gum({ audio: false, video: { facingMode: "environment" } }));   // si el teléfono no acepta, vuelve a lo básico
+  };
+})();
 const escena = $("escenaAr"), sistema = () => escena.systems["mindar-image-system"];
 const SOMBRA = (() => { const c = document.createElement("canvas"); c.width = c.height = 128; const x = c.getContext("2d"), g = x.createRadialGradient(64,64,0,64,64,64);
   g.addColorStop(0, "rgba(0,0,0,.6)"); g.addColorStop(1, "rgba(0,0,0,0)"); x.fillStyle = g; x.fillRect(0,0,128,128); return c.toDataURL(); })();
@@ -457,7 +469,7 @@ function falloCamara(e){
 async function arrancar(){
   if(camCargando) return; camCargando = true; pant("pCarga");
   try{
-    const res = await fetch("targets.mind", { cache: "no-store" });
+    const res = await fetch("targets.mind", { method: "HEAD" });
     if(!res.ok) throw { name: "MindNoEncontrado", status: res.status };
     const r = sistema().start(); if(r && r.catch) r.catch(falloCamara);
   }catch(e){
@@ -471,7 +483,8 @@ function mostrarVideo(){
   v.setAttribute("playsinline", ""); v.muted = true; if(v.paused) v.play().catch(() => {});
   window.dispatchEvent(new Event("resize"));
 }
-escena.addEventListener("arReady", () => { camOn = true; camCargando = false; pant(null); $("guia").classList.add("on"); mostrarVideo(); setTimeout(mostrarVideo, 600); });
+escena.addEventListener("arReady", () => { camOn = true; camCargando = false; pant(null); $("guia").classList.add("on"); mostrarVideo(); setTimeout(mostrarVideo, 600);
+  const v = document.querySelector("#ar video"); if(v) avisar("Cámara " + v.videoWidth + "×" + v.videoHeight); });
 escena.addEventListener("arError", e => falloCamara(e && e.detail ? e.detail : e));
 
 function irAR(){
