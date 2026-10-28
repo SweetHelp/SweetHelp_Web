@@ -12,8 +12,11 @@
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 <style>
 @font-face{font-family:"Choco Taste Trial";src:url("Choco Taste Trial.otf") format("opentype"),url("Choco%20Taste%20Trial.otf") format("opentype");font-display:swap}
+/* Choco Taste no trae números: los dígitos usan una tipografía redondeada y gruesa (igual que en Sugar Snake). Si no existe en el equipo, caen a Lilita One */
+@font-face{font-family:"Choco Num";unicode-range:U+0030-0039;font-weight:normal;
+  src:local("Arial Rounded MT Bold"),local("Nunito Black"),local("Varela Round"),local("Trebuchet MS Bold"),local("Verdana Bold"),local("Arial Black"),local("Arial")}
 :root{--rosa:#f28f95;--crema:#f8f2dc;--marron:#8b5e3c;--oscuro:#2a1408;--antojo:#8a3f55;--agregar:#e0527a;
-  --titulo:"Choco Taste Trial","Lobster",cursive;--cuerpo:"Lilita One",system-ui,sans-serif;
+  --titulo:"Choco Num","Choco Taste Trial","Lilita One","Lobster",cursive;--cuerpo:"Lilita One",system-ui,sans-serif;
   --pw:min(47vw,56vh);--ph:calc(var(--pw)*1.437)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden;font-family:var(--cuerpo);background:#fff}
@@ -71,9 +74,10 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
 .scan img{height:68px;width:auto;display:block}.scan:active{transform:scale(.92)}
 .base{position:absolute;right:0;top:0;width:50%;height:100%;border-radius:4px 16px 16px 4px;background:#d9879a url("contraportadalibro.svg") center/100% 100% no-repeat}
 /* botón "Resetear álbum" sobre la contraportada: aparece cuando el libro está abierto del todo */
-.rst{position:absolute;left:50%;bottom:7%;transform:translateX(-50%);white-space:nowrap;font-size:clamp(.75rem,calc(var(--pw)*.06),1.1rem);color:#fff;background:var(--agregar);border-radius:999px;padding:.6em 1.4em;box-shadow:0 4px 12px rgba(0,0,0,.3);opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s}
+.rst{position:absolute;left:75%;bottom:7%;transform:translateX(-50%);z-index:55;touch-action:manipulation;white-space:nowrap;font-size:clamp(.8rem,calc(var(--pw)*.065),1.15rem);color:#fff;background:var(--agregar);border-radius:999px;padding:.65em 1.5em;box-shadow:0 4px 12px rgba(0,0,0,.3);opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s}
 .rst:active{filter:brightness(.92)}
-.libro.cierre .rst{opacity:1;visibility:visible;transition:opacity .3s .85s,visibility 0s .85s}
+.rst.on{opacity:1;visibility:visible;transition:opacity .3s .85s,visibility 0s .85s}
+@media (max-width:760px) and (orientation:portrait){.rst{left:50%}}
 .leaf{position:absolute;right:0;top:0;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;transition:transform .95s cubic-bezier(.45,.05,.25,1)}
 .face{position:absolute;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
 .face::after{content:"";position:absolute;inset:0;background:#2a1408;opacity:0;pointer-events:none}
@@ -198,6 +202,8 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
 .cod button{background:var(--agregar);color:#fff;border-radius:999px;padding:6px 14px;font-size:.9rem}
 /* ---------- Solo PC: botón de código, ventana de código y modo debug ---------- */
 .cod-btn{position:absolute;left:18px;bottom:16px;z-index:65}.cod-btn img{height:58px}
+/* sin botón Scan (cámara bloqueada): el de Código ocupa exactamente su lugar, abajo al centro */
+.cod-btn.solo{left:50%;transform:translateX(-50%)}.cod-btn.solo img{height:68px}.cod-btn.solo:active{transform:translateX(-50%) scale(.92)}
 .scan.txt{background:var(--agregar);color:#fff;border-radius:999px;padding:10px 20px;font-size:1.4rem;filter:none}
 .cmod{position:fixed;inset:0;z-index:93;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(20,8,4,.72);backdrop-filter:blur(4px)}
 .cwin{width:min(94vw,440px);background:#1b0c05;border:1px solid #3a2012;border-radius:30px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,145,149,.08)}
@@ -251,7 +257,8 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
 <section class="alb" id="alb">
   <div class="top"><a href="index5.html" aria-label="Volver"><img src="inicio.svg" alt="Inicio" onerror="var a=this.parentNode;a.textContent='← Volver';a.style.cssText='color:#fff;background:#e0527a;padding:8px 18px;border-radius:999px;line-height:normal;filter:none'"></a><h1>ArSweetCards</h1><span class="pill" id="cont"></span></div>
   <div class="escena" id="escena">
-    <div class="vp"><div class="mesa" id="mesa"><div class="libro" id="libro"><div class="suelo"></div><div class="base"><button class="rst" id="btnRstAlb" type="button">Resetear álbum</button></div></div></div>
+    <div class="vp"><div class="mesa" id="mesa"><div class="libro" id="libro"><div class="suelo"></div><div class="base"></div></div></div>
+      <button class="rst" id="btnRstAlb" type="button">Resetear álbum</button>
       <button class="borde i" id="bI" type="button" aria-label="Página anterior" hidden>&#8249;</button><button class="borde d" id="bD" type="button" aria-label="Página siguiente" hidden>&#8250;</button></div>
   </div>
   <div class="hint" id="hint">Toca la tapa para acercar y abrir el álbum</div>
@@ -312,7 +319,7 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
     </div>
   </div>
 </section>
-<section class="pant" id="pResetAlb" hidden><h2 style="font-family:var(--titulo);font-weight:400;font-size:2.4rem;margin:0">¿Resetear álbum?</h2><p style="max-width:320px;margin:0">Se borrarán todas tus cartas desbloqueadas. Esto no se puede deshacer. Los sombreros que ya ganaste en Sugar Snake se conservan.</p><div class="dbtns"><button class="btn sec" id="rstNo" type="button">Cancelar</button><button class="btn" id="rstSi" type="button">Sí, resetear</button></div></section>
+<section class="pant" id="pResetAlb" hidden><h2 style="font-family:var(--titulo);font-weight:400;font-size:2.4rem;margin:0">¿Borrar tu álbum?</h2><p style="max-width:320px;margin:0">Se borrarán todas tus cartas desbloqueadas. Esto no se puede deshacer. Los sombreros que ya ganaste en Sugar Snake se conservan.</p><div class="dbtns"><button class="btn sec" id="rstNo" type="button">No</button><button class="btn" id="rstSi" type="button">Sí, borrar</button></div></section>
 <section class="pant" id="pCarga" hidden><div class="rueda"></div><p>Preparando la cámara…</p></section>
 <section class="pant" id="pError" hidden><h2 style="font-family:var(--titulo);font-weight:400;font-size:2.4rem;margin:0">¡Ups!</h2><p id="errorTexto" style="max-width:340px"></p><button class="btn" id="btnReint">Intentar de nuevo</button><button class="btn" id="btnErrAlb">Volver al álbum</button></section>
 <div class="toast" id="toast"></div>
@@ -481,7 +488,7 @@ function pintaLibro(){
   mesa.style.perspectiveOrigin = m ? (der ? "75% 40%" : "25% 40%") : "50% 40%";
   $("bI").hidden = f === 0; $("bD").hidden = f === 0 || (m ? (f >= NH && lado === "R") : f >= NH);
   $("hint").hidden = f !== 0;
-  libro.classList.toggle("cierre", f >= NH && (!m || lado === "R"));   // contraportada a la vista
+  $("btnRstAlb").classList.toggle("on", f >= NH && (!m || lado === "R"));   // contraportada a la vista
 }
 let bloqueoSel = 0;      // mientras la hoja gira no se selecciona nada
 const ir = d => {
@@ -909,6 +916,7 @@ try{ camFallo = ES_PC && sessionStorage.getItem("arsweet_cam_bloq") === "1"; }ca
 function actualizarBotones(){
   $("btnCodigo").hidden = !ES_PC;
   $("btnScan").hidden = ES_PC && (camPerm || camSin || camFallo);
+  $("btnCodigo").classList.toggle("solo", $("btnScan").hidden);
 }
 if(ES_PC){
   try{ navigator.permissions.query({ name: "camera" }).then(r => {
