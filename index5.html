@@ -126,9 +126,30 @@
 <main>
         <!-- VISOR 3D: cambia src="cocina.gltf" por la ruta de tu archivo .gltf o .glb -->
         <section class="sh-visor3d">
-            <model-viewer src="cocina-optimizado.glb" alt="Modelo 3D de la cocina de Sweet Help"
+            <model-viewer data-src="cocina-optimizado.glb" alt="Modelo 3D de la cocina de Sweet Help"
                 camera-controls shadow-intensity="1" touch-action="pan-y">
             </model-viewer>
+            <!-- Optimización: el modelo solo se carga y se dibuja mientras se ve en pantalla.
+                 Al salir de la vista (o cambiar de pestaña) se descarga tras DEJAR_MS y vuelve al regresar. -->
+            <script>
+            (function () {
+                var mv = document.querySelector(".sh-visor3d model-viewer");
+                if (!mv) return;
+                var SRC = mv.getAttribute("data-src");
+                var DEJAR_MS = 4000;      // ms fuera de pantalla antes de liberar el modelo (más alto = menos parpadeo al volver)
+                var MARGEN = "250px 0px"; // empieza a cargar un poco antes de que se vea
+                var visible = false, t = null;
+                function cargar() { clearTimeout(t); if (mv.getAttribute("src") !== SRC) mv.setAttribute("src", SRC); }
+                function descargar() {
+                    clearTimeout(t);
+                    t = setTimeout(function () { if (!visible || document.hidden) mv.removeAttribute("src"); }, DEJAR_MS);
+                }
+                function revisar() { if (visible && !document.hidden) cargar(); else descargar(); }
+                if (!("IntersectionObserver" in window)) { cargar(); return; }
+                new IntersectionObserver(function (e) { visible = e[0].isIntersecting; revisar(); }, { rootMargin: MARGEN }).observe(mv);
+                document.addEventListener("visibilitychange", revisar);
+            })();
+            </script>
         </section>
 
         <section class="text1">
