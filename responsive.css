@@ -3,14 +3,13 @@
 
 @media (max-width:768px){
   body{overflow-x:hidden;-webkit-text-size-adjust:100%}
-  header{padding-top:90px}
-  html{overflow-x:hidden}
+  header{padding-top:56px}
 
   /* ---------- MENÚ HAMBURGUESA ---------- */
   .sh-menu{top:8px!important;right:8px!important;display:block!important;z-index:10002!important}
-  .sh-menu .sh-hamb{width:78px!important;height:78px!important;display:block;margin-left:auto}
+  .sh-menu .sh-hamb{width:56px!important;height:56px!important;display:block;margin-left:auto}
   .sh-menu .sh-pill{
-    position:absolute!important;top:86px;right:0;margin:0!important;
+    position:absolute!important;top:64px;right:0;margin:0!important;
     padding:16px 20px!important;height:auto!important;min-width:170px;
     flex-direction:column;align-items:flex-start;gap:12px!important;
     background:#fff;border-radius:22px!important;box-shadow:0 8px 24px rgba(0,0,0,.28);
@@ -28,16 +27,15 @@
   .sh-menu .sh-sub a{padding:6px 10px;font-size:.95rem}
 
   /* ---------- CARRITO, PERFIL, PINKY, CARTAS ---------- */
-  .sh-cart-wrap{top:94px!important;right:14px!important}
-  .sh-ibtn img{width:66px!important;height:66px!important}
+  .sh-cart-wrap{top:72px!important;right:12px!important}
+  .sh-ibtn img{width:46px!important;height:46px!important}
   .sh-perfil{top:8px!important;left:8px!important}
   .sh-perfil-btn img{width:54px!important;height:54px!important;object-fit:contain}
   .menudesplegable2{width:auto!important;height:auto!important;padding:0!important}
   .menudesplegable2 .dropdown img,.menudesplegable2 img{width:54px!important;height:54px!important;object-fit:contain}
   .sh-pinky-btn{right:14px!important;bottom:14px!important}
   .sh-pinky-btn img{width:52px!important;height:52px!important}
-  .sh-pinky-btn.sh-cartas-btn{right:14px!important}
-  body.sh-tiene-cartas #shPinkyBtn{right:76px!important}
+  .sh-pinky-btn.sh-cartas-btn{right:76px!important}
   .sh-faq{right:14px!important;bottom:78px!important;width:calc(100vw - 28px)!important;max-width:340px!important;max-height:65vh!important}
 
   /* ---------- FORMULARIOS (style.css / style2.css tenían ancho fijo de 400px y alto fijo de 40px en los textos) ---------- */
@@ -63,11 +61,8 @@
   .logos{width:100%;margin:0;padding:0}
   .logos img{width:min(92vw,520px);margin:0 auto;display:block}
   img.bottoms{left:0;margin:12px auto}
-  /* Slider: pegado arriba a la derecha de TODA la pantalla (cambia --slider-ancho para hacerlo más grande o pequeño) */
-  .slider{position:absolute!important;top:0!important;right:0!important;left:auto!important;z-index:-1;
-    width:var(--slider-ancho,72vw);height:auto!important;aspect-ratio:1300/1500;margin:0!important;
-    -webkit-mask-position:top right;mask-position:top right}
-  .slider:hover{transform:none}
+  .slider{position:relative;z-index:0;width:100%;height:auto;aspect-ratio:1300/1500;margin:8px 0;
+    -webkit-mask-position:center;mask-position:center}
   .sh-visor3d{--subir-texto:0px!important}
   .sh-visor3d model-viewer{height:55vh!important}
 
@@ -76,11 +71,6 @@
   .termometro-icono{height:80px!important}
 
   /* ---------- PRODUCTOS / EQUIPO ---------- */
-  /* Las flechas del armador se salían del ancho de la pantalla y la página se corría de lado */
-  #armaPostre .carta-giro{width:min(340px,calc(100vw - 116px))}
-  #armaPostre .flecha{padding:6px}
-  #armaPostre .flecha.izq{right:calc(100% + 4px)}
-  #armaPostre .flecha.der{left:calc(100% + 4px)}
   .produtitemul{flex-direction:column;align-items:center;gap:16px;margin:0}
   .product-item,.product-itemc{width:92%!important;height:auto!important;padding:16px!important}
   .bottomspor{margin:12px auto}
@@ -91,14 +81,7 @@
 }
 
 @media (max-width:380px){
-  .sh-menu .sh-hamb{width:70px!important;height:70px!important}
-  .sh-menu .sh-pill{top:78px}
-  .sh-cart-wrap{top:86px!important}
-  header{padding-top:82px}
+  .sh-menu .sh-hamb{width:50px!important;height:50px!important}
+  .sh-menu .sh-pill{top:58px}
+  .sh-cart-wrap{top:64px!important}
 }
-
-/* ===== Arreglos de productos.html (todas las pantallas) ===== */
-/* Evita que la página salte de lado cuando desaparece la barra de scroll al abrir el catálogo */
-html{scrollbar-gutter:stable}
-/* En pantallas táctiles el visor 3D ya no bloquea el scroll vertical: arrastra de lado para girar, hacia arriba/abajo para desplazarte */
-@media (pointer:coarse){#armaPostre .visor{touch-action:pan-y}}
