@@ -70,6 +70,10 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
 .scan{background:none;padding:0;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45));transition:transform .2s}
 .scan img{height:68px;width:auto;display:block}.scan:active{transform:scale(.92)}
 .base{position:absolute;right:0;top:0;width:50%;height:100%;border-radius:4px 16px 16px 4px;background:#d9879a url("contraportadalibro.svg") center/100% 100% no-repeat}
+/* botón "Resetear álbum" sobre la contraportada: aparece cuando el libro está abierto del todo */
+.rst{position:absolute;left:50%;bottom:7%;transform:translateX(-50%);white-space:nowrap;font-size:clamp(.75rem,calc(var(--pw)*.06),1.1rem);color:#fff;background:var(--agregar);border-radius:999px;padding:.6em 1.4em;box-shadow:0 4px 12px rgba(0,0,0,.3);opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s}
+.rst:active{filter:brightness(.92)}
+.libro.cierre .rst{opacity:1;visibility:visible;transition:opacity .3s .85s,visibility 0s .85s}
 .leaf{position:absolute;right:0;top:0;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;transition:transform .95s cubic-bezier(.45,.05,.25,1)}
 .face{position:absolute;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
 .face::after{content:"";position:absolute;inset:0;background:#2a1408;opacity:0;pointer-events:none}
@@ -152,6 +156,7 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
 .btn.sec{background:#fff;color:var(--agregar)}
 /* botones de la barra de cámara */
 .arizq{display:flex;align-items:center;gap:10px}
+#btnReset{position:fixed;right:14px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:31}
 .pill.ibtn.txt{background:var(--agregar);padding:6px 16px;font-size:1.7rem;line-height:1.2;color:#fff;filter:none}
 /* contador dorado cuando el álbum está completo */
 .pill.oro{background:linear-gradient(135deg,#ffe28a,#e9a93a);color:#5a3a10;box-shadow:0 0 14px rgba(255,211,107,.85);cursor:pointer;animation:oroPulse 2.4s ease-in-out infinite}
@@ -172,6 +177,53 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
 .ft{margin:0;font-family:var(--titulo);font-weight:400;font-size:clamp(2.4rem,10vw,3.8rem);color:#fff3c4;text-shadow:0 4px 14px rgba(0,0,0,.4)}
 .fin.on .ft{animation:pop2 .8s .5s cubic-bezier(.3,1.6,.5,1) both}
 .fn{margin:0;font-size:1.15rem;max-width:320px}
+/* ---------- Recompensa de Sugar Snake ---------- */
+.rec{position:fixed;inset:0;z-index:88;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center;color:#fff;overflow:hidden;
+  background:radial-gradient(circle at 50% 40%,rgba(255,145,149,.97),rgba(131,60,74,.98) 80%)}
+.rec>*:not(.rayos){position:relative;z-index:2}
+.sslogo{margin:0;font-family:var(--titulo);font-weight:400;font-size:clamp(2.6rem,13vw,4.6rem);line-height:.95;letter-spacing:3px;color:#fff8ef;
+  -webkit-text-stroke:3px #833c4a;paint-order:stroke fill;text-shadow:0 5px 0 #833c4a,0 10px 22px rgba(0,0,0,.35)}   /* mismo logo que el inicio de Sugar Snake */
+.sslogo span{display:block;color:#ff9195}
+.rt{margin:0;max-width:320px;font-size:1.2rem}
+.rimg{width:min(58vw,240px);aspect-ratio:1;border-radius:28px;border:5px solid #fff8ef;box-shadow:0 10px 30px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 60%,#fff6f7,#ffe1e6)}
+.rimg img{width:92%;height:92%;object-fit:contain;display:block}
+.rn{margin:0;font-family:var(--titulo);font-weight:400;font-size:clamp(1.6rem,6vw,2.2rem);color:#fff3c4}
+.rd{margin:0;max-width:300px;font-size:.95rem;opacity:.9}
+.rec.on .sslogo{animation:pop2 .7s cubic-bezier(.3,1.6,.5,1) both}
+.rec.on .rimg{animation:pop2 .8s .25s cubic-bezier(.3,1.6,.5,1) both}
+/* ---------- Código para PC (en el teléfono se muestra y se copia) ---------- */
+.cod{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;background:var(--crema);color:var(--marron);border:3px solid var(--rosa);border-radius:999px;padding:5px 6px 5px 16px;font-size:.95rem}
+.cod b{font-weight:400;font-size:1.2rem;letter-spacing:.18em;color:var(--antojo)}
+.cod button{background:var(--agregar);color:#fff;border-radius:999px;padding:6px 14px;font-size:.9rem}
+/* ---------- Solo PC: botón de código, ventana de código y modo debug ---------- */
+.cod-btn{position:absolute;left:18px;bottom:16px;z-index:65}.cod-btn img{height:58px}
+.scan.txt{background:var(--agregar);color:#fff;border-radius:999px;padding:10px 20px;font-size:1.4rem;filter:none}
+.cmod{position:fixed;inset:0;z-index:93;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(20,8,4,.72);backdrop-filter:blur(4px)}
+.cwin{width:min(94vw,440px);background:#1b0c05;border:1px solid #3a2012;border-radius:30px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,145,149,.08)}
+.chead{height:46px;background:#2a1408;display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:0 20px}
+.chead i{width:36px;height:9px;border-radius:5px;background:#4a2a18}
+.chead i.on{background:#ff9195;box-shadow:0 0 10px rgba(255,145,149,.85)}
+.cbody{padding:26px 24px 28px;text-align:center}
+.ctit{margin:0 0 8px;font-family:var(--cuerpo);font-weight:400;font-size:1.5rem;letter-spacing:.32em;text-indent:.32em;color:#f8f2dc}
+.csub{margin:0 0 18px;font-size:.9rem;line-height:1.3;color:#d9b9a4}
+.cinp{width:100%;background:#2b160b;border:1px solid #4a2a18;border-radius:22px;padding:16px 12px;font-family:var(--cuerpo);font-size:1.7rem;letter-spacing:.3em;text-align:center;color:#f8f2dc;text-transform:uppercase;outline:none;transition:border-color .2s,box-shadow .2s}
+.cinp::placeholder{color:#7a4a30}
+.cinp:focus{border-color:#ff9195;box-shadow:0 0 0 3px rgba(255,145,149,.25)}
+.cmsg{min-height:1.3em;margin:12px 0 0;font-size:.95rem;color:#f8f2dc}.cmsg.err{color:#ff9195}
+.ctiles{display:flex;gap:14px;justify-content:center;margin-top:16px}
+.ctile{width:100px;height:100px;border-radius:28px;background:#2b160b;border:1px solid #4a2a18;color:#ffb3b8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;transition:transform .15s,background .15s}
+.ctile:hover{background:#3a1d10;transform:translateY(-2px)}.ctile:active{transform:scale(.94)}
+.ctile svg{width:38px;height:38px}
+.ctile.go{background:var(--agregar);color:#fff;border-color:transparent}.ctile.go:hover{background:#ea6389}
+.dbgtag{position:absolute;top:60px;left:50%;transform:translateX(-50%);z-index:65;white-space:nowrap;background:#2a1408;color:#ff9195;border:2px solid #ff9195;border-radius:999px;padding:4px 14px;font-size:.8rem;letter-spacing:.12em;box-shadow:0 0 12px rgba(255,145,149,.5)}
+#dbgkeys{position:fixed;left:0;right:0;top:50%;transform:translateY(-50%);z-index:120;display:none;flex-wrap:wrap;gap:14px;justify-content:center;padding:0 20px;pointer-events:none}
+#dbgkeys.on{display:flex}
+.kcap{width:96px;height:96px;padding:9px;border-radius:26px;background:#833c4a;box-shadow:0 10px 0 #5a2833,0 16px 30px rgba(131,60,74,.45)}
+.kcap i{width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:17px;background:#f8f2dc;box-shadow:inset 0 -7px 0 #ff9195,inset 0 4px 0 #fff;font-style:normal;font-size:52px;color:#833c4a;font-family:Arial,sans-serif;font-weight:bold}
+.kcap.last{animation:kcapPop .28s cubic-bezier(.2,1.6,.4,1)}
+@keyframes kcapPop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+.demo{flex-wrap:wrap;justify-content:flex-end;max-width:min(92vw,460px)}
 </style>
 </head>
 <body>
@@ -199,14 +251,16 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
 <section class="alb" id="alb">
   <div class="top"><a href="index5.html" aria-label="Volver"><img src="inicio.svg" alt="Inicio" onerror="var a=this.parentNode;a.textContent='← Volver';a.style.cssText='color:#fff;background:#e0527a;padding:8px 18px;border-radius:999px;line-height:normal;filter:none'"></a><h1>ArSweetCards</h1><span class="pill" id="cont"></span></div>
   <div class="escena" id="escena">
-    <div class="vp"><div class="mesa" id="mesa"><div class="libro" id="libro"><div class="suelo"></div><div class="base"></div></div></div>
+    <div class="vp"><div class="mesa" id="mesa"><div class="libro" id="libro"><div class="suelo"></div><div class="base"><button class="rst" id="btnRstAlb" type="button">Resetear álbum</button></div></div></div>
       <button class="borde i" id="bI" type="button" aria-label="Página anterior" hidden>&#8249;</button><button class="borde d" id="bD" type="button" aria-label="Página siguiente" hidden>&#8250;</button></div>
   </div>
   <div class="hint" id="hint">Toca la tapa para acercar y abrir el álbum</div>
   <div class="barra">
     <button class="scan" id="btnScan" type="button" aria-label="Scan"><img src="Scan.svg" alt="Scan"></button>
   </div>
-  <div class="demo" id="demo" hidden><button id="dSim">🎲 Simular</button><button id="dRes">↺ Reiniciar</button><button id="dCasi">🏆 Casi todas</button></div>
+  <button class="scan cod-btn" id="btnCodigo" type="button" aria-label="Código" title="Introducir código" hidden><img src="code.svg" alt="Código" onerror="var b=this.parentNode;b.classList.add('txt');b.textContent='&lt;/&gt;'"></button>
+  <div class="dbgtag" id="dbgTag" hidden>🛠 MODO DEBUG ACTIVADO</div>
+  <div class="demo" id="demo" hidden><button id="dTodas">🃏 Todas las cartas</button><button id="dSim">🎲 Simular</button><button id="dCasi">🏆 Casi todas</button><button id="dRes">↺ Reiniciar</button></div>
 </section>
 
 <!-- Desbloqueo -->
@@ -215,11 +269,22 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
   <p class="dt" id="dTit"></p>
   <div id="dCarta"></div>
   <p class="dn" id="dNom"></p>
+  <div class="cod" id="dCod" hidden><span>Código para PC:</span><b></b><button type="button">Copiar</button></div>
   <div class="dbtns" id="dBtns" hidden><button class="btn sec" id="dSeguir">Seguir cazando</button><button class="btn" id="dVer">Ver en el álbum</button></div>
 </section>
 <section class="vis" id="vis" hidden>
-  <div id="vCarta"></div><p class="vnom" id="vNom"></p><p class="vdesc" id="vDesc"></p><small class="vtip" id="vTip">Arrastra o toca la carta para girarla</small>
+  <div id="vCarta"></div><p class="vnom" id="vNom"></p><p class="vdesc" id="vDesc"></p><div class="cod" id="vCod" hidden><span>Código para PC:</span><b></b><button type="button">Copiar</button></div><small class="vtip" id="vTip">Arrastra o toca la carta para girarla</small>
   <button class="btn" id="vX">Cerrar</button>
+</section>
+
+<section class="rec" id="ssRec" hidden>
+  <div class="rayos"></div>
+  <h2 class="sslogo">SUGAR<span>SNAKE</span></h2>
+  <p class="rt">¡Has desbloqueado "Sombrero" en el juego Sugar Snake!</p>
+  <div class="rimg"><img id="ssImg" src="" alt="Sombrero"></div>
+  <p class="rn" id="ssNom"></p>
+  <p class="rd">Lo encuentras en la tienda de Sugar Snake, en Ropaje. Escaneando las 3 serpientes también ganas un logro.</p>
+  <button class="btn" id="ssOk" type="button">¡Genial!</button>
 </section>
 
 <section class="fin" id="fin" hidden>
@@ -231,9 +296,27 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
   <canvas id="conf"></canvas>
 </section>
 
+<section class="cmod" id="pCod" hidden>
+  <div class="cwin" role="dialog" aria-label="Código">
+    <div class="chead"><i></i><i></i><i class="on"></i></div>
+    <div class="cbody">
+      <h2 class="ctit">CÓDIGO</h2>
+      <p class="csub">Escribe el código de 8 letras y números que te dio la carta en el teléfono.</p>
+      <input class="cinp" id="cInp" type="text" maxlength="16" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="········">
+      <p class="cmsg" id="cMsg"></p>
+      <div class="ctiles">
+        <button class="ctile" id="cPegar" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2.5"/><path d="M9 4h6v3H9z"/><path d="M9 12h6M9 16h4"/></svg>Pegar</button>
+        <button class="ctile go" id="cOk" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/><circle cx="12" cy="16" r="1.2"/></svg>Desbloquear</button>
+        <button class="ctile" id="cX" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Cerrar</button>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="pant" id="pResetAlb" hidden><h2 style="font-family:var(--titulo);font-weight:400;font-size:2.4rem;margin:0">¿Resetear álbum?</h2><p style="max-width:320px;margin:0">Se borrarán todas tus cartas desbloqueadas. Esto no se puede deshacer. Los sombreros que ya ganaste en Sugar Snake se conservan.</p><div class="dbtns"><button class="btn sec" id="rstNo" type="button">Cancelar</button><button class="btn" id="rstSi" type="button">Sí, resetear</button></div></section>
 <section class="pant" id="pCarga" hidden><div class="rueda"></div><p>Preparando la cámara…</p></section>
 <section class="pant" id="pError" hidden><h2 style="font-family:var(--titulo);font-weight:400;font-size:2.4rem;margin:0">¡Ups!</h2><p id="errorTexto" style="max-width:340px"></p><button class="btn" id="btnReint">Intentar de nuevo</button><button class="btn" id="btnErrAlb">Volver al álbum</button></section>
 <div class="toast" id="toast"></div>
+<div id="dbgkeys"></div>
 
 <script>
 /* =====================================================================
@@ -272,17 +355,44 @@ const DATOS = [
   [11,"Pinky Vitruvio",true,"Pinky se inspira en el Hombre de Vitruvio."],
   [12,"Pinky Chambeadora",false,"Pinky se pone a trabajar por quienes más lo necesitan."]
 ];
+/* ---------- Conexión con Sugar Snake ---------- */
+/* Al escanear estas cartas se guarda en localStorage la clave "sweetHelpScans" (la lee sigueelpostre.html para desbloquear el sombrero y el logro).
+   Los dos HTML deben estar en la misma carpeta/sitio. Los SVG de los sombreros se muestran desde esta misma carpeta. */
+/* Código de 8 letras/números por carta (se calcula igual en cualquier dispositivo): el teléfono lo muestra y el PC lo acepta */
+const COD_SAL = "SweetHelp-ArCards-v1";
+function hash53(str){ let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+  for(let i = 0, ch; i < str.length; i++){ ch = str.charCodeAt(i); h1 = Math.imul(h1 ^ ch, 2654435761); h2 = Math.imul(h2 ^ ch, 1597334677); }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return 4294967296 * (2097151 & h2) + (h1 >>> 0); }
+const codigoDe = num => (hash53(COD_SAL + num) % 2821109907456).toString(36).toUpperCase().padStart(8, "0");   // 36^8 combinaciones
+const SS_KEY = "sweetHelpScans";
+const SS_RECOMPENSAS = {   // num de la carta -> recompensa
+  22: { id: "merenguita", nombre: "Sombrero de Merenguita", svg: "merenguitahat.svg" },
+  21: { id: "mandarina",  nombre: "Sombrero de Mandarina",  svg: "mandarinahat.svg" },
+  20: { id: "frambuesa",  nombre: "Sombrero de Frambuesa",  svg: "frambuesahat.svg" }
+};
+const ssLeer = () => { try { return JSON.parse(localStorage.getItem(SS_KEY) || "{}") || {}; } catch (e) { return {}; } };
+const ssTiene = k => !!ssLeer()[k];
+function ssGuardar(k){ try{ const o = ssLeer(); if(!o[k]){ o[k] = Date.now(); localStorage.setItem(SS_KEY, JSON.stringify(o)); } }catch(e){} }
 const p2 = n => String(n).padStart(2, "0");
 const CARTAS = DATOS.map(([num, nombre, especial, desc], i) => ({ i, num, nombre, desc, esp: !!especial, carta: CARTAS_DIR + p2(i) + ".png", ar: CARTAS_DIR + p2(i) + ".png" }));
 const POR_NUM = {}; CARTAS.forEach(c => POR_NUM[c.num] = c);
-const TOTAL = CARTAS.length, PAGS = Math.ceil(TOTAL / 4);   // 4 cartas por página
+const TOTAL = CARTAS.length, PAGS = Math.ceil(TOTAL / 4);
+const CODIGOS = {}; CARTAS.forEach(c => { c.cod = codigoDe(c.num); CODIGOS[c.cod] = c; });   // 4 cartas por página
 
 const $ = id => document.getElementById(id);
 const demo = new URLSearchParams(location.search).get("demo") === "1";
+/* Versión PC (ratón, sin pantalla táctil): botón de código y modo debug. Para probar: ?pc=1 fuerza PC, ?pc=0 fuerza teléfono */
+const _pc = new URLSearchParams(location.search).get("pc");
+const ES_PC = _pc === "1" ? true : _pc === "0" ? false : (!/Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent) && matchMedia("(hover:hover) and (pointer:fine)").matches);
+let dbgOn = false; try{ dbgOn = ES_PC && sessionStorage.getItem("arsweet_debug") === "1"; }catch(e){}
+const mostrarCodigos = () => !ES_PC || dbgOn;       // el teléfono muestra el código de cada carta (y el PC en modo debug)
 const KEY = "arsweetcards_album";
 let got = new Set();
 try { got = new Set(JSON.parse(localStorage.getItem(KEY) || "[]")); } catch (e) {}
 const guardar = () => { try { localStorage.setItem(KEY, JSON.stringify([...got])); } catch (e) {} };
+Object.keys(SS_RECOMPENSAS).forEach(n => { const c = POR_NUM[n]; if(c && got.has(c.i)) ssGuardar(SS_RECOMPENSAS[n].id); });   // cartas que ya tenías antes: también cuentan
 const SONIDO_PAGINA = "";      // opcional: ruta de tu propio sonido (mp3/ogg). Vacío = sonido de hoja generado por el navegador
 let ac;
 function sonidoPagina(){
@@ -369,14 +479,15 @@ function pintaLibro(){
   libro.style.transform = f === 0 ? `translateX(${m ? 25 - 25 * k : -25 * k}%) scale(${k}) rotateX(22deg)` : "translateX(0) scale(1) rotateX(6deg)";
   mesa.style.transform = m ? `translateX(${der ? -50 : 0}%)` : "none";                 // en teléfono solo se ve una mitad del libro
   mesa.style.perspectiveOrigin = m ? (der ? "75% 40%" : "25% 40%") : "50% 40%";
-  $("bI").hidden = f === 0; $("bD").hidden = f === 0 || (m ? (f >= NH && lado === "L") : f >= NH);
+  $("bI").hidden = f === 0; $("bD").hidden = f === 0 || (m ? (f >= NH && lado === "R") : f >= NH);
   $("hint").hidden = f !== 0;
+  libro.classList.toggle("cierre", f >= NH && (!m || lado === "R"));   // contraportada a la vista
 }
 let bloqueoSel = 0;      // mientras la hoja gira no se selecciona nada
 const ir = d => {
   const f0 = f, l0 = lado;
   if(!movil()) f = Math.max(0, Math.min(NH, f + d));
-  else if(d > 0){ if(f === 0){ f = 1; lado = "R"; } else if(lado === "R"){ if(f < NH){ f++; lado = "L"; } } else if(f < NH) lado = "R"; }
+  else if(d > 0){ if(f === 0){ f = 1; lado = "R"; } else if(lado === "R"){ if(f < NH){ f++; lado = "L"; } } else lado = "R"; }
   else if(f > 0){ if(lado === "R"){ if(f === 1) f = 0; else lado = "L"; } else { f--; lado = "R"; } }
   if(f !== f0 || lado !== l0){ sonidoPagina(); bloqueoSel = Date.now() + 1100; }
   pintaLibro();
@@ -419,15 +530,28 @@ function irACarta(c){
   pintaLibro();
 }
 
+/* ---------- Resetear álbum ---------- */
+$("btnRstAlb").onclick = e => { e.stopPropagation(); $("pResetAlb").hidden = false; };
+$("rstNo").onclick = () => { $("pResetAlb").hidden = true; };
+$("rstSi").onclick = () => {
+  got.clear(); guardar(); ultima = null; finPend = false;
+  CARTAS.forEach(c => pintaSlot(c)); contadores();
+  $("pResetAlb").hidden = true; $("fin").hidden = true; cancelAnimationFrame(confRaf);
+  f = 0; lado = "R"; bloqueoSel = Date.now() + 1100; sonidoPagina(); pintaLibro();   // el libro se cierra otra vez
+  avisar("Álbum reseteado ✓");
+};
+
 /* ---------- Carta 3D (desbloqueo y visor) ---------- */
 const carta3d = (c, bloq) => `<div class="c3d"><div class="cf"><img src="cartasatras.svg" alt="Reverso"></div>` +
   `<div class="cf cfr ${c.esp && !bloq ? "esp" : ""}"><img src="${bloq ? "cardblock.svg" : c.carta}" alt="${c.nombre}"></div></div>`;
-let ultima = null, finPend = false;
+let ultima = null, finPend = false, recPend = null;
 let tDesb = [];
 function desbloquear(c){
   got.add(c.i); guardar(); pintaSlot(c, true); contadores(); ultima = c; finPend = got.size >= TOTAL;
+  const rec = SS_RECOMPENSAS[c.num]; recPend = null;
+  if(rec && !ssTiene(rec.id)){ ssGuardar(rec.id); recPend = rec; }          // primera vez: se desbloquea en Sugar Snake
   const D = $("desb"); tDesb.forEach(clearTimeout); tDesb = [];
-  D.className = "desb"; D.hidden = false;
+  D.className = "desb"; D.hidden = false; $("dCod").hidden = true;
   $("dTit").textContent = "¡Carta encontrada!"; $("dNom").textContent = ""; $("dBtns").hidden = true;
   $("dCarta").innerHTML = '<div class="c3d lockfx"><div class="cf esp"><img src="cardblock.svg" alt="Carta bloqueada"></div></div>';   // 1) brilla el candado
   sonidoBrillo();
@@ -435,15 +559,25 @@ function desbloquear(c){
     D.classList.add("bum"); sonidoBum();
     $("dTit").textContent = "¡Carta desbloqueada!";
     $("dCarta").innerHTML = `<div class="c3d revela"><div class="cf ${c.esp ? "esp" : ""}"><img src="${c.carta}" alt="${c.nombre}"></div></div>`;
-    $("dNom").textContent = "#" + p2(c.num) + " · " + c.nombre + (c.esp ? " ✨" : "");
+    $("dNom").textContent = "#" + p2(c.num) + " · " + c.nombre + (c.esp ? " ✨" : ""); ponCodigo("dCod", c);
     $("dBtns").hidden = false;
     if(navigator.vibrate) try{ navigator.vibrate([60, 40, 120]); }catch(e){}
   }, 1900));
 }
 function cierraDesb(ver){
   $("desb").hidden = true;
-  if(ver) irAlbum(ultima);
-  if(finPend){ finPend = false; setTimeout(celebrar, ver ? 900 : 350); }       // ¡era la última carta!
+  const r = recPend; recPend = null;
+  const seguir = () => {
+    if(ver) irAlbum(ultima);
+    if(finPend){ finPend = false; setTimeout(celebrar, ver ? 900 : 350); }       // ¡era la última carta!
+  };
+  if(r) mostrarRecompensa(r, seguir); else seguir();
+}
+function mostrarRecompensa(r, despues){
+  $("ssImg").src = r.svg; $("ssImg").alt = r.nombre; $("ssNom").textContent = r.nombre;
+  const R = $("ssRec"); R.hidden = false; R.classList.remove("on"); void R.offsetWidth; R.classList.add("on");
+  try{ sonidoBum(); }catch(e){} if(navigator.vibrate) try{ navigator.vibrate([60, 40, 120]); }catch(e){}
+  $("ssOk").onclick = () => { R.hidden = true; despues(); };
 }
 $("dSeguir").onclick = () => cierraDesb(false);
 $("dVer").onclick = () => cierraDesb(true);
@@ -465,9 +599,10 @@ function abrirVisor(c){
     tilt = 0; pon(); };
   k.onpointerup = suelta; k.onpointercancel = suelta;
   setTimeout(() => { ang = 180; pon(); }, 30);
-  $("vTip").hidden = false;
+  $("vTip").hidden = false; ponCodigo("vCod", on ? c : null);
   $("vNom").innerHTML = '<span class="vnum">#' + p2(c.num) + '</span> · ' + c.nombre + (on && c.esp ? " ✨" : "");
-  $("vDesc").textContent = on ? c.desc : "🔒 Escanea esta carta con la cámara para desbloquearla.";
+  const rv = SS_RECOMPENSAS[c.num];
+  $("vDesc").textContent = (on ? c.desc : "🔒 Escanea esta carta con la cámara para desbloquearla.") + (rv ? " 🎩 Al escanearla ganas un sombrero exclusivo en Sugar Snake." : "");
   $("vis").hidden = false;
 }
 $("vX").onclick = () => { $("vis").hidden = true; };
@@ -540,6 +675,43 @@ const SOMBRA_CARTA = (() => { const k = 3, c = document.createElement("canvas");
   rrPath(x, PADS * k, PADS * k, CW * k, CH * k, CR * k); x.fill(); return c.toDataURL(); })();
 const mk = (tag, at) => { const e = document.createElement(tag); for(const k in at) e.setAttribute(k, at[k]); return e; };
 
+/* Brilli brilli de las cartas especiales también en la previsualización AR:
+   plano transparente (mezcla aditiva) pegado delante de la carta, con un destello que la barre y chispitas. */
+AFRAME.registerComponent("brilli", {
+  init(){
+    const k = 2, c = document.createElement("canvas"); c.width = CW * k; c.height = CH * k;
+    this.c = c; this.x = c.getContext("2d"); this.k = k; this.ult = 0;
+    this.tex = new THREE.CanvasTexture(c);
+    if(THREE.sRGBEncoding) this.tex.encoding = THREE.sRGBEncoding;
+    if(THREE.SRGBColorSpace) this.tex.colorSpace = THREE.SRGBColorSpace;
+    this.mat = new THREE.MeshBasicMaterial({ map: this.tex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, toneMapped: false });
+    this.geo = new THREE.PlaneGeometry(1.1, 1.1 * CH / CW);
+    this.el.setObject3D("mesh", new THREE.Mesh(this.geo, this.mat));
+    this.ch = Array.from({ length: 14 }, () => ({ x: .08 + Math.random() * .84, y: .06 + Math.random() * .88, f: Math.random() * 6.28, v: 2 + Math.random() * 3 }));
+  },
+  tick(t){
+    let o = this.el.object3D; while(o){ if(!o.visible) return; o = o.parent; }      // solo dibuja mientras la carta se ve
+    if(t - this.ult < 33) return; this.ult = t;
+    const x = this.x, c = this.c, w = c.width, h = c.height, k = this.k;
+    x.clearRect(0, 0, w, h); x.save(); rrPath(x, 0, 0, w, h, CR * k); x.clip();
+    const u = (t % 2600) / 2600, gx = (-.4 + 1.8 * u) * w;                          // franja diagonal que cruza la carta
+    const g = x.createLinearGradient(gx - .3 * w, 0, gx + .3 * w, h * .6);
+    g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(.35, "rgba(255,255,255,.6)"); g.addColorStop(.5, "rgba(255,120,220,.45)");
+    g.addColorStop(.65, "rgba(110,230,255,.5)"); g.addColorStop(1, "rgba(255,255,255,0)");
+    x.fillStyle = g; x.fillRect(0, 0, w, h);
+    this.ch.forEach(p => {                                                          // chispitas
+      const a = Math.pow(Math.max(0, Math.sin(t / 1000 * p.v + p.f)), 3); if(a < .02) return;
+      const px = p.x * w, py = p.y * h, r = (3 + 6 * a) * k, gr = x.createRadialGradient(px, py, 0, px, py, r);
+      gr.addColorStop(0, "rgba(255,255,255," + a + ")"); gr.addColorStop(1, "rgba(255,255,255,0)");
+      x.fillStyle = gr; x.fillRect(px - r, py - r, r * 2, r * 2);
+      x.strokeStyle = "rgba(255,255,255," + a * .9 + ")"; x.lineWidth = k; x.beginPath();
+      x.moveTo(px - r * 1.6, py); x.lineTo(px + r * 1.6, py); x.moveTo(px, py - r * 1.6); x.lineTo(px, py + r * 1.6); x.stroke();
+    });
+    x.restore(); this.tex.needsUpdate = true;
+  },
+  remove(){ this.tex.dispose(); this.mat.dispose(); this.geo.dispose(); this.el.removeObject3D("mesh"); }
+});
+
 const RESETS = [];
 function crearAnclas(){
   CARTAS.forEach(c => {
@@ -555,6 +727,8 @@ function crearAnclas(){
         animation__in: "property: scale; from: 0.01 0.01 0.01; to: 1 1 1; dur: 800; easing: easeOutElastic; startEvents: aparece",
         animation__sx: "property: rotation; from: -5 -8 -2; to: 5 8 2; dir: alternate; dur: 2300; easing: easeInOutSine; loop: true",
         animation__dx: "property: position; from: -0.03 0 0; to: 0.03 0.02 0; dir: alternate; dur: 2900; easing: easeInOutSine; loop: true" });
+      let brillo = null;
+      if(c.esp){ brillo = mk("a-entity", { brilli: "", position: "0 0 0.01" }); img.appendChild(brillo); }   // cartas especiales: brilli brilli
       const poner = url => { const im = new Image();
         im.onload = () => {
           const rel = im.naturalHeight / im.naturalWidth;
@@ -567,6 +741,7 @@ function crearAnclas(){
             img.setAttribute("material", { shader: "flat", transparent: true, side: "double", src });
           }else{                                                        // recorte sin forma de carta (personaje suelto): queda como estaba
             const h = 1.1 * rel; img.setAttribute("height", h); sombra.setAttribute("height", h);
+            if(brillo) brillo.setAttribute("visible", false);          // sin forma de carta: sin destello
             img.setAttribute("material", { shader: "flat", transparent: true, side: "double", src: url });
           }
         };
@@ -593,6 +768,8 @@ const pant = id => { ["pCarga", "pError"].forEach(p => $(p).hidden = p !== id); 
 function error(m){ camCargando = false; $("errorTexto").textContent = m; pant("pError"); $("guia").classList.remove("on"); }
 function falloCamara(e){
   console.warn(e); const n = e && e.name;
+  if(ES_PC && (n === "NotAllowedError" || n === "PermissionDeniedError" || n === "NotFoundError" || n === "DevicesNotFoundError")){   // PC sin permiso o sin cámara: solo queda el botón de código
+    camFallo = true; try{ sessionStorage.setItem("arsweet_cam_bloq", "1"); }catch(x){} actualizarBotones(); }
   if(n === "NotAllowedError" || n === "PermissionDeniedError") error("No pudimos usar la cámara. Permite el acceso en el navegador y vuelve a intentarlo.");
   else if(!window.isSecureContext) error("La cámara solo funciona en una página segura (HTTPS).");
   else error("No pudimos iniciar la cámara ni leer las cartas. Revisa que targets.mind tenga las 22 imágenes (00 a 21).");
@@ -650,13 +827,103 @@ $("btnReset").onclick = reiniciarAR;
 $("btnReint").onclick = () => { camCargando = false; try{ sistema().stop(); }catch(e){} arrancar(); };
 $("btnErrAlb").onclick = () => { camCargando = false; irAlbum(); };
 
+/* ---------- Código por carta: copiar (teléfono) ---------- */
+function copiar(t){
+  const ok = () => avisar("Código copiado ✓");
+  const falla = () => { const a = document.createElement("textarea"); a.value = t; a.style.cssText = "position:fixed;opacity:0"; document.body.appendChild(a); a.select();
+    try{ document.execCommand("copy"); ok(); }catch(e){ avisar("Código: " + t); } a.remove(); };
+  try{ if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(t).then(ok, falla); return; } }catch(e){}
+  falla();
+}
+function ponCodigo(id, c){
+  const el = $(id); el.hidden = !(c && mostrarCodigos()); if(el.hidden) return;
+  el.querySelector("b").textContent = c.cod; el.querySelector("button").onclick = () => copiar(c.cod);
+}
+
+/* ---------- Solo PC: ventana para escribir el código ---------- */
+const URL_NGART = "https://ngartstudi.online", URL_VIKKI = "https://www.instagram.com/itsvikki22/";   // códigos secretos
+const msgCod = (t, err) => { $("cMsg").textContent = t; $("cMsg").classList.toggle("err", !!err); };
+const irA = url => { const w = window.open(url, "_blank"); if(w){ try{ w.opener = null; }catch(e){} } else location.href = url; };
+function abrirCodigo(){ $("cInp").value = ""; msgCod(""); $("pCod").hidden = false; setTimeout(() => $("cInp").focus(), 60); }
+function cerrarCodigo(){ $("pCod").hidden = true; }
+function probarCodigo(){
+  const raw = $("cInp").value.trim(), low = raw.toLowerCase();
+  if(low === "ngartstudio"){ cerrarCodigo(); irA(URL_NGART); return; }
+  if(low === "vikki"){ cerrarCodigo(); irA(URL_VIKKI); return; }
+  const cod = raw.replace(/[\s-]/g, "").toUpperCase();
+  if(!/^[0-9A-Z]{8}$/.test(cod)) return msgCod("El código tiene 8 letras y números.", true);
+  const c = CODIGOS[cod];
+  if(!c) return msgCod("Ese código no es válido.", true);
+  if(got.has(c.i)) return msgCod("Ya tienes #" + p2(c.num) + " · " + c.nombre + " ✓");
+  cerrarCodigo(); desbloquear(c);                                        // misma animación (y sombrero de Sugar Snake) que al escanear
+}
+$("btnCodigo").onclick = abrirCodigo;
+$("cX").onclick = cerrarCodigo; $("cOk").onclick = probarCodigo;
+$("pCod").addEventListener("click", e => { if(e.target === $("pCod")) cerrarCodigo(); });
+$("cInp").addEventListener("keydown", e => { if(e.key === "Enter") probarCodigo(); else if(e.key === "Escape") cerrarCodigo(); });
+$("cPegar").onclick = async () => {
+  try{ $("cInp").value = (await navigator.clipboard.readText()).trim().slice(0, 16); msgCod(""); $("cInp").focus(); }
+  catch(e){ msgCod("Pega con Ctrl+V.", true); $("cInp").focus(); }
+};
+
+/* ---------- Solo PC: modo debug (↑ ↑ ↓ ↓ ← → ← → N G, igual que en Sugar Snake) ---------- */
+const DBG_SEQ = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "KeyN", "KeyG"];
+const DBG_LBL = { ArrowUp: "↑", ArrowDown: "↓", ArrowLeft: "←", ArrowRight: "→", KeyN: "N", KeyG: "G" };
+let dbgPos = 0, dbgTimer = 0;
+const dbgPermitido = () => ES_PC && !$("alb").hidden && ["desb", "vis", "fin", "pCod", "pResetAlb", "ssRec", "pCarga", "pError"].every(id => $(id).hidden);
+function dbgMostrar(){
+  const el = $("dbgkeys"); clearTimeout(dbgTimer);
+  if(dbgPos < 2){ el.classList.remove("on"); el.innerHTML = ""; return; }
+  el.innerHTML = DBG_SEQ.slice(0, dbgPos).map((c, i, a) => `<div class="kcap${i === a.length - 1 ? " last" : ""}"><i>${DBG_LBL[c]}</i></div>`).join("");
+  el.classList.add("on");
+  dbgTimer = setTimeout(() => { dbgPos = 0; dbgMostrar(); }, 3000);       // se borra si te equivocas o pasan 3 s
+}
+function dbgFeed(code){
+  if(!dbgPermitido()){ if(dbgPos){ dbgPos = 0; dbgMostrar(); } return; }
+  if(code === DBG_SEQ[dbgPos]){ dbgPos++; if(dbgPos === DBG_SEQ.length){ dbgPos = 0; dbgMostrar(); alternarDebug(); return; } }
+  else if(dbgPos === 2 && code === "ArrowUp") dbgPos = 2;
+  else dbgPos = code === DBG_SEQ[0] ? 1 : 0;
+  dbgMostrar();
+}
+function actualizarDebug(){ $("dbgTag").hidden = !dbgOn; $("demo").hidden = !(demo || dbgOn); }
+function alternarDebug(){
+  dbgOn = !dbgOn; try{ sessionStorage.setItem("arsweet_debug", dbgOn ? "1" : "0"); }catch(e){}
+  actualizarDebug(); avisar(dbgOn ? "Modo debug activado" : "Modo debug desactivado");
+  try{ audio(); const t = ac.currentTime; [523, 659, 784].forEach((fq, k) => tono(fq, t + k * .08, .25, .15, "triangle")); }catch(e){}
+}
+addEventListener("keydown", e => { if(ES_PC && !e.repeat) dbgFeed(e.code); });
+const repintarTodo = () => { CARTAS.forEach(c => pintaSlot(c)); contadores(); };
+$("dTodas").onclick = () => {        // todas las cartas de golpe (y los sombreros de Sugar Snake, para probar la conexión)
+  CARTAS.forEach(c => got.add(c.i)); guardar(); repintarTodo();
+  Object.values(SS_RECOMPENSAS).forEach(r => ssGuardar(r.id));
+  avisar("Todas las cartas ✓ + sombreros de Sugar Snake");
+};
+$("dSim").onclick = () => { const c = CARTAS.find(x => !got.has(x.i)); if(!c) return avisar("¡Ya tienes todas!"); desbloquear(c); };
+$("dRes").onclick = () => { got.clear(); guardar(); try{ localStorage.removeItem(SS_KEY); }catch(e){} repintarTodo(); avisar("Álbum y Sugar Snake reiniciados"); };
+$("dCasi").onclick = () => { CARTAS.slice(0, TOTAL - 1).forEach(c => got.add(c.i)); guardar(); repintarTodo(); avisar("Falta 1: toca 🎲 Simular"); };
+/* Botones de la barra de abajo:
+   - PC: Scan y Código salen por defecto; si la cámara está bloqueada, no hay cámara o falló el permiso, queda solo el de Código.
+   - Teléfono: solo Scan (el botón de Código no existe). */
+let camPerm = false, camSin = false, camFallo = false;
+try{ camFallo = ES_PC && sessionStorage.getItem("arsweet_cam_bloq") === "1"; }catch(e){}
+function actualizarBotones(){
+  $("btnCodigo").hidden = !ES_PC;
+  $("btnScan").hidden = ES_PC && (camPerm || camSin || camFallo);
+}
+if(ES_PC){
+  try{ navigator.permissions.query({ name: "camera" }).then(r => {
+    const act = () => { camPerm = r.state === "denied"; if(r.state !== "denied"){ camFallo = false; try{ sessionStorage.removeItem("arsweet_cam_bloq"); }catch(e){} } actualizarBotones(); };
+    act(); r.onchange = act;                                     // si luego das permiso en el navegador, el botón Scan vuelve solo
+  }).catch(() => {}); }catch(e){}
+  try{ navigator.mediaDevices.enumerateDevices().then(l => { camSin = !l.some(d => d.kind === "videoinput"); actualizarBotones(); }).catch(() => {}); }catch(e){}
+}
+actualizarBotones();
+actualizarDebug();
+
 /* ---------- Inicio ---------- */
 pintaLibro();
 if(demo){
-  $("demo").hidden = false;
-  $("dSim").onclick = () => { const c = CARTAS.find(x => !got.has(x.i)); if(!c) return avisar("¡Ya tienes todas!"); $("alb").hidden = true; desbloquear(c); };
-  $("dRes").onclick = () => { got.clear(); guardar(); CARTAS.forEach(c => pintaSlot(c)); contadores(); };
-  $("dCasi").onclick = () => { CARTAS.slice(0, TOTAL - 1).forEach(c => got.add(c.i)); guardar(); CARTAS.forEach(c => pintaSlot(c)); contadores(); avisar("Falta 1: toca 🎲 Simular"); };
+  /* ?demo=1: sin cámara; los botones de prueba salen siempre */
 }else{
   const iniciar = () => crearAnclas();
   escena.hasLoaded ? iniciar() : escena.addEventListener("loaded", iniciar);
