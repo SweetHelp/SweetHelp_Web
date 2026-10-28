@@ -36,8 +36,7 @@
   .menudesplegable2 .dropdown img,.menudesplegable2 img{width:54px!important;height:54px!important;object-fit:contain}
   .sh-pinky-btn{right:14px!important;bottom:14px!important}
   .sh-pinky-btn img{width:52px!important;height:52px!important}
-  .sh-pinky-btn.sh-cartas-btn{right:14px!important}
-  body.sh-tiene-cartas #shPinkyBtn{right:76px!important}
+  .sh-pinky-btn.sh-cartas-btn{right:auto!important;left:14px!important}
   .sh-faq{right:14px!important;bottom:78px!important;width:calc(100vw - 28px)!important;max-width:340px!important;max-height:65vh!important}
 
   /* ---------- FORMULARIOS (style.css / style2.css tenían ancho fijo de 400px y alto fijo de 40px en los textos) ---------- */
