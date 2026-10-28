@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styleproductos.css">
+    <style>
+/* Menú y Pinky de Sweet Help */
+.sh-menu{position:fixed;top:16px;right:24px;z-index:10000;display:flex;align-items:center}
+        .sh-pill{display:flex;align-items:center;gap:32px;list-style:none;margin:0 -50px 0 0;padding:0 70px 0 32px;height:60px;
+            position:relative;border-radius:999px;pointer-events:none;opacity:0;
+            clip-path:inset(-300px -60px -300px 100%);
+            transition:clip-path .55s cubic-bezier(.65,0,.35,1),opacity .35s ease}
+        .sh-pill.open{pointer-events:auto;opacity:1;clip-path:inset(-300px -60px -300px -60px)}
+        .sh-pill::before{content:'';position:absolute;inset:0;z-index:-1;background:#fff;border-radius:999px;
+            -webkit-mask:radial-gradient(circle 49px at calc(100% - 5px) 50%,transparent 48px,#000 49px);
+            mask:radial-gradient(circle 49px at calc(100% - 5px) 50%,transparent 48px,#000 49px)}
+        .sh-pill>li{opacity:0;transform:translateX(70px);transition:transform .25s ease,opacity .2s ease}
+        .sh-pill.open>li{opacity:1;transform:none;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .35s ease}
+        .sh-pill.open>li:nth-child(7){transition-delay:.10s}
+        .sh-pill.open>li:nth-child(6){transition-delay:.16s}
+        .sh-pill.open>li:nth-child(5){transition-delay:.22s}
+        .sh-pill.open>li:nth-child(4){transition-delay:.28s}
+        .sh-pill.open>li:nth-child(3){transition-delay:.34s}
+        .sh-pill.open>li:nth-child(2){transition-delay:.40s}
+        .sh-pill.open>li:nth-child(1){transition-delay:.46s}
+        .sh-pill a{display:flex;align-items:center}
+        .sh-pill img{height:40px;width:auto;transition:transform .2s ease}
+        .sh-pill a:hover img{transform:scale(1.15)}
+        .sh-sep{width:3px;height:42px;background:#bd5c73;border-radius:2px}
+        .sh-dd{position:relative}
+        .sh-sub{display:none;position:absolute;top:52px;left:-40px;list-style:none;margin:0;padding:6px;background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.2);white-space:nowrap}
+        .sh-dd:hover .sh-sub{display:block}
+        .sh-sub a{padding:8px 16px;color:#bd5c73;font-weight:700;text-decoration:none;border-radius:10px}
+        .sh-sub a:hover{background:#ffe0e1}
+        .sh-hamb{position:relative;z-index:2;width:90px;height:90px;border-radius:50%;border:0;padding:0;background:#fff;cursor:pointer;
+            line-height:0;transition:transform .2s ease}
+        .sh-hamb:hover{transform:scale(1.06)}
+        .sh-hamb img{width:100%;height:100%;display:block}
+
+.sh-pinky-btn{position:fixed;right:28px;bottom:20px;z-index:10000;background:none;border:0;padding:0;cursor:pointer}
+        .sh-pinky-btn img{width:64px;height:64px;display:block;position:relative;z-index:1}
+        .sh-ripple{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:22%;border:4px solid #ff9195;background:rgba(255,145,149,.35);
+            pointer-events:none;opacity:0;animation:shRipple 2.4s ease-out infinite}
+        .sh-ripple:nth-of-type(2){animation-delay:.8s}
+        .sh-ripple:nth-of-type(3){animation-delay:1.6s}
+        @keyframes shRipple{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.4);opacity:0}}
+        .sh-faq{position:fixed;right:28px;bottom:96px;width:310px;max-width:calc(100vw - 56px);max-height:60vh;overflow:auto;
+            background:#fff;border:3px solid #ff9195;border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:10000;display:none}
+        .sh-faq.open{display:block}
+        .sh-faq-head{display:flex;align-items:center;gap:10px;background:#ff9195;color:#fff;padding:10px 14px;font-weight:800}
+        .sh-faq-head img{width:44px;height:44px}
+        .sh-faq details{padding:10px 14px;border-bottom:1px solid #ffe0e1;color:#864f02;font-size:14px}
+        .sh-faq summary{cursor:pointer;font-weight:700;color:#c0607a}
+        .sh-faq p{margin:8px 0 0}
+
+/* Carrito (icono fijo debajo del menú) */
+.sh-cart-wrap{position:fixed;top:124px;right:33px;z-index:10000}
+.sh-ibtn{position:relative;background:none;border:0;padding:0;cursor:pointer;line-height:0}
+.sh-ibtn img{width:64px;height:64px}
+
+/* Perfil (arriba a la izquierda) */
+.sh-perfil{position:fixed;top:8px;left:8px;z-index:10000}
+.sh-perfil-btn{background:none;border:0;padding:0;cursor:pointer;line-height:0}
+.sh-perfil-btn img{width:84px;height:84px;display:block}
+.sh-perfil-menu{display:none;list-style:none;margin:6px 0 0;padding:6px;background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.sh-perfil-menu.open{display:block}
+.sh-perfil-menu a{display:block;padding:8px 16px;color:#bd5c73;font-weight:700;text-decoration:none;border-radius:10px;font-family:inherit}
+.sh-perfil-menu a:hover{background:#ffe0e1}
+
+/* ===== Generador de targets.mind (estilo Sweet Help) ===== */
+.mind-wrap{max-width:980px;margin:0 auto;padding:40px 18px 20px;text-align:left}
+.mind-titulo{text-align:center;margin-bottom:10px}
+.mind-titulo .section-class h2,.mind-titulo h2{color:#833c4a;font-size:clamp(34px,6vw,56px);line-height:1.1;margin:0 0 8px;overflow-wrap:anywhere}
+.mind-titulo p{color:#833c4a;font-size:16px;margin:0}
+.mind-eyebrow{display:inline-block;background:#ff9195;color:#fff;font-weight:800;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+.mind-panel{background:#fff;border:4px solid #ff9195;border-radius:30px;padding:24px;margin:20px 0;box-shadow:0 10px 20px rgba(255,145,149,.35);color:#833c4a}
+.mind-panel h3{margin:0 0 6px;font-size:22px;color:#833c4a}
+.mind-hint{color:#864f02;font-size:14px;margin:0 0 16px}
+.mind-drop{border:3px dashed #ff9195;border-radius:30px;background:#fff5f5;padding:30px 16px;text-align:center;cursor:pointer;transition:transform .3s ease,background .3s ease}
+.mind-drop:hover{transform:translateY(-5px)}
+.mind-drop.drag{background:#ffe0e1;border-color:#833c4a;transform:scale(.99)}
+.mind-drop strong{display:block;font-size:18px;color:#833c4a}
+.mind-drop span{display:block;color:#864f02;font-size:14px;margin-top:4px}
+.mind-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.mind-btn{background:#fff;border:2px solid #ff9195;border-radius:50px;padding:12px 22px;color:#ff9195;font-size:16px;font-weight:600;cursor:pointer;transition:transform .3s ease,background .3s ease,color .3s ease}
+.mind-btn:hover:not(:disabled){background:#ff9195;color:#fff;transform:translateY(-5px)}
+.mind-btn.primary{background:#ff9195;color:#fff}
+.mind-btn.primary:hover:not(:disabled){background:#833c4a;border-color:#833c4a}
+.mind-btn:disabled{opacity:.45;cursor:not-allowed}
+.mind-small{font-size:13px;color:#864f02}
+.mind-status{margin-top:16px;padding:14px 16px;background:#fff0f0;border-radius:20px;color:#833c4a;white-space:pre-wrap}
+.mind-progress{height:28px;position:relative;border-radius:999px;margin-top:14px;border:2px solid #ff9195;background:#ffe0e1;overflow:hidden}
+.mind-progress #bar{height:100%;width:0;background:#ff9195;border-radius:999px;transition:width .2s}
+.mind-progress #pct{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:14px;color:#833c4a;text-shadow:0 0 4px #fff,0 0 4px #fff}
+.mind-progress.working #bar{background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.4) 0 10px,transparent 10px 20px);background-size:28px 28px;animation:mindRayas 1s linear infinite}
+@keyframes mindRayas{to{background-position:28px 0}}
+#eta{margin-top:6px;text-align:center}
+.mind-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:14px;margin-top:16px}
+.mind-card{border:3px solid #ff9195;border-radius:22px;overflow:hidden;background:#fff;min-width:0;transition:transform .3s ease}
+.mind-card:hover{transform:translateY(-6px)}
+.mind-card img{width:100%;height:120px;object-fit:contain;background:#fff5f5;display:block}
+.mind-card .meta{padding:9px 10px}
+.mind-card .num{font-size:11px;color:#bc5d75;font-weight:800}
+.mind-card .name{font-size:12px;overflow-wrap:anywhere;font-weight:600;color:#833c4a}
+.mind-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.mind-step{padding:16px;border:3px solid #ff9195;border-radius:22px;background:#fff5f5}
+.mind-step b{display:block;margin-bottom:4px;color:#833c4a}
+.mind-notice{border-left:8px solid #ff9195;background:#fff0f0;padding:14px 18px;border-radius:0 22px 22px 0;font-size:14px;color:#833c4a;margin:20px 0}
+.mind-notice a{color:#bc5d75}
+@media (max-width:768px){
+  .mind-wrap{padding:24px 6px 10px}
+  .mind-panel{padding:18px 14px;border-width:3px}
+  .mind-actions .mind-btn{width:100%}
+  .mind-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+}
+    </style>
+    <title>Generador Mind Sh</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+<header>
+<main class="mind-wrap">
+
+    <section class="mind-titulo">
+        <span class="mind-eyebrow">ArSweetCards · Herramienta</span>
+        <h2>GENERADOR DE TARGETS.MIND</h2>
+        <p>Prepara tus cartas y compílalas para MindAR desde el navegador.</p>
+    </section>
+
+    <section class="mind-panel">
+        <h3>1. Añade las imágenes</h3>
+        <p class="mind-hint">Puedes seleccionar el ZIP corregido o las imágenes PNG/JPG directamente. El orden de selección se conserva cuando el navegador lo permite; con el ZIP usamos el orden numerado.</p>
+        <div class="mind-drop" id="drop"><strong>Suelta aquí tu ZIP o tus imágenes</strong><span>o haz clic para buscar archivos en tu computador</span><input id="files" type="file" accept=".zip,image/png,image/jpeg,image/webp" multiple hidden></div>
+        <div class="mind-actions">
+            <button class="mind-btn" id="choose">Elegir archivos</button>
+            <button class="mind-btn" id="clear">Limpiar selección</button>
+            <button class="mind-btn primary" id="compile" disabled>Generar targets.mind</button>
+            <button class="mind-btn" id="dl" disabled>⬇ Descargar targets.mind</button>
+        </div>
+        <div class="mind-small" id="lib" style="margin-top:14px">Cargando compilador de MindAR…</div>
+        <div class="mind-status" id="status" role="status">Todavía no has seleccionado archivos.</div>
+        <div class="mind-progress" id="progWrap"><div id="bar"></div><span id="pct">0%</span></div>
+        <div class="mind-small" id="eta"></div>
+        <div class="mind-grid" id="preview"></div>
+    </section>
+
+    <section class="mind-panel">
+        <h3>2. Cómo usarlo</h3>
+        <div class="mind-steps">
+            <div class="mind-step"><b>① Selecciona</b><span class="mind-small">Carga el ZIP ArSweetCards corregido o tus imágenes.</span></div>
+            <div class="mind-step"><b>② Revisa</b><span class="mind-small">Comprueba las miniaturas y el orden de los objetivos.</span></div>
+            <div class="mind-step"><b>③ Compila</b><span class="mind-small">Pulsa “Generar targets.mind” y espera a que termine.</span></div>
+            <div class="mind-step"><b>④ Descarga</b><span class="mind-small">Se descargará el archivo binario real que usa MindAR.</span></div>
+        </div>
+    </section>
+
+    <div class="mind-notice"><b>Importante:</b> esta página usa el compilador oficial de MindAR cargado desde un CDN, por lo que necesita conexión a internet. Las imágenes se procesan en tu navegador; no se suben a un servidor propio. Se carga MindAR desde el repositorio oficial hiukim/mind-ar-js. Si el compilador no carga, prueba Chrome/Edge y vuelve a abrir este archivo. También puedes usar el compilador oficial: <a href="https://hiukim.github.io/mind-ar-js-doc/tools/compile/" target="_blank" rel="noopener">hiukim.github.io/mind-ar-js-doc/tools/compile</a></div>
+
+</main>
+<div class="linead1"></div>
+
+<footer class="footer">
+    <ul class="pietext">
+        <li class="pi">SweetHelpCorp©  <b>|</b>  Derechos Reservados</li>
+    </ul>
+    <ul class="iconospie">
+        <li class="icopie"><a href=""><img src="iconolinktree.svg" alt="iconolinktree"></a></li>
+        <li class="icopie"><a href=""><img src="iconoig.svg" alt="iconoig"></a></li>
+        <li class="icopie"><a href=""><img src="iconoappsh.svg" alt="iconoappsh"></a></li>
+    </ul>
+</footer>
+</header>
+
+<script src="cursor.js"></script>
+<!-- MENÚ, PINKY, CARRITO Y PERFIL -->
+<script src="cargando.js"></script>
+<div class="sh-menu">
+    <ul class="sh-pill open" id="shPill">
+        <li><a href="index5.html"><img src="inicio.svg" alt="Inicio"></a></li>
+        <li class="sh-sep"></li>
+        <li><a href="productos.html"><img src="productosicono.svg" alt="Productos"></a></li>
+        <li class="sh-sep"></li>
+        <li class="sh-dd"><a href="#"><img src="infosh.svg" alt="Sobre Nosotros"></a>
+            <ul class="sh-sub">
+                <li><a href="informacion.html">Informacion</a></li>
+                <li><a href="equipo.html">Equipo</a></li>
+            </ul>
+        </li>
+        <li class="sh-sep"></li>
+        <li><a href="sigueelpostre.html"><img src="play.svg" alt="iconsnake"></a></li>
+    </ul>
+    <button class="sh-hamb" id="shMenuBtn" aria-label="Menú"><img src="menuicon.svg" alt="menu"></button>
+</div>
+
+<div class="sh-faq" id="shFaq">
+    <div class="sh-faq-head"><img src="pinky.svg" alt="Pinky"><span>¡Hola! Soy Pinky, ¿en qué te ayudo?</span></div>
+    <details><summary>¿Qué es Sweet Help?</summary><p>Es un emprendimiento social de Santa Marta que vende postres artesanales para combatir el hambre.</p></details>
+    <details><summary>¿Cómo ayuda mi compra?</summary><p>Por cada postre que compras destinamos el 10% para entregar kits alimentarios a familias vulnerables.</p></details>
+    <details><summary>¿Qué es el termómetro de donaciones?</summary><p>Muestra cuántos kits alimentarios hemos entregado este mes frente a la meta. Pulsa "Descubre tu avance" para verlo.</p></details>
+    <details><summary>¿Cómo compro un producto?</summary><p>Entra a Productos, elige tu postre y se agregará al carrito. Allí podrás ver tus compras y pulsar "Pagar ahora".</p></details>
+    <details><summary>¿Mi carrito se pierde si cambio de página?</summary><p>No, tu carrito se mantiene aunque abras otra pestaña o página de Sweet Help.</p></details>
+    <details><summary>¿Dónde conozco más del equipo?</summary><p>En el menú, dentro de Sobre Nosotros, encontrarás Información y Equipo.</p></details>
+</div>
+<button class="sh-pinky-btn" id="shPinkyBtn" aria-label="Preguntas frecuentes"><span class="sh-ripple"></span><span class="sh-ripple"></span><span class="sh-ripple"></span><img src="pinky.svg" alt="Pinky"></button>
+<div class="sh-cart-wrap">
+    <button class="sh-ibtn" id="shCartBtn" aria-label="Carrito"><img src="carrito.svg" alt="carrito"><span class="sh-badge">0</span></button>
+</div>
+<div class="sh-perfil">
+    <button class="sh-perfil-btn" id="shPerfilBtn" aria-label="Perfil"><img src="iconoperfil.png" alt="iconperfil"></button>
+    <ul class="sh-perfil-menu" id="shPerfilMenu"><li><a href="">Editar</a></li><li><a href="iniciaroregistrarse.html">Salir</a></li></ul>
+</div>
+<script>
+(function () {
+    const $ = id => document.getElementById(id);
+    $('shMenuBtn').onclick = () => $('shPill').classList.toggle('open');
+    $('shPinkyBtn').onclick = e => { e.stopPropagation(); $('shFaq').classList.toggle('open'); };
+    $('shPerfilBtn').onclick = e => { e.stopPropagation(); $('shPerfilMenu').classList.toggle('open'); };
+    document.addEventListener('click', e => {
+        if (!e.target.closest('#shFaq')) $('shFaq').classList.remove('open');
+        if (!e.target.closest('.sh-perfil')) $('shPerfilMenu').classList.remove('open');
+    });
+})();
+</script>
+
+<!-- ===== Compilador de MindAR ===== -->
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script>
+const expected=['00-maracuya-tropical','01-mora-silvestre','02-fresa-tentacion','03-choco-milo','04-choco-fresa','05-choco-mix','06-pinky-lisa','07-pinky-grito','08-pinky-noche','09-pinky-creacion','10-pinky-vitruvio','11-pinky-chambeadora','12-kit','13-postre','14-pinky-arroz'];
+const $=id=>document.getElementById(id);
+let chosen=[], libPromise=null;
+const decir=s=>{$('status').textContent=s};
+const libMsg=(s,ok)=>{const e=$('lib');e.textContent=s;e.style.color=ok===true?'#267f61':ok===false?'#b3261e':''};
+
+/* ---------- Carga del compilador de MindAR (con varios CDN de respaldo) ---------- */
+function loadClassic(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('no se pudo descargar'));document.head.appendChild(s)})}
+function findCompiler(mod){
+  const M=window.MINDAR;
+  return (mod&&mod.Compiler)||(M&&M.IMAGE&&M.IMAGE.Compiler)||(M&&M.Compiler)||null;
+}
+function getCompiler(){
+  if(libPromise)return libPromise;
+  libPromise=(async()=>{
+    const urls=[
+      'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js',
+      'https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image.prod.js',
+      'https://unpkg.com/mind-ar@1.2.5/dist/mindar-image.prod.js'
+    ];
+    const errs=[];
+    for(const u of urls){
+      try{
+        let mod=null;
+        try{mod=await import(u)}                       // versiones nuevas: archivo ES module (carga sus trozos solo)
+        catch(e1){await loadClassic(u)}                // versiones viejas: script clásico
+        const C=findCompiler(mod);
+        if(C)return C;
+        errs.push(u+' → cargó pero no expone Compiler');
+      }catch(e){errs.push(u+' → '+e.message)}
+    }
+    throw new Error('No se pudo cargar MindAR desde ningún CDN.\n'+errs.join('\n'));
+  })();
+  libPromise.catch(()=>{libPromise=null});
+  return libPromise;
+}
+libMsg('Cargando compilador de MindAR…');
+getCompiler().then(()=>libMsg('Compilador de MindAR listo ✓',true)).catch(e=>{console.error(e);libMsg('✗ '+e.message.split('\n')[0]+' (revisa internet o desactiva bloqueadores y recarga)',false)});
+
+/* ---------- Selección de archivos ---------- */
+$('choose').onclick=()=>$('files').click();
+$('drop').onclick=e=>{if(e.target.id!=='files')$('files').click()};
+$('drop').ondragover=e=>{e.preventDefault();$('drop').classList.add('drag')};
+$('drop').ondragleave=()=>$('drop').classList.remove('drag');
+$('drop').ondrop=e=>{e.preventDefault();$('drop').classList.remove('drag');handleFiles([...e.dataTransfer.files])};
+$('files').onchange=e=>handleFiles([...e.target.files]);
+$('clear').onclick=()=>{chosen=[];ultimoBlob=null;$('dl').disabled=true;$('preview').innerHTML='';$('files').value='';$('compile').disabled=true;setProg(0);$('eta').textContent='';decir('Selección limpiada.')};
+
+function natural(a,b){return a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:'base'})}
+function mime(n){return /\.jpe?g$/i.test(n)?'image/jpeg':/\.webp$/i.test(n)?'image/webp':'image/png'}
+const esImagen=n=>/\.(png|jpe?g|webp)$/i.test(n)&&!/(^|\/)(__MACOSX|\._)/.test(n);
+
+async function handleFiles(files){
+  try{
+    let images=[];
+    for(const f of files){
+      if(/\.zip$/i.test(f.name)){
+        if(!window.JSZip)throw new Error('JSZip no cargó (revisa internet). Descomprime el ZIP y selecciona las imágenes directamente.');
+        const zip=await JSZip.loadAsync(f);
+        const entries=Object.values(zip.files).filter(x=>!x.dir&&esImagen(x.name));
+        for(const entry of entries){
+          const blob=await entry.async('blob');
+          images.push(new File([blob],entry.name.split('/').pop(),{type:mime(entry.name)}));
+        }
+      }else if(f.type.startsWith('image/')||esImagen(f.name))images.push(f);
+    }
+    if(!images.length){decir('No encontré imágenes válidas. Selecciona un ZIP o PNG/JPG.');return}
+    images.sort(natural);
+    chosen=images;render();$('compile').disabled=false;
+    decir(revisarOrden());
+  }catch(err){console.error(err);decir('No pude leer el archivo: '+err.message)}
+}
+function revisarOrden(){
+  const n=chosen.length;
+  if(n===expected.length){
+    const mal=chosen.findIndex((f,i)=>f.name.replace(/\.[^.]+$/,'').toLowerCase()!==expected[i]);
+    if(mal===-1)return `Listo: 15 imágenes en el orden correcto ✓. Pulsa “Generar targets.mind”.`;
+    return `Listo: 15 imágenes, pero el objetivo ${mal} es “${chosen[mal].name}” y se esperaba “${expected[mal]}”. Si el orden no es el que quieres, corrígelo antes de compilar (el número del objetivo es el targetIndex del HTML).`;
+  }
+  return `Listo: ${n} imagen(es), ordenadas por nombre. Revisa que el orden de las miniaturas sea el que quieres: el número de OBJETIVO es el targetIndex del HTML.`;
+}
+function render(){
+  const p=$('preview');p.innerHTML='';
+  chosen.forEach((f,i)=>{
+    const url=URL.createObjectURL(f);
+    const d=document.createElement('div');d.className='mind-card';
+    d.innerHTML=`<img alt="Vista previa" src="${url}"><div class="meta"><div class="num">OBJETIVO ${i}</div><div class="name"></div></div>`;
+    d.querySelector('.name').textContent=f.name;
+    p.appendChild(d);
+  });
+}
+function loadImage(file){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    img.onload=()=>resolve(img);
+    img.onerror=()=>reject(new Error('No se pudo abrir '+file.name));
+    img.src=URL.createObjectURL(file);
+  });
+}
+function setProg(p){
+  p=Math.max(0,Math.min(100,p));
+  const vivo=$('progWrap').classList.contains('working');
+  $('bar').style.width=(vivo&&p<4?4:p)+'%';
+  $('pct').textContent=Math.round(p)+'%';
+}
+const mmss=ms=>{const t=Math.max(0,Math.round(ms/1000));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
+let ultimoBlob=null;
+function descargar(blob){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='targets.mind';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+$('dl').onclick=()=>{if(ultimoBlob)descargar(ultimoBlob)};
+const respirar=()=>new Promise(r=>setTimeout(r,30));
+
+/* ---------- Compilar y descargar ---------- */
+$('compile').onclick=async()=>{
+  if(!chosen.length)return;
+  const btn=$('compile');btn.disabled=true;
+  $('progWrap').classList.add('working');setProg(0);
+  const t0=Date.now();let ultimo=0;
+  const reloj=setInterval(()=>{
+    const el=Date.now()-t0;
+    $('eta').textContent='Tiempo transcurrido: '+mmss(el)+(ultimo>3?' · faltan aprox. '+mmss(el/(ultimo/100)-el):'');
+  },1000);
+  try{
+    decir('Cargando compilador de MindAR…');
+    const Compiler=await getCompiler();
+    const images=[];
+    for(let i=0;i<chosen.length;i++){
+      images.push(await loadImage(chosen[i]));
+      decir(`Preparando imagen ${i+1} de ${chosen.length}…`);
+    }
+    const compiler=new Compiler();
+    decir('Compilando objetivos. Puede tardar varios minutos: no cierres ni cambies de pestaña.');
+    await respirar();
+    await compiler.compileImageTargets(images,progress=>{
+      ultimo=progress;setProg(progress);
+      decir('Compilando objetivos… '+progress.toFixed(1)+'%\n(no cierres ni cambies de pestaña)');
+    });
+    const data=await compiler.exportData();
+    const blob=new Blob([data],{type:'application/octet-stream'});
+    if(blob.size<1000)throw new Error('El archivo generado salió vacío o demasiado pequeño ('+blob.size+' bytes).');
+    ultimoBlob=blob;$('dl').disabled=false;
+    descargar(blob);
+    setProg(100);
+    decir(`¡Listo! Se descargó targets.mind; si no ves la descarga, pulsa “Descargar targets.mind” (${(blob.size/1024).toFixed(0)} KB) con ${chosen.length} objetivos. Ponlo junto a arsweetcards.html y verifica que los targetIndex coincidan con el orden de las miniaturas.`);
+  }catch(err){
+    console.error(err);
+    decir('No se pudo compilar: '+err.message+'\nPrueba con Chrome o Edge actualizado y buena conexión; si el navegador se queda sin memoria, compila menos imágenes por intento.');
+  }finally{clearInterval(reloj);$('progWrap').classList.remove('working');btn.disabled=false}
+};
+</script>
+<script src="carrito.js"></script>
+<script src="responsive.js"></script>
+</body>
+</html>
