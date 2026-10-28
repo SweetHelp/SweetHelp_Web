@@ -55,7 +55,7 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
 .top{flex:none;width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 14px;gap:8px}
 .top a{color:#fff;text-decoration:none;background:rgba(42,20,8,.55);padding:8px 16px;border-radius:999px}
 .top h1{margin:0;font-family:var(--titulo);font-weight:400;font-size:clamp(1.6rem,6vw,2.4rem);color:var(--marron)}
-.escena{flex:1;width:100%;display:flex;align-items:center;justify-content:center;min-height:0}
+.escena{flex:1;width:100%;display:flex;align-items:center;justify-content:center;min-height:0;touch-action:pan-y}
 .vp{position:relative;width:calc(var(--pw)*2);height:var(--ph)}
 .mesa{position:absolute;left:0;top:0;width:calc(var(--pw)*2);height:100%;perspective:2600px;perspective-origin:50% 40%;transition:transform 1.1s cubic-bezier(.45,.05,.25,1),perspective-origin 1.1s cubic-bezier(.45,.05,.25,1)}
 @media (max-width:760px) and (orientation:portrait){:root{--pw:min(88vw,52vh)}.vp{width:var(--pw);clip-path:inset(-12% 0 -12% 0)}}
@@ -124,11 +124,26 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
 .vtip{color:var(--antojo);font-size:.85rem}
 .vnom{margin:0;font-family:var(--titulo);font-size:clamp(1.6rem,6vw,2.2rem);color:var(--marron)}
 .vdesc{margin:0;max-width:min(92vw,420px);background:var(--crema);border:5px solid var(--rosa);border-radius:22px;padding:10px 16px;font-size:1rem;line-height:1.3;color:var(--oscuro)}
-.flash{position:absolute;inset:0;background:#fff;pointer-events:none;animation:flash .7s ease-out forwards}
-@keyframes flash{to{opacity:0}}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.desb.bum .flash{animation:flash2 .9s ease-out}
+@keyframes flash2{0%{opacity:1}100%{opacity:0}}
+.onda{position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px;border-radius:50%;border:6px solid #fff;opacity:0;pointer-events:none}
+.desb.bum .onda{animation:onda 1s ease-out}
+@keyframes onda{0%{transform:scale(1);opacity:.95}100%{transform:scale(70);opacity:0}}
+.desb .rayos{opacity:0;transition:opacity .8s}.desb.bum .rayos{opacity:.5}
+.desb.bum .dt{animation:pop2 .7s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop2{0%{transform:scale(.6)}100%{transform:scale(1)}}
+.lockfx .cf{animation:lockGlow 1.9s ease-in-out forwards}
+@keyframes lockGlow{0%{filter:brightness(1) drop-shadow(0 0 0 rgba(255,225,130,0))}
+ 40%{filter:brightness(1.3) drop-shadow(0 0 26px rgba(255,225,130,.95))}
+ 70%{filter:brightness(1.6) drop-shadow(0 0 44px rgba(255,235,160,1));transform:scale(1.03)}
+ 78%{transform:scale(1.03) rotate(-3deg)}84%{transform:scale(1.03) rotate(3deg)}90%{transform:scale(1.03) rotate(-2deg)}
+ 100%{filter:brightness(2) drop-shadow(0 0 60px #fff);transform:scale(1.06)}}
+.revela{animation:boom .85s cubic-bezier(.2,1.4,.4,1)}
+@keyframes boom{0%{transform:scale(.15) rotate(-18deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
 .rayos{position:absolute;width:150vmax;height:150vmax;left:50%;top:50%;margin:-75vmax 0 0 -75vmax;opacity:.5;pointer-events:none;
   background:repeating-conic-gradient(rgba(255,215,230,.5) 0 8deg,transparent 8deg 24deg);animation:gira 14s linear infinite;-webkit-mask:radial-gradient(circle,#000 0,transparent 55%);mask:radial-gradient(circle,#000 0,transparent 55%)}
-.desb>*:not(.flash):not(.rayos){position:relative;z-index:2}
+.desb>*:not(.flash):not(.rayos):not(.onda){position:relative;z-index:2}
 .dt{margin:0;font-family:var(--titulo);font-size:clamp(2rem,8vw,3rem);color:#ffe0e8;animation:pop .7s cubic-bezier(.3,1.6,.5,1)}
 .dn{margin:0;font-size:1.2rem}
 .dbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
@@ -169,11 +184,11 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
 
 <!-- Desbloqueo -->
 <section class="desb" id="desb" hidden>
-  <div class="flash"></div><div class="rayos"></div>
-  <p class="dt">¡Carta desbloqueada!</p>
+  <div class="flash"></div><div class="onda"></div><div class="rayos"></div>
+  <p class="dt" id="dTit"></p>
   <div id="dCarta"></div>
   <p class="dn" id="dNom"></p>
-  <div class="dbtns"><button class="btn sec" id="dSeguir">Seguir cazando</button><button class="btn" id="dVer">Ver en el álbum</button></div>
+  <div class="dbtns" id="dBtns" hidden><button class="btn sec" id="dSeguir">Seguir cazando</button><button class="btn" id="dVer">Ver en el álbum</button></div>
 </section>
 <section class="vis" id="vis" hidden>
   <div id="vCarta"></div><p class="vnom" id="vNom"></p><p class="vdesc" id="vDesc"></p><small class="vtip" id="vTip">Arrastra o toca la carta para girarla</small>
@@ -252,6 +267,23 @@ function sonidoPagina(){
     s2.connect(lp); lp.connect(g2); g2.connect(ac.destination); s2.start(t + .72);
   }catch(e){}
 }
+function audio(){ ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if(ac.state === "suspended") ac.resume(); return ac; }
+function tono(f0, t, dur, vol, tipo, f1){
+  const o = ac.createOscillator(), g = ac.createGain(); o.type = tipo || "sine"; o.frequency.setValueAtTime(f0, t);
+  if(f1) o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + dur + .05);
+}
+function sonidoBrillo(){ try{ audio(); const t = ac.currentTime;                        // chispitas que suben mientras brilla el candado
+  for(let k = 0; k < 8; k++) tono(880 * Math.pow(1.19, k), t + k * .22, .35, .09, "triangle"); }catch(e){} }
+function sonidoBum(){ try{ audio(); const t = ac.currentTime;
+  tono(150, t, .6, .9, "sine", 35);                                                       // el "bum"
+  const n = Math.floor(ac.sampleRate * .4), b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0);
+  for(let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2);
+  const s = ac.createBufferSource(), lp = ac.createBiquadFilter(), g = ac.createGain(); s.buffer = b; lp.type = "lowpass"; lp.frequency.value = 900; g.gain.value = .5;
+  s.connect(lp); lp.connect(g); g.connect(ac.destination); s.start(t);
+  [1047, 1319, 1568, 2093].forEach((fq, k) => tono(fq, t + .18 + k * .09, .5, .14, "triangle"));   // campanitas
+}catch(e){} }
 let tToast;
 function avisar(t){ const x = $("toast"); x.textContent = t; x.classList.add("show"); clearTimeout(tToast); tToast = setTimeout(() => x.classList.remove("show"), 1900); }
 
@@ -313,7 +345,14 @@ const ir = d => {
 $("bI").onclick = e => { e.stopPropagation(); ir(-1); };
 $("bD").onclick = e => { e.stopPropagation(); ir(1); };   // las páginas solo se pasan tocando el borde
 
+let x0 = 0, arrastro = false;
+$("escena").addEventListener("pointerdown", e => { x0 = e.clientX; arrastro = false; });
+$("escena").addEventListener("pointerup", e => {                                   // en teléfono también se pasa deslizando el dedo
+  const dx = e.clientX - x0;
+  if(movil() && Math.abs(dx) > 50){ arrastro = true; ir(dx < 0 ? 1 : -1); }
+});
 $("escena").addEventListener("click", e => {
+  if(arrastro){ arrastro = false; return; }
   if(f === 0){ ir(1); return; }                                  // la tapa es el menú: tócala para abrir
   const s = e.target.closest(".slot[data-i]"); if(!s) return;
   const c = CARTAS[+s.dataset.i];
@@ -327,40 +366,47 @@ function irACarta(c){
 }
 
 /* ---------- Carta 3D (desbloqueo y visor) ---------- */
-const carta3d = c => `<div class="c3d"><div class="cf"><img src="cartasatras.svg" alt="Reverso"></div>` +
-  `<div class="cf cfr ${c.esp ? "esp" : ""}"><img src="${c.carta}" alt="${c.nombre}"></div></div>`;
+const carta3d = (c, bloq) => `<div class="c3d"><div class="cf"><img src="cartasatras.svg" alt="Reverso"></div>` +
+  `<div class="cf cfr ${c.esp && !bloq ? "esp" : ""}"><img src="${bloq ? "cardblock.svg" : c.carta}" alt="${c.nombre}"></div></div>`;
 let ultima = null;
+let tDesb = [];
 function desbloquear(c){
   got.add(c.i); guardar(); pintaSlot(c, true); contadores(); ultima = c;
-  $("dCarta").innerHTML = carta3d(c);
-  $("dNom").textContent = "#" + p2(c.num) + " · " + c.nombre + (c.esp ? " ✨" : "");
-  $("desb").hidden = false;
-  setTimeout(() => { const k = $("dCarta").firstChild; if(k) k.classList.add("vuelta"); }, 800);
-  if(navigator.vibrate) try{ navigator.vibrate([40, 40, 80]); }catch(e){}
+  const D = $("desb"); tDesb.forEach(clearTimeout); tDesb = [];
+  D.className = "desb"; D.hidden = false;
+  $("dTit").textContent = "¡Carta encontrada!"; $("dNom").textContent = ""; $("dBtns").hidden = true;
+  $("dCarta").innerHTML = '<div class="c3d lockfx"><div class="cf esp"><img src="cardblock.svg" alt="Carta bloqueada"></div></div>';   // 1) brilla el candado
+  sonidoBrillo();
+  tDesb.push(setTimeout(() => {                                                                                                      // 2) ¡bum! aparece la carta
+    D.classList.add("bum"); sonidoBum();
+    $("dTit").textContent = "¡Carta desbloqueada!";
+    $("dCarta").innerHTML = `<div class="c3d revela"><div class="cf ${c.esp ? "esp" : ""}"><img src="${c.carta}" alt="${c.nombre}"></div></div>`;
+    $("dNom").textContent = "#" + p2(c.num) + " · " + c.nombre + (c.esp ? " ✨" : "");
+    $("dBtns").hidden = false;
+    if(navigator.vibrate) try{ navigator.vibrate([60, 40, 120]); }catch(e){}
+  }, 1900));
 }
 $("dSeguir").onclick = () => { $("desb").hidden = true; };
 $("dVer").onclick = () => { $("desb").hidden = true; irAlbum(ultima); };
 function abrirVisor(c){
   const on = got.has(c.i);
-  $("vCarta").innerHTML = on ? carta3d(c) : '<div class="c3d vuelta"><div class="cf"></div><div class="cf cfr"><img src="cardblock.svg" alt="Carta bloqueada"></div></div>';
+  $("vCarta").innerHTML = carta3d(c, !on);
   const k = $("vCarta").firstChild;
-  $("vTip").hidden = !on;
-  if(on){
-    let ang = 0, tilt = 0;
-    const pon = () => { k.style.transform = `rotateX(${tilt}deg) rotateY(${ang}deg)`; };
-    k.style.touchAction = "none"; k.style.cursor = "grab";
-    let x0, y0, a0, mov = false, drag = false;
-    k.onpointerdown = e => { drag = true; mov = false; x0 = e.clientX; y0 = e.clientY; a0 = ang; k.style.transition = "none"; k.setPointerCapture(e.pointerId); };
-    k.onpointermove = e => { if(!drag) return;
-      const dx = e.clientX - x0, dy = e.clientY - y0;
-      if(Math.abs(dx) + Math.abs(dy) > 6) mov = true;
-      ang = a0 + dx * .7; tilt = Math.max(-25, Math.min(25, -dy * .25)); pon(); };
-    const suelta = () => { if(!drag) return; drag = false; k.style.transition = "";
-      ang = mov ? Math.round(ang / 180) * 180 : a0 + 180;      // soltar = queda de frente o de espalda; un toque la voltea
-      tilt = 0; pon(); };
-    k.onpointerup = suelta; k.onpointercancel = suelta;
-    setTimeout(() => { ang = 180; pon(); }, 30);
-  }
+  let ang = 0, tilt = 0;
+  const pon = () => { k.style.transform = `rotateX(${tilt}deg) rotateY(${ang}deg)`; };
+  k.style.touchAction = "none"; k.style.cursor = "grab";
+  let x0, y0, a0, mov = false, drag = false;
+  k.onpointerdown = e => { drag = true; mov = false; x0 = e.clientX; y0 = e.clientY; a0 = ang; k.style.transition = "none"; k.setPointerCapture(e.pointerId); };
+  k.onpointermove = e => { if(!drag) return;
+    const dx = e.clientX - x0, dy = e.clientY - y0;
+    if(Math.abs(dx) + Math.abs(dy) > 6) mov = true;
+    ang = a0 + dx * .7; tilt = Math.max(-25, Math.min(25, -dy * .25)); pon(); };
+  const suelta = () => { if(!drag) return; drag = false; k.style.transition = "";
+    ang = mov ? Math.round(ang / 180) * 180 : a0 + 180;      // soltar = de frente o de espalda; un toque la voltea
+    tilt = 0; pon(); };
+  k.onpointerup = suelta; k.onpointercancel = suelta;
+  setTimeout(() => { ang = 180; pon(); }, 30);
+  $("vTip").hidden = false;
   $("vNom").innerHTML = '<span class="vnum">#' + p2(c.num) + '</span> · ' + c.nombre + (on && c.esp ? " ✨" : "");
   $("vDesc").textContent = on ? c.desc : "🔒 Escanea esta carta con la cámara para desbloquearla.";
   $("vis").hidden = false;
@@ -392,7 +438,7 @@ function crearAnclas(){
     poner(c.ar);
     flota.appendChild(img); ancla.appendChild(sombra); ancla.appendChild(flota);
     ancla.addEventListener("targetFound", () => { $("guia").classList.remove("on"); img.emit("aparece");
-      if(got.has(c.i)) avisar("#" + p2(c.num) + " · " + c.nombre + " ✓ ya la tienes"); else desbloquear(c); });
+      if(got.has(c.i)) avisar("#" + p2(c.num) + " · " + c.nombre + " ✓ ya la tienes"); else if($("desb").hidden) desbloquear(c); });
     ancla.addEventListener("targetLost", () => { $("guia").classList.add("on"); });
     escena.appendChild(ancla);
   });
@@ -429,6 +475,7 @@ escena.addEventListener("arReady", () => { camOn = true; camCargando = false; pa
 escena.addEventListener("arError", e => falloCamara(e && e.detail ? e.detail : e));
 
 function irAR(){
+  try{ audio(); }catch(e){}                                  // el sonido se habilita con este toque
   $("alb").hidden = true; $("arbar").hidden = false;
   if(demo) return;
   if(camOn){ try{ sistema().unpause(); }catch(e){} $("guia").classList.add("on"); mostrarVideo(); }
@@ -437,7 +484,7 @@ function irAR(){
 function irAlbum(c){
   $("alb").hidden = false; $("arbar").hidden = true; $("guia").classList.remove("on"); pant(null);
   try{ if(camOn) sistema().pause(); }catch(e){}
-  if(c) irACarta(c);
+  if(c){ irACarta(c); setTimeout(() => pintaSlot(c, true), 800); }
 }
 $("btnScan").onclick = irAR;
 $("btnAlbum").onclick = () => irAlbum();
