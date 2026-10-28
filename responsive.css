@@ -1,17 +1,28 @@
-/* ===== SweetHelp · Adaptación a teléfono =====
-   Todo va dentro de @media (max-width:768px): en computador no cambia nada de lo que hiciste. */
+/* ===== SweetHelp · Adaptación a teléfono (v2) =====
+   Todo va dentro de @media (max-width:768px): en computador no cambia nada de lo que hiciste.
+   Debe cargarse DESPUÉS de los demás CSS de la página (así ya está en los HTML). */
 
 @media (max-width:768px){
-  body{overflow-x:hidden;-webkit-text-size-adjust:100%}
+  html{overflow-x:hidden;overflow-x:clip}
+  body{overflow-x:hidden;overflow-x:clip;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   header{padding-top:90px}
-  html{overflow-x:hidden}
+
+  /* Toques más rápidos y sin el parpadeo gris de iOS/Android */
+  a,button,input[type="button"],summary,.sh-ibtn{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+
+  /* iOS hace zoom si el campo tiene letra menor a 16px: lo evitamos */
+  input[type="text"],input[type="email"],input[type="password"],input[type="tel"],
+  input[type="number"],input[type="search"],select,textarea{font-size:16px!important}
+  .controls,.botones{width:100%;box-sizing:border-box}
 
   /* ---------- MENÚ HAMBURGUESA ---------- */
-  .sh-menu{top:8px!important;right:8px!important;display:block!important;z-index:10002!important}
+  .sh-menu{top:calc(8px + env(safe-area-inset-top,0px))!important;right:calc(8px + env(safe-area-inset-right,0px))!important;
+    display:block!important;z-index:10002!important}
   .sh-menu .sh-hamb{width:78px!important;height:78px!important;display:block;margin-left:auto}
   .sh-menu .sh-pill{
     position:absolute!important;top:86px;right:0;margin:0!important;
     padding:16px 20px!important;height:auto!important;min-width:170px;
+    max-height:calc(100vh - 120px);max-height:calc(100dvh - 120px);overflow-y:auto;
     flex-direction:column;align-items:flex-start;gap:12px!important;
     background:#fff;border-radius:22px!important;box-shadow:0 8px 24px rgba(0,0,0,.28);
     clip-path:none!important;opacity:0!important;visibility:hidden;pointer-events:none!important;
@@ -20,7 +31,7 @@
   .sh-menu .sh-pill::before{display:none!important}
   .sh-menu .sh-pill.sh-abierto{opacity:1!important;visibility:visible;pointer-events:auto!important;transform:none}
   .sh-menu .sh-pill>li{opacity:1!important;transform:none!important;transition:none!important;width:100%}
-  .sh-menu .sh-pill a{display:flex;align-items:center}
+  .sh-menu .sh-pill a{display:flex;align-items:center;min-height:40px}
   .sh-menu .sh-pill img{height:34px;width:auto}
   .sh-menu .sh-sep{width:100%;height:3px}
   .sh-menu .sh-dd .sh-sub{display:block!important;position:static!important;box-shadow:none!important;
@@ -28,20 +39,26 @@
   .sh-menu .sh-sub a{padding:6px 10px;font-size:.95rem}
 
   /* ---------- CARRITO, PERFIL, PINKY, CARTAS ---------- */
-  .sh-cart-wrap{top:94px!important;right:14px!important}
+  .sh-cart-wrap{top:calc(94px + env(safe-area-inset-top,0px))!important;right:calc(14px + env(safe-area-inset-right,0px))!important}
   .sh-ibtn img{width:66px!important;height:66px!important}
-  .sh-perfil{top:8px!important;left:8px!important}
+  .sh-perfil{top:calc(8px + env(safe-area-inset-top,0px))!important;left:calc(8px + env(safe-area-inset-left,0px))!important}
   .sh-perfil-btn img{width:54px!important;height:54px!important;object-fit:contain}
-  .menudesplegable2{width:auto!important;height:auto!important;padding:0!important}
+  .menudesplegable2{top:calc(8px + env(safe-area-inset-top,0px))!important;left:calc(8px + env(safe-area-inset-left,0px))!important;
+    width:auto!important;height:auto!important;padding:0!important}
   .menudesplegable2 .dropdown img,.menudesplegable2 img{width:54px!important;height:54px!important;object-fit:contain}
-  .sh-pinky-btn{right:14px!important;bottom:14px!important}
+  /* Menú del perfil en index5: en teléfono se abre al tocar (responsive.js pone .sh-abierto) */
+  .menudesplegable2 .dropdown.sh-abierto .submenu{display:block!important;visibility:visible!important;opacity:1!important;
+    max-height:none!important;height:auto!important;pointer-events:auto!important}
+  .sh-pinky-btn{right:calc(14px + env(safe-area-inset-right,0px))!important;bottom:calc(14px + env(safe-area-inset-bottom,0px))!important}
   .sh-pinky-btn img{width:52px!important;height:52px!important}
-  .sh-pinky-btn.sh-cartas-btn{right:14px!important}
+  .sh-pinky-btn.sh-cartas-btn{right:calc(14px + env(safe-area-inset-right,0px))!important}
   body.sh-tiene-cartas #shPinkyBtn{right:76px!important}
-  .sh-faq{right:14px!important;bottom:78px!important;width:calc(100vw - 28px)!important;max-width:340px!important;max-height:65vh!important}
+  .sh-faq{right:14px!important;bottom:calc(78px + env(safe-area-inset-bottom,0px))!important;
+    width:calc(100vw - 28px)!important;max-width:340px!important;
+    max-height:65vh!important;max-height:65dvh!important}
 
   /* ---------- FORMULARIOS (style.css / style2.css tenían ancho fijo de 400px y alto fijo de 40px en los textos) ---------- */
-  .forms-register,.form-login{width:calc(100% - 24px);max-width:400px;padding:30px 18px}
+  .forms-register,.form-login{width:calc(100% - 24px);max-width:400px;padding:30px 18px;box-sizing:border-box}
   .forms-register p,.form-login p{height:auto;line-height:1.4;padding:6px 0;font-size:16px}
 
   /* Términos y política: el texto venía cortado a mano con <br>; en teléfono corre como párrafo normal */
@@ -51,6 +68,7 @@
 
   /* ---------- TÍTULOS Y TEXTOS (tenían alto fijo de 50px y letras de 50-70px) ---------- */
   .section-class h2{font-size:clamp(34px,10vw,48px)}
+  .section-class p{font-size:16px;line-height:1.5}
   .text1{display:block;height:auto;padding:16px 6%;font-size:16px}
   .text2{padding:16px 5%}
   .text2 h2{height:auto;font-size:clamp(24px,7.5vw,34px)}
@@ -69,7 +87,7 @@
     -webkit-mask-position:top right;mask-position:top right}
   .slider:hover{transform:none}
   .sh-visor3d{--subir-texto:0px!important}
-  .sh-visor3d model-viewer{height:55vh!important}
+  .sh-visor3d model-viewer{height:55vh!important;height:55dvh!important}
 
   /* ---------- TERMÓMETRO ---------- */
   .termometro-btn-action{padding:14px 28px;font-size:14px}
@@ -77,12 +95,15 @@
 
   /* ---------- PRODUCTOS / EQUIPO ---------- */
   /* Las flechas del armador se salían del ancho de la pantalla y la página se corría de lado */
+  #armaPostre{max-width:100%}
   #armaPostre .carta-giro{width:min(340px,calc(100vw - 116px))}
   #armaPostre .flecha{padding:6px}
   #armaPostre .flecha.izq{right:calc(100% + 4px)}
   #armaPostre .flecha.der{left:calc(100% + 4px)}
-  .produtitemul{flex-direction:column;align-items:center;gap:16px;margin:0}
+  #armaPostre .acciones,#armaPostre .favs,#armaPostre .ic-social{width:min(340px,calc(100vw - 32px))}
+  .produtitemul{flex-direction:column;align-items:center;gap:16px;margin:0;padding:0}
   .product-item,.product-itemc{width:92%!important;height:auto!important;padding:16px!important}
+  .product-item img,.product-itemc img{max-width:100%;height:auto}
   .bottomspor{margin:12px auto}
 
   /* ---------- PIE DE PÁGINA ---------- */
@@ -90,10 +111,15 @@
   .footer ul{justify-content:center;flex-wrap:wrap;margin:0}
 }
 
+@media (max-width:600px){
+  /* Catálogo emergente: que no lo tape la barra del navegador del celular */
+  .cat-modal{max-height:94vh;max-height:94dvh}
+}
+
 @media (max-width:380px){
   .sh-menu .sh-hamb{width:70px!important;height:70px!important}
   .sh-menu .sh-pill{top:78px}
-  .sh-cart-wrap{top:86px!important}
+  .sh-cart-wrap{top:calc(86px + env(safe-area-inset-top,0px))!important}
   header{padding-top:82px}
 }
 
