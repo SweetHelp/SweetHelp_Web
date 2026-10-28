@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styleproductos.css">
+    <style>
+/* Pinky de Sweet Help (el menú ahora está en menu.js) */
+.sh-pinky-btn{position:fixed;right:28px;bottom:20px;z-index:10000;background:none;border:0;padding:0;cursor:pointer}
+        .sh-pinky-btn img{width:64px;height:64px;display:block;position:relative;z-index:1}
+        .sh-ripple{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:22%;border:4px solid #ff9195;background:rgba(255,145,149,.35);
+            pointer-events:none;opacity:0;animation:shRipple 2.4s ease-out infinite}
+        .sh-ripple:nth-of-type(2){animation-delay:.8s}
+        .sh-ripple:nth-of-type(3){animation-delay:1.6s}
+        @keyframes shRipple{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.4);opacity:0}}
+        .sh-faq{position:fixed;right:28px;bottom:96px;width:310px;max-width:calc(100vw - 56px);max-height:60vh;overflow:auto;
+            background:#fff;border:3px solid #ff9195;border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:10000;display:none}
+        .sh-faq.open{display:block}
+        .sh-faq-head{display:flex;align-items:center;gap:10px;background:#ff9195;color:#fff;padding:10px 14px;font-weight:800}
+        .sh-faq-head img{width:44px;height:44px}
+        .sh-faq details{padding:10px 14px;border-bottom:1px solid #ffe0e1;color:#864f02;font-size:14px}
+        .sh-faq summary{cursor:pointer;font-weight:700;color:#c0607a}
+        .sh-faq p{margin:8px 0 0}
+
+/* Carrito (icono fijo debajo del menú) */
+.sh-cart-wrap{position:fixed;top:124px;right:33px;z-index:10000}
+.sh-ibtn{position:relative;background:none;border:0;padding:0;cursor:pointer;line-height:0}
+.sh-ibtn img{width:64px;height:64px}
+
+/* Perfil (arriba a la izquierda) para páginas sin el menú original */
+.sh-perfil{position:fixed;top:8px;left:8px;z-index:10000}
+.sh-perfil-btn{background:none;border:0;padding:0;cursor:pointer;line-height:0}
+.sh-perfil-btn img{width:84px;height:84px;display:block}
+.sh-perfil-menu{display:none;list-style:none;margin:6px 0 0;padding:6px;background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.sh-perfil-menu.open{display:block}
+.sh-perfil-menu a{display:block;padding:8px 16px;color:#bd5c73;font-weight:700;text-decoration:none;border-radius:10px;font-family:inherit}
+.sh-perfil-menu a:hover{background:#ffe0e1}
+
+</style>
+    <title>Productos Sh</title>
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+    <header> 
+<br>
+
+        <main class="grid-container">
+    <section class="section-class">
+            <h2>MISIÓN</h2>
+            <p>Transformar el consumo cotidiano de postres artesanales en una acción directa y transparente contra la inseguridad alimentaria en Santa Marta. A través de un modelo de negocio sostenible y sin intermediarios, destinamos el 10% de nuestras utilidades a la entrega personal de kits nutricionales a familias en situación de vulnerabilidad, garantizando que cada compra se convierta en una oportunidad tangible de cambio social y bienestar integral.</p>
+    </section>
+    </main>
+    <div class="linead1"></div>
+    
+    <main class="grid-container">
+    <section class="section-class">
+            <h2>VISIÓN</h2>
+            <p>Consolidarse para el año 2026 como el modelo referente de emprendimiento social en la región, logrando un impacto medible en el cumplimiento del ODS 2: Hambre Cero. Aspiramos a fomentar una cultura de consumo consciente donde el diseño, la calidad gastronómica y la responsabilidad social converjan, permitiendo expandir nuestra red de ayuda y asegurar que una alimentación digna, segura y nutritiva llegue de forma eficiente a más hogares vulnerables.</p>
+    </section>
+    </main>
+
+    
+<footer class="footer">
+    <ul class="pietext">
+        <li class="pi">SweetHelpCorp©  <b>|</b>  Derechos Reservados</li>
+    </ul>
+    <ul class="iconospie">
+        <li class="icopie"><a href=""><img src="iconolinktree.svg" alt="iconolinktree"></a></li>
+        <li class="icopie"><a href=""><img src="iconoig.svg" alt="iconoig"></a></li>
+        <li class="icopie"><a href=""><img src="iconoappsh.svg" alt="iconoappsh"></a></li>
+
+    </ul>
+
+</footer>
+<script src="cursor.js"></script>
+<!-- MENÚ, PINKY, CARRITO Y PERFIL -->
+ <script src="cargando.js"></script>
+<div class="sh-faq" id="shFaq">
+        <div class="sh-faq-head"><img src="pinky.svg" alt="Pinky"><span>¡Hola! Soy Pinky, ¿en qué te ayudo?</span></div>
+        <details><summary>¿Qué es Sweet Help?</summary><p>Es un emprendimiento social de Santa Marta que vende postres artesanales para combatir el hambre.</p></details>
+        <details><summary>¿Cómo ayuda mi compra?</summary><p>Por cada postre que compras destinamos el 10% para entregar kits alimentarios a familias vulnerables.</p></details>
+        <details><summary>¿Qué es el termómetro de donaciones?</summary><p>Muestra cuántos kits alimentarios hemos entregado este mes frente a la meta. Pulsa "Descubre tu avance" para verlo.</p></details>
+        <details><summary>¿Cómo compro un producto?</summary><p>Entra a Productos, elige tu postre y se agregará al carrito. Allí podrás ver tus compras y pulsar "Pagar ahora".</p></details>
+        <details><summary>¿Mi carrito se pierde si cambio de página?</summary><p>No, tu carrito se mantiene aunque abras otra pestaña o página de Sweet Help.</p></details>
+        <details><summary>¿Dónde conozco más del equipo?</summary><p>En el menú, dentro de Sobre Nosotros, encontrarás Información y Equipo.</p></details>
+    </div>
+    <button class="sh-pinky-btn" id="shPinkyBtn" aria-label="Preguntas frecuentes"><span class="sh-ripple"></span><span class="sh-ripple"></span><span class="sh-ripple"></span><img src="pinky.svg" alt="Pinky"></button>
+<div class="sh-cart-wrap">
+    <button class="sh-ibtn" id="shCartBtn" aria-label="Carrito"><img src="carrito.svg" alt="carrito"><span class="sh-badge">0</span></button>
+</div>
+<div class="sh-perfil">
+    <button class="sh-perfil-btn" id="shPerfilBtn" aria-label="Perfil"><img src="iconoperfil.png" alt="iconperfil"></button>
+    <ul class="sh-perfil-menu" id="shPerfilMenu"><li><a href="">Editar</a></li><li><a href="iniciaroregistrarse.html">Salir</a></li></ul>
+</div>
+<script>
+(function () {
+    const $ = id => document.getElementById(id);
+    $('shPinkyBtn').onclick = e => { e.stopPropagation(); $('shFaq').classList.toggle('open'); };
+    $('shPerfilBtn').onclick = e => { e.stopPropagation(); $('shPerfilMenu').classList.toggle('open'); };
+    document.addEventListener('click', e => {
+        if (!e.target.closest('#shFaq')) $('shFaq').classList.remove('open');
+        if (!e.target.closest('.sh-perfil')) $('shPerfilMenu').classList.remove('open');
+    });
+})();
+</script>
+<script src="menu.js"></script>
+<script src="carrito.js"></script>
+<script src="perfil.js"></script>
+</body>
+</html>

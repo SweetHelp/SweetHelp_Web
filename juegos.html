@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="theme-color" content="#3a1824">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SweetHelp · Juegos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+@font-face{
+  font-family:"Choco Taste Trial";
+  src:url("Choco Taste Trial.otf") format("opentype"),
+      url("Choco%20Taste%20Trial.otf") format("opentype");
+  font-display:swap;
+}
+:root{
+  --rosa:#ff9a9a;
+  --rosa-carta:#f28f95;
+  --crema:#f8f2dc;
+  --flecha:#bc5d75;
+  --marron:#8b5e3c;
+  --antojo:#8a3f55;
+  --vino:#3a1824;
+  --vino2:#5a2538;
+  --ph:min(88vh,820px,calc(92vw / .49));
+  --pw:calc(var(--ph) * .49);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:radial-gradient(ellipse at 50% 30%,var(--vino2) 0%,var(--vino) 70%,#2a1018 100%);
+  font-family:"Poppins",system-ui,sans-serif;
+  overflow:hidden;
+  color:var(--crema);
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;overscroll-behavior:none;
+}
+.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+/* ===== Celular ===== */
+.phone{
+  position:relative;
+  width:var(--pw);height:var(--ph);
+  font-size:calc(var(--pw) / 22);
+  padding:calc(var(--pw) * .032);
+  border-radius:calc(var(--pw) * .15);
+  background:linear-gradient(145deg,#4a2030,#1e0b12);
+  box-shadow:0 0 0 2px #6b3347,0 30px 80px rgba(0,0,0,.55),inset 0 0 0 2px rgba(255,255,255,.06);
+  transition:transform 1.25s cubic-bezier(.65,.05,.25,1);
+  will-change:transform;
+  animation:entra 1.1s cubic-bezier(.2,.9,.3,1) backwards;
+}
+@keyframes entra{from{transform:translateY(115vh)}to{transform:translateY(0)}}
+.phone::before,.phone::after{ /* botones laterales */
+  content:"";position:absolute;width:3px;background:#6b3347;border-radius:2px;
+}
+.phone::before{left:-3px;top:22%;height:7%}
+.phone::after{right:-3px;top:28%;height:12%}
+.screen{
+  position:relative;width:100%;height:100%;overflow:hidden;
+  border-radius:calc(var(--pw) * .12);
+  background:var(--vino2);
+  isolation:isolate;
+}
+.wall{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0}
+.isla{
+  position:absolute;top:1.1em;left:50%;transform:translateX(-50%);
+  width:28%;height:1.9em;background:#1a0910;border-radius:99px;z-index:5;
+}
+
+/* ===== Inicio ===== */
+.home{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;padding:1.2em 1.2em 1em}
+.barra{display:flex;justify-content:space-between;align-items:center;font-family:"Lilita One",sans-serif;font-size:.8em;letter-spacing:.02em;padding:0 1.4em;height:2.6em;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.reloj-grande{text-align:center;margin:2.2em 0 1.6em;text-shadow:0 2px 8px rgba(40,10,20,.45)}
+.reloj-grande b{display:block;font-family:"Lilita One",system-ui,sans-serif;font-weight:400;font-size:3.6em;line-height:1;letter-spacing:.03em;color:var(--crema)}
+.reloj-grande span{font-size:1em;opacity:.9}
+.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.3em .2em;justify-items:center;align-content:start;flex:1}
+.app{
+  display:flex;flex-direction:column;align-items:center;gap:.55em;
+  background:none;border:0;color:var(--crema);cursor:pointer;
+  font-family:"Lilita One",sans-serif;font-size:.72em;letter-spacing:.02em;
+  text-shadow:0 1px 4px rgba(40,10,20,.7);
+  transition:transform .18s cubic-bezier(.3,1.6,.5,1);
+  width:100%;
+}
+.app:active .icono{transform:scale(.86);filter:brightness(.9);transition-duration:.08s}
+.app span{transition:transform .25s,letter-spacing .25s}
+.icono{
+  width:4.5em;height:4.5em;border-radius:1.1em;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--rosa-carta);
+  position:relative;
+  box-shadow:0 .4em 1em rgba(40,10,20,.4),inset 0 0 0 1px rgba(255,255,255,.15);
+  transition:transform .3s cubic-bezier(.3,1.7,.5,1),box-shadow .3s,filter .3s;
+}
+.icono::after{ /* brillo que cruza el icono */
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.38) 50%,transparent 70%);
+  transform:translateX(-120%);transition:transform .6s ease;
+}
+.emo{font-size:1.8em;line-height:1}
+.app span{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icono img{width:100%;height:100%;object-fit:cover;display:block}
+.icono svg{width:62%;height:62%}
+.dock{
+  display:flex;justify-content:center;gap:1.4em;
+  background:rgba(58,24,36,.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-radius:1.8em;padding:.9em;margin:0 .2em .9em;
+}
+
+@media (hover:hover){
+.app:hover span{transform:translateY(.15em);letter-spacing:.04em}
+.app:hover .icono{transform:translateY(-.35em) scale(1.12) rotate(-2deg);box-shadow:0 1em 1.6em rgba(40,10,20,.55),0 0 1.2em rgba(255,154,154,.45);filter:brightness(1.08)}
+.app:hover .icono::after{transform:translateX(120%)}
+}
+/* batería arriba */
+.bateria{display:flex;align-items:center;gap:.45em}
+.bateria svg{width:2em;height:1em}
+/* entrada de todo el inicio */
+.home:not(.entra) .barra,.home:not(.entra) .reloj-grande,.home:not(.entra) .app{opacity:0}
+.wall{opacity:0;transition:opacity 1.2s ease,background .4s}
+.screen.encendida .wall{opacity:1}
+.home.entra .barra{animation:bajar .7s cubic-bezier(.2,.9,.3,1) .1s backwards}
+.home.entra .reloj-grande{animation:subeReloj .9s cubic-bezier(.2,.9,.3,1) .25s backwards}
+.home.entra .app{animation:popApp .65s cubic-bezier(.3,1.6,.5,1) backwards;animation-delay:calc(.55s + var(--i) * .08s)}
+@keyframes bajar{from{opacity:0;transform:translateY(-1.5em)}}
+@keyframes subeReloj{from{opacity:0;transform:translateY(1.2em) scale(.9);filter:blur(6px)}}
+@keyframes popApp{from{opacity:0;transform:translateY(1.6em) scale(.4)}}
+.indicador{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:44%;height:2em;background:none;z-index:6;border:0;cursor:pointer}
+.indicador::after{content:"";position:absolute;left:12%;right:12%;top:50%;height:.35em;margin-top:.1em;border-radius:99px;background:rgba(248,242,220,.75)}
+
+/* ===== Pantalla de carga (igual a la del botón Agregar, sin chulito) ===== */
+.splash{
+  position:absolute;inset:0;z-index:10;background:#1a0910;
+  opacity:1;transition:opacity .6s ease,background 1.1s ease;
+}
+.splash.fondo{background:var(--rosa-carta)}
+.splash.oculto{opacity:0;pointer-events:none}
+.splash-inner{
+  position:absolute;left:50%;top:50%;
+  width:60%;
+  display:flex;flex-direction:column;align-items:center;gap:1.6em;
+  transform:translate(-50%,-50%) rotate(var(--contra,0deg));
+  transition:transform 1.25s cubic-bezier(.65,.05,.25,1);
+}
+.splash-inner img{width:80%;height:auto;display:block}
+.splash-inner img,.splash-texto{opacity:0;transform:translateY(.8em);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.9,.3,1)}
+.splash.texto .splash-inner img,.splash.texto .splash-texto{opacity:1;transform:none}
+.estado{opacity:0;transform:scale(.3);transition:opacity .5s ease,transform .6s cubic-bezier(.3,1.7,.5,1)}
+.splash.cargando .estado{opacity:1;transform:none}
+.estado{position:relative;width:3.4em;height:3.4em}
+.splash-texto{
+  font-family:"Choco Taste Trial","Lilita One",cursive;font-size:2em;color:var(--crema);
+  text-align:center;line-height:1.1;min-height:1.1em;white-space:nowrap;
+  text-shadow:0 2px 6px rgba(138,63,85,.5);
+}
+
+/* círculo de carga: anillo de progreso que se llena */
+.estado{width:3.6em;height:3.6em;flex:0 0 auto;aspect-ratio:1/1}
+.anillo{width:100%;height:100%;display:block;transform:rotate(-90deg);overflow:visible}
+.anillo circle{fill:none;stroke-width:5;stroke-linecap:round}
+.anillo .pista{stroke:rgba(255,255,255,.35)}
+.anillo .prog{stroke:#fff;stroke-dasharray:125.66;stroke-dashoffset:125.66}
+.splash.cargando .prog{animation:llenar 2.2s ease-in-out forwards}
+.splash.cargando.fin .estado{opacity:0;transform:scale(.3)}
+.splash.sinanillo .estado{display:none}
+/* SweetHelp IOS: el logo salta y las letras van subiendo una por una */
+.splash.texto .splash-inner img{animation:popLogo .9s cubic-bezier(.3,1.6,.5,1)}
+.splash-texto .l{display:inline-block;opacity:0;transform:translateY(.9em) scale(.5)}
+.splash.texto .splash-texto .l{animation:letraIn .6s cubic-bezier(.3,1.7,.5,1) forwards;animation-delay:calc(.35s + var(--k) * .07s)}
+@keyframes letraIn{to{opacity:1;transform:none}}
+@keyframes popLogo{from{opacity:0;transform:scale(.4) rotate(-10deg)}}
+@keyframes llenar{to{stroke-dashoffset:0}}
+
+/* carga fija: no gira ni se acerca con el celular */
+.splash.fijo .splash-inner{opacity:0;transition:none}
+/* ===== "Iniciando aplicación": fija, no gira ni se acerca con el celular ===== */
+.carga-fija{
+  position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:40;
+  display:flex;flex-direction:column;align-items:center;gap:1.6em;
+  opacity:0;pointer-events:none;transition:opacity .45s ease;
+}
+.carga-fija.ver{opacity:1}
+.carga-fija img{width:80%;height:auto;display:block}
+.carga-fija .estado{opacity:1;transform:none}
+.carga-fija .splash-texto{opacity:1;transform:none}
+.carga-fija.ver .prog{animation:llenar 2.1s ease-in-out forwards}
+.splash.fijo .splash-inner{opacity:0;transition:none}
+/* ===== Pantalla de carga de las apps (la de Sugar Snake) ===== */
+.carga-app{
+  position:fixed;inset:0;z-index:40;background:#843D4B;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .5s ease;
+  --primary-color:#833c4a;--accent-color:#ff9195;
+}
+.carga-app.ver{opacity:1}
+.carga-titulo{
+  margin:0 0 14px;text-align:center;font-weight:normal;
+  font-family:"Choco Num","Choco Taste","Choco Taste Trial","Lilita One",system-ui,sans-serif;
+  font-size:clamp(56px,11vw,140px);line-height:.95;letter-spacing:3px;color:#fff8ef;
+  -webkit-text-stroke:3px var(--primary-color);paint-order:stroke fill;
+  text-shadow:0 6px 0 var(--primary-color),0 12px 24px rgba(131,60,74,.45);
+  animation:flotar 3.2s ease-in-out infinite;user-select:none;
+}
+.carga-titulo span{display:block;color:var(--accent-color)}
+.carga-texto{
+  color:#fff8ef;font-family:"Choco Num","Choco Taste","Choco Taste Trial","Lilita One",system-ui,sans-serif;
+  font-size:24px;letter-spacing:4px;opacity:.85;
+}
+.carga-texto .puntos::after{content:"";display:inline-block;width:1.6em;text-align:left;animation:puntos 1.2s steps(1) infinite}
+@keyframes puntos{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+@keyframes flotar{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-4px) rotate(1deg)}}
+.carga-serpiente{position:absolute;right:28px;bottom:22px;width:240px;height:240px}
+.carga-serpiente canvas{width:240px;height:240px;display:block}
+@media (max-width:600px){.carga-serpiente{transform:scale(.65);transform-origin:bottom right;right:12px;bottom:8px}}
+.splash.fijo .splash-inner{opacity:0;transition:none}
+
+/* ===== Ajustes: fondo de pantalla ===== */
+.panel{
+  position:absolute;inset:0;z-index:7;
+  background:linear-gradient(180deg,#4a1f2c,#3a1824);
+  padding:4.2em 1.6em 2.4em;overflow-y:auto;
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.3,.9,.3,1);
+  display:flex;flex-direction:column;gap:1.2em;
+}
+.panel.abierto{transform:translateY(0)}
+.panel h2{font-family:"Choco Taste Trial","Lilita One",cursive;font-weight:400;font-size:2.6em;color:var(--rosa);text-align:center;line-height:1}
+.panel p{font-size:.95em;text-align:center;opacity:.85}
+.muestras{display:grid;grid-template-columns:repeat(3,1fr);gap:.9em}
+.muestra{
+  aspect-ratio:9/16;border-radius:1em;border:.22em solid transparent;cursor:pointer;
+  background-size:cover;background-position:center;
+  transition:transform .15s,border-color .15s;
+}
+.muestra:hover{transform:scale(1.04)}
+.muestra.activa{border-color:var(--crema)}
+.btn{
+  font-family:"Lilita One",sans-serif;font-size:1.1em;letter-spacing:.03em;
+  padding:.7em 1em;border-radius:999px;border:.16em solid var(--rosa);
+  background:transparent;color:var(--rosa);cursor:pointer;text-align:center;
+  transition:background .15s,color .15s,transform .15s;
+}
+.btn:hover{background:var(--rosa);color:var(--vino)}
+.btn:active{transform:scale(.95)}
+.btn.principal{background:#e0527a;border-color:#e0527a;color:var(--crema)}
+.btn.principal:hover{background:#ee6a90;border-color:#ee6a90;color:var(--crema)}
+#archivo{display:none}
+
+/* ===== Aviso (toast) ===== */
+.toast{position:absolute;left:50%;bottom:3.2em;transform:translate(-50%,20px);opacity:0;z-index:9;pointer-events:none;
+  background:#e0527a;color:var(--crema);font-family:"Lilita One",sans-serif;font-size:1em;padding:.6em 1.3em;border-radius:999px;transition:.3s;white-space:nowrap}
+.toast.ver{opacity:1;transform:translate(-50%,0)}
+
+/* ===== Volver ===== */
+.volver{
+  position:fixed;top:14px;left:14px;z-index:50;
+  font-family:"Lilita One",sans-serif;font-size:1rem;color:var(--crema);text-decoration:none;
+  background:rgba(58,24,36,.6);border:2px solid var(--flecha);border-radius:999px;padding:.4em 1em;
+  transition:background .2s;
+}
+.volver:hover{background:var(--flecha)}
+
+/* ===== Teléfono / táctil: el celular ocupa toda la pantalla ===== */
+@media (max-width:640px), (pointer:coarse) and (max-width:900px){
+  :root{--ph:100vh;--ph:100dvh;--pw:100vw}
+  .phone{font-size:clamp(14px,4.6vw,19px);padding:0;border-radius:0;box-shadow:none;background:var(--vino)}
+  .phone::before,.phone::after,.isla{display:none}
+  .screen{border-radius:0}
+  .home{padding:calc(.8em + env(safe-area-inset-top)) 1.1em 1em}
+  .barra{padding:0 .4em}
+  .reloj-grande{margin:1.4em 0 1.4em}
+  .apps{gap:1.5em .3em}
+  .panel{padding:calc(2.4em + env(safe-area-inset-top)) 1.6em calc(2.6em + env(safe-area-inset-bottom))}
+  .volver{top:auto;bottom:calc(10px + env(safe-area-inset-bottom));left:12px;font-size:.85rem}
+}
+@media (pointer:coarse){
+  .app{min-height:6.4em}
+  .btn{padding:.85em 1em}
+}
+</style>
+</head>
+<body>
+<a class="volver" href="index5.html">← Inicio</a>
+
+<div class="stage" id="stage">
+  <div class="phone" id="phone">
+    <div class="screen" id="screen">
+      <div class="wall" id="wall"></div>
+      <div class="isla"></div>
+
+      <!-- Inicio -->
+      <div class="home" id="home">
+        <div class="barra"><span class="bateria"><b id="bateriaTxt">100%</b><svg viewBox="0 0 28 14" fill="none"><rect x="1" y="1" width="23" height="12" rx="3.5" stroke="#f8f2dc" stroke-width="1.6"/><rect x="3.2" y="3.2" width="18.6" height="7.6" rx="2" fill="#f8f2dc"/><rect x="25" y="4.5" width="2.2" height="5" rx="1" fill="#f8f2dc"/></svg></span><span>SweetHelp</span></div>
+        <div class="reloj-grande"><b id="horaGrande">9:41</b><span id="fechaGrande"></span></div>
+        <div class="apps" id="apps"></div>
+      </div>
+
+      <!-- Ajustes / fondo -->
+      <div class="panel" id="panel">
+        <h2>Fondo de pantalla</h2>
+        <p>Elige uno o sube tu propia imagen</p>
+        <div class="muestras" id="muestras"></div>
+        <label class="btn principal" for="archivo">Subir mi imagen</label>
+        <input type="file" id="archivo" accept="image/*">
+        <button class="btn" id="quitarFondo" type="button">Fondo original</button>
+        <button class="btn" id="cerrarPanel" type="button">Listo</button>
+      </div>
+
+      <div class="toast" id="toast"></div>
+      <button class="indicador" id="indicador" aria-label="Inicio"></button>
+
+      <!-- Pantalla de carga -->
+      <div class="splash" id="splash">
+        <div class="splash-inner" id="splashInner">
+          <img src="shwhite.svg" alt="" onerror="this.style.display='none'">
+          <div class="estado"><svg class="anillo" viewBox="0 0 50 50"><circle class="pista" cx="25" cy="25" r="20"/><circle class="prog" cx="25" cy="25" r="20"/></svg></div>
+          <div class="splash-texto" id="splashTexto">SweetHelp IOS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="carga-fija" id="cargaFija" aria-hidden="true">
+  <img src="shwhite.svg" alt="" onerror="this.style.display='none'">
+  <div class="estado"><svg class="anillo" viewBox="0 0 50 50"><circle class="pista" cx="25" cy="25" r="20"/><circle class="prog" cx="25" cy="25" r="20"/></svg></div>
+  <div class="splash-texto">Iniciando aplicación…</div>
+</div>
+
+<script>
+/* ---------- Apps (cambia aquí nombres, iconos y páginas) ---------- */
+const SVG_MERCH = '<svg viewBox="0 0 48 48" fill="none" stroke="#f8f2dc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8 8 13l3 8 5-2v21h16V19l5 2 3-8-9-5c-1 3-4 5-7 5s-6-2-7-5z"/></svg>';
+const SVG_GALERIA = '<svg viewBox="0 0 48 48" fill="none" stroke="#f8f2dc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="9" width="36" height="30" rx="5"/><circle cx="17" cy="20" r="3.5"/><path d="m8 36 11-10 8 7 5-5 9 8"/></svg>';
+const SVG_AJUSTES = '<svg viewBox="0 0 48 48" fill="none" stroke="#f8f2dc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="6"/><path d="M24 6v6M24 36v6M6 24h6M36 24h6M11 11l4 4M33 33l4 4M37 11l-4 4M15 33l-4 4"/></svg>';
+
+const APPS = [
+  { nombre:"ArSweetCards", icono:"ArSweetcard.svg", emoji:"🃏", titulo:["AR SWEET","CARDS"], url:"ArSweetCards.html" },
+  { nombre:"Sugar Snake",  icono:"SugarSnake.svg",  emoji:"🐍", titulo:["SUGAR","SNAKE"], url:"sigueelpostre.html" },
+  { nombre:"Sweet Battle", icono:"SBattle.svg",     emoji:"⚔️", titulo:["SWEET","BATTLE"], url:"SweetCardsBattle.html" },
+  { nombre:"Merch",        svg:SVG_MERCH,   fondo:"linear-gradient(145deg,#e0527a,#bc5d75)", titulo:["MERCH"], url:"merch.html" },
+  { nombre:"Galería",      svg:SVG_GALERIA, fondo:"linear-gradient(145deg,#f39c12,#c4741f)", titulo:["GALERÍA"], url:"galeria.html" },
+  { nombre:"Ajustes",      svg:SVG_AJUSTES, fondo:"linear-gradient(145deg,#8a3f55,#5a2538)", accion:"ajustes" }
+];
+
+
+/* ---------- Fondos de pantalla ---------- */
+const FONDOS = [
+  "linear-gradient(160deg,#ff9a9a 0%,#bc5d75 55%,#5a2538 100%)",
+  "linear-gradient(160deg,#f39c12 0%,#e0527a 60%,#5a2538 100%)",
+  "linear-gradient(160deg,#8b5e3c 0%,#8a3f55 60%,#3a1824 100%)",
+  "radial-gradient(circle at 30% 20%,#f28f95 0%,#bc5d75 40%,#3a1824 100%)",
+  "linear-gradient(200deg,#d9748e 0%,#8a3f55 50%,#2a1018 100%)",
+  "linear-gradient(160deg,#4a1f2c 0%,#2a1018 100%)"
+];
+const CLAVE = "sh_fondo_juegos";
+
+const $ = id => document.getElementById(id);
+const phone = $("phone"), splash = $("splash"), splashInner = $("splashInner"), splashTexto = $("splashTexto");
+let ocupado = false;
+
+/* ---------- Construcción ---------- */
+function crearApp(a, i){
+  const b = document.createElement("button");
+  b.style.setProperty("--i", i);
+  b.className = "app"; b.type = "button"; b.setAttribute("aria-label", a.nombre);
+  const ic = document.createElement("div"); ic.className = "icono";
+  if(a.icono){
+    const img = new Image(); img.alt = ""; img.src = a.icono;
+    img.onerror = () => { img.remove(); ic.innerHTML = '<span class="emo">' + a.emoji + '</span>'; };
+    ic.appendChild(img);
+  } else {
+    ic.style.background = a.fondo; ic.innerHTML = a.svg;
+  }
+  const t = document.createElement("span"); t.textContent = a.nombre;
+  b.append(ic, t);
+  b.onclick = () => a.accion === "ajustes" ? abrirPanel() : abrirApp(a);
+  return b;
+}
+APPS.forEach((a, i) => $("apps").appendChild(crearApp(a, i)));
+
+/* ---------- Reloj ---------- */
+function reloj(){
+  const d = new Date();
+  const h = d.getHours() % 12 || 12, m = String(d.getMinutes()).padStart(2,"0");
+  $("horaGrande").textContent = h + ":" + m;
+  $("fechaGrande").textContent = d.toLocaleDateString("es", { weekday:"long", day:"numeric", month:"long" });
+}
+reloj(); setInterval(reloj, 15000);
+
+/* ---------- Arranque del teléfono ---------- */
+function arrancar(){
+  splashTexto.innerHTML = [..."SweetHelp IOS"].map((c, k) => '<span class="l" style="--k:' + k + '">' + (c === " " ? "&nbsp;" : c) + '</span>').join("");
+  const paso = (ms, f) => setTimeout(f, ms);
+  paso(1500, () => splash.classList.add("fondo"));            // fade del color de la cámara al rosa
+  paso(2800, () => splash.classList.add("cargando"));            // aparece el círculo de carga
+  paso(5100, () => splash.classList.add("fin"));              // el círculo llega al 100% y desaparece
+  paso(5700, () => splash.classList.add("sinanillo", "texto")); // ya sin círculo aparece el logo y SweetHelp IOS
+  paso(7900, () => {                                          // se apaga la carga y aparece todo
+    splash.classList.add("oculto");
+    $("screen").classList.add("encendida");
+    $("home").classList.add("entra");
+  });
+}
+
+/* ---------- Abrir app: carga, giro horizontal, acercamiento y salto ---------- */
+function abrirApp(a){
+  if(ocupado) return;
+  ocupado = true;
+  /* 1) "Iniciando aplicación…": logo y anillo quietos, derechos y del mismo tamaño */
+  const cf = $("cargaFija");
+  cf.style.fontSize = getComputedStyle(phone).fontSize;
+  cf.style.width = splashInner.offsetWidth + "px";
+  splash.classList.add("fondo", "fijo");
+  splash.classList.remove("oculto");
+  cf.classList.add("ver");
+  /* 2) el celular gira a horizontal y se acerca */
+  setTimeout(() => {
+    const W = phone.offsetWidth, H = phone.offsetHeight;
+    const s = Math.max(innerWidth / H, innerHeight / W) * 1.22;
+    phone.style.transform = "rotate(90deg) scale(" + s + ")";
+  }, 450);
+  /* 3) después aparece la pantalla de carga compartida (cargando.js) y de ahí abre la app */
+  setTimeout(() => pantallaCarga(a.url), 2300);
+}
+
+/* Usa cargando.js (Pinky en moto + barra): se carga una sola vez y se le "hace clic" a un enlace
+   para que muestre su pantalla y luego abra la página. Si no carga, abre la app directo. */
+let cargandoListo = false;
+function irA(url){
+  const enlace = document.createElement("a");
+  enlace.href = url; enlace.style.display = "none";
+  document.body.appendChild(enlace);
+  enlace.click();
+}
+function pantallaCarga(url){
+  if(cargandoListo){ irA(url); return; }
+  const sc = document.createElement("script");
+  sc.src = "cargando.js";
+  sc.onload = () => { cargandoListo = true; irA(url); };
+  sc.onerror = () => { location.href = url; };
+  document.head.appendChild(sc);
+}
+
+/* ---------- Si vuelven con "atrás", dejar el teléfono como nuevo ---------- */
+addEventListener("pageshow", e => {
+  if(!e.persisted) return;
+  ocupado = false;
+  phone.style.transition = "none"; phone.style.transform = "";
+  splash.classList.remove("fijo"); $("cargaFija").classList.remove("ver");
+  splash.classList.add("oculto");
+  requestAnimationFrame(() => requestAnimationFrame(() => { phone.style.transition = ""; }));
+});
+
+/* ---------- Fondo de pantalla ---------- */
+function aplicarFondo(f){
+  const w = $("wall");
+  if(f && f.tipo === "img"){ w.style.background = "url('" + f.datos + "') center/cover no-repeat"; }
+  else { w.style.background = FONDOS[(f && f.i) || 0]; }
+  document.querySelectorAll(".muestra").forEach((m,i) => m.classList.toggle("activa", !(f && f.tipo === "img") && i === ((f && f.i) || 0)));
+}
+function guardarFondo(f){ try{ localStorage.setItem(CLAVE, JSON.stringify(f)); }catch(e){ aviso("No se pudo guardar el fondo"); } }
+function leerFondo(){ try{ return JSON.parse(localStorage.getItem(CLAVE)) || {tipo:"preset", i:0}; }catch(e){ return {tipo:"preset", i:0}; } }
+
+FONDOS.forEach((g,i) => {
+  const m = document.createElement("button");
+  m.className = "muestra"; m.type = "button"; m.style.background = g; m.setAttribute("aria-label","Fondo " + (i+1));
+  m.onclick = () => { const f = {tipo:"preset", i}; aplicarFondo(f); guardarFondo(f); };
+  $("muestras").appendChild(m);
+});
+
+$("archivo").onchange = e => {
+  const file = e.target.files[0]; if(!file) return;
+  const lector = new FileReader();
+  lector.onload = () => {
+    const img = new Image();
+    img.onload = () => { /* se reduce para que quepa en el almacenamiento */
+      const max = 900, k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      const f = {tipo:"img", datos:c.toDataURL("image/jpeg", .85)};
+      aplicarFondo(f); guardarFondo(f); aviso("Fondo cambiado");
+    };
+    img.src = lector.result;
+  };
+  lector.readAsDataURL(file);
+  e.target.value = "";
+};
+$("quitarFondo").onclick = () => { const f = {tipo:"preset", i:0}; aplicarFondo(f); guardarFondo(f); };
+
+/* ---------- Panel ---------- */
+function abrirPanel(){ $("panel").classList.add("abierto"); }
+function cerrarPanel(){ $("panel").classList.remove("abierto"); }
+$("cerrarPanel").onclick = cerrarPanel;
+$("indicador").onclick = cerrarPanel;
+addEventListener("keydown", e => { if(e.key === "Escape") cerrarPanel(); });
+
+/* mantener presionado el fondo abre los ajustes */
+let tPress;
+$("home").addEventListener("pointerdown", e => { if(e.target.closest(".app")) return; tPress = setTimeout(abrirPanel, 650); });
+$("home").addEventListener("contextmenu", e => e.preventDefault());
+["pointerup","pointerleave","pointercancel"].forEach(ev => $("home").addEventListener(ev, () => clearTimeout(tPress)));
+
+function aviso(t){ const el = $("toast"); el.textContent = t; el.classList.add("ver"); setTimeout(() => el.classList.remove("ver"), 1800); }
+
+aplicarFondo(leerFondo());
+arrancar();
+</script>
+</body>
+</html>
