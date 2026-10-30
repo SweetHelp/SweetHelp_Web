@@ -1,0 +1,1488 @@
+{
+ "v": 2,
+ "name": "bitacora-sweet-help",
+ "pdfs": [
+  "BITACORA_SWEET_HELP_ADELANTO.pdf"
+ ],
+ "slides": [
+  {
+   "id": "bs01",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "fade",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 1 · BITÁCORA",
+   "els": [
+    {
+     "id": "bs01e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 1,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs02",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "slideL",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 2 · Sweet Help",
+   "els": [
+    {
+     "id": "bs02e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 2,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs03",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "cover",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 3 · Sweet Help",
+   "els": [
+    {
+     "id": "bs03e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 3,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs04",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "zoom",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 4 · Sweet Help es un emprendimiento social que convier",
+   "els": [
+    {
+     "id": "bs04e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 4,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs05",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "slideU",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 5 · OBJETIVO GENERAL:",
+   "els": [
+    {
+     "id": "bs05e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 5,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs06",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "curtain",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 6 · Datos demográficos:",
+   "els": [
+    {
+     "id": "bs06e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 6,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs07",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "wipe",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 7 · INSIGHTS",
+   "els": [
+    {
+     "id": "bs07e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 7,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs08",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "circle",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 8 · Hallazgo",
+   "els": [
+    {
+     "id": "bs08e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 8,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs09",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "flip",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 9 · Tony's chocolonely",
+   "els": [
+    {
+     "id": "bs09e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 9,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs10",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "blur",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 10 · REFERENTE",
+   "els": [
+    {
+     "id": "bs10e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 10,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs11",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "fade",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 11 · REFERENTE",
+   "els": [
+    {
+     "id": "bs11e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 11,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs12",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "slideL",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 12 · Referentes conceptuales:Sweet Help está",
+   "els": [
+    {
+     "id": "bs12e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 12,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs13",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "cover",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 13 · Sweet",
+   "els": [
+    {
+     "id": "bs13e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 13,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs14",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "zoom",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 14 · TERRITORIO CONCEPTUAL",
+   "els": [
+    {
+     "id": "bs14e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 14,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs15",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "slideU",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 15 · PINKY FORMANDO UN CORAZON CON LAS MANOS",
+   "els": [
+    {
+     "id": "bs15e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 15,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs16",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "curtain",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 16 · VALORES QUE",
+   "els": [
+    {
+     "id": "bs16e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 16,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs17",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "wipe",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 17 · DISTINCIÓN CON OTROS PROYECTOS",
+   "els": [
+    {
+     "id": "bs17e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 17,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs18",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "circle",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 18 · CONCEPTO",
+   "els": [
+    {
+     "id": "bs18e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 18,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs19",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "flip",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 19 · DEFINICIÓN",
+   "els": [
+    {
+     "id": "bs19e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 19,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs20",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "blur",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 20 · EXPLORACIÓN INICIAL",
+   "els": [
+    {
+     "id": "bs20e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 20,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs21",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "fade",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 21 · Consumo consciente",
+   "els": [
+    {
+     "id": "bs21e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 21,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs22",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "slideL",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 22 · OBSERVACIONES",
+   "els": [
+    {
+     "id": "bs22e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 22,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs23",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "cover",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 23 · EXPLORACIÓN GRÁFICA I",
+   "els": [
+    {
+     "id": "bs23e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 23,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs24",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "zoom",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 24 · BOCETACION",
+   "els": [
+    {
+     "id": "bs24e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 24,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs25",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "slideU",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 25 · BOCETACION",
+   "els": [
+    {
+     "id": "bs25e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 25,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs26",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "curtain",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 26 · EXPLORACIÓN GRÁFICA II",
+   "els": [
+    {
+     "id": "bs26e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 26,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs27",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "wipe",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 27 · CONSOLIDACIÓN",
+   "els": [
+    {
+     "id": "bs27e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 27,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs28",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "circle",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 28 · La paleta de color equilibra el universo sensorial",
+   "els": [
+    {
+     "id": "bs28e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 28,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs29",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "flip",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 29 · TIPOGRAFÍA",
+   "els": [
+    {
+     "id": "bs29e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 29,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs30",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "blur",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 30 · ILUSTRACIÓN",
+   "els": [
+    {
+     "id": "bs30e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 30,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs31",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "fade",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 31 · Se realizó un análisis integral desde la idea orig",
+   "els": [
+    {
+     "id": "bs31e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 31,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs32",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "slideL",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 32 · Esta es Pinky, una cerdita adorable pastelera, ell",
+   "els": [
+    {
+     "id": "bs32e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 32,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs33",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "cover",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 33 · ESCALAESCALA",
+   "els": [
+    {
+     "id": "bs33e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 33,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs34",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "zoom",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 34 · SILUETA",
+   "els": [
+    {
+     "id": "bs34e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 34,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs35",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "slideU",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 35 · La paleta de color del personaje principal está co",
+   "els": [
+    {
+     "id": "bs35e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 35,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs36",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "curtain",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 36 · ICONOGRFÍA",
+   "els": [
+    {
+     "id": "bs36e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 36,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs37",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "wipe",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 37 · IMAGEN",
+   "els": [
+    {
+     "id": "bs37e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 37,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs38",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "circle",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 38 · FOTOGRAFÍAS",
+   "els": [
+    {
+     "id": "bs38e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 38,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs39",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "flip",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 39 · Además se tomaron unas fotos para evaluar el compo",
+   "els": [
+    {
+     "id": "bs39e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 39,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs40",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "blur",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 40 · Maracuyá Tropical Sweet Help. Elaboración propia. ",
+   "els": [
+    {
+     "id": "bs40e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 40,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs41",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "fade",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 41 · Kit Sweet Help. Elaboración propia. (2026) Kit y E",
+   "els": [
+    {
+     "id": "bs41e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 41,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs42",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "slideL",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 42 · FEEDBACK",
+   "els": [
+    {
+     "id": "bs42e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 42,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs43",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "cover",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 43 · MATERIA NIP",
+   "els": [
+    {
+     "id": "bs43e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 43,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs44",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "zoom",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 44 · ICONOGRAFÍA",
+   "els": [
+    {
+     "id": "bs44e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 44,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs45",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "slideU",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 45 · RUTA DE",
+   "els": [
+    {
+     "id": "bs45e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 45,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs46",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "curtain",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 46 · LANDING",
+   "els": [
+    {
+     "id": "bs46e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 46,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs47",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "wipe",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 47 · MAQUETACIÓN",
+   "els": [
+    {
+     "id": "bs47e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 47,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs48",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "circle",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 48 · ANÁLISIS",
+   "els": [
+    {
+     "id": "bs48e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 48,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs49",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "flip",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 49 · MATERIA DUPLA",
+   "els": [
+    {
+     "id": "bs49e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 49,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs50",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "blur",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 50 · MODELADO 3D",
+   "els": [
+    {
+     "id": "bs50e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 50,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  },
+  {
+   "id": "bs51",
+   "bg1": "#000000",
+   "bg2": "#ffe0e1",
+   "grad": false,
+   "transition": "fade",
+   "tdur": 700,
+   "notes": "",
+   "title": "Página 51 · ESTAMOS TRABAJANDO PARA",
+   "els": [
+    {
+     "id": "bs51e",
+     "type": "image",
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 720,
+     "rot": 0,
+     "op": 1,
+     "anim": "none",
+     "adur": 700,
+     "adelay": 0,
+     "pdfn": "BITACORA_SWEET_HELP_ADELANTO.pdf",
+     "pdfp": 51,
+     "fit": "contain",
+     "radius": 0
+    }
+   ]
+  }
+ ]
+}

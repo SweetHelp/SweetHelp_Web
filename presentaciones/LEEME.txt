@@ -1,0 +1,17 @@
+CARPETA BASE: presentaciones
+En el editor (botón ☁ GitHub) escribe como "Carpeta base": presentaciones
+
+presentaciones/
+  bitacora-sweet-help/                      <- ejemplo con tu PDF
+    pdf/BITACORA_SWEET_HELP_ADELANTO.pdf    <- el PDF original
+    transiciones/transiciones.json          <- transiciones por página (puedes editarlo)
+    media/                                  <- imágenes y videos extra
+
+Enlace para abrirla (sube presentador.html a tu hosting):
+  https://TU-SITIO/presentador.html?gh=USUARIO/REPO/main/presentaciones/bitacora-sweet-help
+
+Pasos:
+1. Sube esta carpeta (presentador.html + presentaciones/) a tu repositorio.
+2. Abre presentador.html, botón ☁ GitHub: usuario, repo, rama (y token si es privado o para subir).
+3. "Mis presentaciones" -> bitacora-sweet-help, o usa el enlace de arriba.
+Cada presentación nueva que subas desde el editor crea su propia carpeta aquí.
