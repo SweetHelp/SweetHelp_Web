@@ -684,6 +684,50 @@
         .ach-toast .ic { font-size: 30px; width: 50px; height: 50px; border-radius: 10px; background: #ffd54f; color: #2b1a22; display: flex; align-items: center; justify-content: center; flex: none; }
         .ach-toast small { display: block; font-size: 11px; letter-spacing: 1px; color: #ffd54f; } .ach-toast b { display: block; font-size: 16px; } .ach-toast span { display: block; font-size: 12px; opacity: 0.85; }
         #diary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; margin-top: 18px; }
+        /* ===== ONLINE ===== */
+        #start-screen { overflow-y: auto; }
+        .btn-online { margin-top: 16px; }
+        .btn-link { position: relative; z-index: 2; margin-top: 14px; padding: 8px 24px; border-radius: 50px; font-weight: bold; font-size: 14px; letter-spacing: 1px; text-decoration: none; color: #833c4a; text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+            background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,145,149,0.55)); border: 1.5px solid rgba(255,255,255,0.65); box-shadow: inset 0 1.5px 0 rgba(255,255,255,0.8), 0 8px 20px rgba(131,60,74,0.25); transition: transform .2s ease; }
+        .btn-link:hover { transform: translateY(-2px) scale(1.05); }
+        @media (max-height: 860px) {
+            #start-screen .start-title { font-size: clamp(40px, 10vh, 100px); margin-bottom: 14px; }
+            #start-screen .btn-play { padding: 12px 44px; font-size: 24px; }
+            #start-screen .btn-tut { font-size: 18px; padding: 8px 36px; margin-bottom: 8px; }
+            #start-screen .btn-online { margin-top: 10px; }
+            #start-screen .btn-shop { margin-top: 12px; width: 60px; height: 60px; }
+            #start-screen .btn-row { margin-top: 12px; gap: 14px; }
+            #start-screen .btn-row .btn-shop { margin-top: 0; }
+            .btn-link { margin-top: 10px; padding: 6px 20px; font-size: 12px; }
+        }
+        .net-modal { position: fixed; inset: 0; z-index: 330; background: rgba(131,60,74,0.55); display: none; align-items: center; justify-content: center; padding: 18px; }
+        .net-modal.open { display: flex; }
+        .net-wins { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; max-height: 94vh; overflow: auto; padding: 6px; }
+        .net-panel { position: relative; width: min(88vw, 380px); box-sizing: border-box; background: #fff8ef; border: 4px solid var(--primary-color); border-radius: 28px; padding: 26px 24px 24px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; animation: netPop .35s cubic-bezier(.2,1.4,.4,1) both; }
+        @keyframes netPop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: scale(1); } }
+        .net-panel h2 { margin: 0; font-family: 'Choco Num', 'Choco Taste', 'Segoe UI', sans-serif; font-weight: normal; font-size: 30px; letter-spacing: 1px; color: var(--primary-color); }
+        .net-lbl { font-weight: bold; font-size: 13px; letter-spacing: 2px; color: #ba5d73; }
+        .net-inp { width: 100%; box-sizing: border-box; padding: 14px; border-radius: 999px; border: 3px solid var(--primary-color); background: #fff0f1; color: var(--primary-color); font-family: 'Choco Num', 'Choco Taste', 'Segoe UI', sans-serif; font-size: 30px; text-align: center; letter-spacing: 6px; text-transform: uppercase; outline: 0; user-select: text; -webkit-user-select: text; }
+        .net-inp.nick { font-size: 20px; letter-spacing: 1px; text-transform: none; padding: 10px 14px; }
+        .net-inp:focus { border-color: var(--accent-color); box-shadow: 0 0 0 4px rgba(255,145,149,0.4); }
+        .net-code { font-family: 'Choco Num', 'Choco Taste', 'Segoe UI', sans-serif; font-size: 54px; letter-spacing: 8px; color: var(--accent-color); -webkit-text-stroke: 2px var(--primary-color); paint-order: stroke fill; text-shadow: 0 4px 0 var(--primary-color); user-select: text; -webkit-user-select: text; }
+        .net-status, .net-desc { margin: 0; min-height: 18px; font-size: 14px; color: #666; }
+        .net-pick { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 320px; }
+        .net-pick button { width: 52px; height: 52px; border-radius: 50%; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 26px; overflow: hidden; border: 3px solid rgba(131,60,74,.3); background: radial-gradient(circle at 50% 60%, #fff6f7, #ffc9d0); transition: transform .15s; }
+        .net-pick button img { width: 80%; height: 80%; object-fit: contain; }
+        .net-pick button.on { border-color: var(--primary-color); transform: scale(1.15); box-shadow: 0 0 0 3px var(--accent-color); }
+        .net-modes { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        .net-mode { padding: 8px 16px; border-radius: 50px; border: 2px solid var(--primary-color); background: #fff; color: var(--primary-color); font-weight: bold; cursor: pointer; }
+        .net-mode.on { background: var(--accent-color); color: #fff; }
+        .net-ic { display: inline-flex; vertical-align: middle; margin-right: 4px; font-size: 14px; }
+        .net-ic img { width: 16px; height: 16px; }
+        #net-toast { position: fixed; left: 50%; top: 76px; z-index: 600; transform: translate(-50%, -20px); opacity: 0; pointer-events: none; padding: 9px 22px; border-radius: 999px; max-width: 90vw; text-align: center; font-weight: bold; font-size: 14px; color: #833c4a; background: #fff0f1; border: 2px solid var(--accent-color); box-shadow: 0 8px 20px rgba(131,60,74,.3); transition: .3s; }
+        #net-toast.show { opacity: 1; transform: translate(-50%, 0); }
+        .net-on #pause-overlay .btn-resume[onclick="openTutorial()"], .net-on #pause-overlay .btn-shop[onclick="openShop()"] { display: none; }
+        .net-sel { font-size: 15px; padding: 5px 8px; border-radius: 10px; border: 2px solid var(--accent-color); color: var(--primary-color); background: #fff; font-weight: bold; max-width: 100%; margin: 4px 0; }
+        #net-arc, #net-duel { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+        #net-arc[hidden], #net-duel[hidden] { display: none; }
+
     </style>
 </head>
 <body>
@@ -701,11 +745,13 @@
         <button class="btn-play btn-tut" onclick="openTutorial()">TUTORIAL</button>
         <button class="btn-cfg" id="cfgBtn" title="Ajustes" onclick="openConfig()"><img src="config.svg" alt="Ajustes" onerror="this.outerHTML='⚙️'"></button>
         <button class="btn-play" onclick="startGame()">JUGAR</button>
+        <button class="btn-play btn-online" onclick="openOnline()">ONLINE</button>
         <button class="btn-shop" id="shopBtn" title="Tienda" onclick="openShop()"><img src="carritopng.svg" alt="Tienda"></button>
         <div class="btn-row">
             <button class="btn-shop dia" id="diaryBtn" title="Diario" onclick="openDiary()"><img src="diario.svg" alt="Diario" onerror="this.outerHTML='📖'"></button>
             <button class="btn-shop" id="achBtn" title="Logros" onclick="openAch()"><img src="logro.svg" alt="Logros" onerror="this.outerHTML='🏆'"></button>
         </div>
+        <a class="btn-link" href="ArSweetCards.html">IR A CAZAR CARTAS</a>
     </div>
 
     <!-- Ajustes de sonido -->
@@ -800,7 +846,8 @@
             <h2 id="go-title">¡GAME OVER!</h2>
             <p id="death-reason"></p>
             <p>Postres finales: <span id="final-score">0</span></p>
-            <div class="go-btns"><button class="btn-reset" onclick="retry()">REINTENTAR</button><button class="btn-reset" onclick="openShop()">TIENDA</button><button class="btn-reset" onclick="openConfig()"><img src="config.svg" alt="" style="height:20px;vertical-align:middle;margin-right:8px" onerror="this.style.display='none'">AJUSTES</button><button class="btn-reset" onclick="menuLoad()">MENÚ</button></div>
+            <div class="go-btns" id="go-offline"><button class="btn-reset" onclick="retry()">REINTENTAR</button><button class="btn-reset" onclick="openShop()">TIENDA</button><button class="btn-reset" onclick="openConfig()"><img src="config.svg" alt="" style="height:20px;vertical-align:middle;margin-right:8px" onerror="this.style.display='none'">AJUSTES</button><button class="btn-reset" onclick="menuLoad()">MENÚ</button></div>
+            <div class="go-btns" id="go-online" style="display:none"><button class="btn-reset" id="goRev" onclick="netRevancha()">REVANCHA</button><button class="btn-reset" onclick="goHome()">INICIO</button></div>
         </div>
 
     </div>
@@ -896,6 +943,45 @@
             </div>
         </div>
     </div>
+
+    <div class="net-modal" id="net-icon" onclick="if (event.target === this) netCloseIcon()">
+        <div class="net-panel">
+            <button class="shop-close" onclick="netCloseIcon()">✕</button>
+            <h2>ELIGE TU ICONO</h2>
+            <div class="net-pick" id="net-pick"></div>
+            <input class="net-inp nick" id="net-nick" maxlength="12" placeholder="tu nick" autocomplete="off">
+            <button class="btn-resume" style="margin-top:0" onclick="netIconOk()">CONTINUAR</button>
+        </div>
+    </div>
+    <div class="net-modal" id="net-multi" onclick="if (event.target === this || event.target.classList.contains('net-wins')) netCloseMulti()">
+        <div class="net-wins">
+            <div class="net-panel">
+                <button class="shop-close" onclick="netCloseMulti()">✕</button>
+                <h2>CREAR SALA</h2>
+                <div class="net-modes" id="net-modes">
+                    <button type="button" class="net-mode on" data-m="normal">NORMAL</button><button type="button" class="net-mode" data-m="arcade">ARCADE</button><button type="button" class="net-mode" data-m="dificil">DIFÍCIL</button><button type="button" class="net-mode" data-m="historia">HISTORIA</button>
+                </div>
+                <p class="net-desc" id="net-mdesc"></p>
+                <div id="net-arc" hidden>
+                    <select class="net-sel" id="net-sub"></select>
+                    <div id="net-duel">
+                        <label class="net-lbl">Gana quien consiga más… <select class="net-sel" id="net-goal"><option value="dessert">Postres</option><option value="kills">Enemigos</option></select></label>
+                        <label class="net-lbl">Meta por ronda <input class="net-sel" type="number" id="net-n" min="1" max="99" value="15" style="width:70px"></label>
+                    </div>
+                </div>
+                <button class="btn-resume" id="net-crear" style="margin-top:0" onclick="netCrear()">CREAR</button>
+                <div class="net-code" id="net-code" hidden></div>
+                <p class="net-status" id="net-status"></p>
+            </div>
+            <div class="net-panel">
+                <h2>UNIRSE</h2>
+                <label class="net-lbl" for="net-in">CÓDIGO DE SALA</label>
+                <input class="net-inp" id="net-in" maxlength="5" placeholder="▪▪▪▪▪" autocomplete="off">
+                <button class="btn-resume" style="margin-top:0" onclick="netUnir()">UNIRME</button>
+            </div>
+        </div>
+    </div>
+    <div id="net-toast"></div>
 
     <div id="dbgkeys"></div>
 
@@ -1298,8 +1384,9 @@
             localStorage.setItem('sugarSnakeEquipped2', JSON.stringify(equipped2));
         } catch (e) {} };
         const showCoins = () => { coinEl.textContent = coins; shopCoinEl.textContent = coins; };
-        function addCoins(n) {
+        function addCoins(n, p) {
             if (tut) return;
+            if (p && p.remote) { netRemoteCoin(n * (MODE.xp || 1)); return; }
             coins += n * (MODE.xp || 1); ST.coin += Math.max(0, n); saveShop(); showCoins();
             const b = coinEl.closest('.counter-box'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
         }
@@ -1394,11 +1481,12 @@
 
         // ===================== Tamaño / pantalla completa / niebla =====================
         let g = 40, W = 800, H = 800, fog = null, fogs = {};
+        const NVW = () => (window.NETV ? window.NETV.w : window.innerWidth), NVH = () => (window.NETV ? window.NETV.h : window.innerHeight);   // online: el campo se ajusta a la pantalla más pequeña
         function setupSize() {
-            const base = Math.max(30, Math.min(56, Math.min(window.innerWidth, window.innerHeight) / 14));
-            const rows = Math.max(8, Math.round(window.innerHeight / base));
-            g = window.innerHeight / rows;
-            W = Math.round(window.innerWidth);   // el campo llega justo hasta el borde real de la pantalla (antes se recortaba a múltiplos de la casilla)
+            const base = Math.max(30, Math.min(56, Math.min(NVW(), NVH()) / 14));
+            const rows = Math.max(8, Math.round(NVH() / base));
+            g = NVH() / rows;
+            W = Math.round(NVW());   // el campo llega justo hasta el borde real de la pantalla (antes se recortaba a múltiplos de la casilla)
             H = Math.round(rows * g);
             canvas.width = W; canvas.height = H;
             canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
@@ -1538,7 +1626,7 @@
         { const rowCnt = {}; SKILLS.forEach(k => { if (k.t === undefined) { k.t = 1; k.x = k.col; k.y = (rowCnt[k.col] = (rowCnt[k.col] || 0) + 1); } }); }
 
         function applySkills(p) {
-            const sk = skillsOwned[p.id] || [], has = k => sk.includes(k);
+            const sk = p.skl || skillsOwned[p.id] || [], has = k => sk.includes(k);
             p.xpMul = 1 + (has('panza') ? 0.25 : 0) + (has('banquete') ? 0.25 : 0);
             p.magnet = has('iman');
             if (p.shield === undefined) p.shield = has('coraza') ? 1 : 0;
@@ -1547,7 +1635,7 @@
             p.boostMul = has('algodon') ? 1.2 : 1;
             p.noFatigue = has('descanso');
             p.wlist = WEAPON_ORDER.filter(w => has(w));
-            p.wp = p.wlist.includes(wpnEq[p.id]) ? wpnEq[p.id] : (p.wlist[0] || null);
+            p.wp = p.wlist.includes(p.weq || wpnEq[p.id]) ? (p.weq || wpnEq[p.id]) : (p.wlist[0] || null);
             p.canStop = has('freno');
             p.stopDur = has('siesta') ? 5 : 2;
             p.stopCdMax = has('respiro') ? 3 : 8;
@@ -1633,6 +1721,7 @@
         // ---- XP ----
         function gainXP(p, amt) {
             if (tut) return;
+            if (p.remote) { netRemoteXP(p, Math.round(amt * (p.xpMul || 1) * (MODE.xp || 1))); return; }
             const a = Math.round(amt * (p.xpMul || 1) * (MODE.xp || 1)), before = lvlInfo(xpTotal[p.id]).L;
             xpTotal[p.id] += a; saveProg();
             const after = lvlInfo(xpTotal[p.id]).L;
@@ -2388,6 +2477,7 @@
         function makePlayer(slot, x, y) {
             const id = identOf(slot), pal = id === 2 ? PAL2 : PAL1, p = newSnake(x, y, 0, 2 * g);
             Object.assign(p, { id, slot, pal, stopT: 0, stopCd: 0, stopTot: 1, stopCdTot: 1, visLen: 2 * g, dessert: 0, body: 2, fatigue: 0, drain: 0, invul: 0, headHit: 0, boost: false, critAt: null, critLeft: 5, alive: true, kills: 0, eaten: 0, wcd: 0, guard: 0, ms: 0, combo: 0, lastEat: -1e9, crossed: false, mere: false, mereCd: 1500, mereThrow: 0, mereFace: 1 });
+            if (window.NETREM && slot === 2) { p.remote = true; p.skl = NETREM.skl; p.weq = NETREM.weq; p.accI = NETREM.accI; }
             applySkills(p);
             if (slot === 1 && mereSkinOn()) { p.msk = 1; p.pal = PALM; p.mere = false; ST.playM = 1; }   // juegas como Merenguita (más pequeña)
             return p;
@@ -2587,7 +2677,7 @@
         function collect(p, dt) {
             pull(p, food, dt);
             if (Math.hypot(p.x - food.x, p.y - food.y) < g * 0.8) {
-                p.dessert++; p.body++; p.eaten++; ST.ate++; hud(); S('eat'); addCoins(1); gainXP(p, 10);
+                p.dessert++; p.body++; p.eaten++; ST.ate++; hud(); S('eat'); addCoins(1, p); gainXP(p, 10);
                 if (MODE.id === 'mini') miniPts(p, 1, food.x, food.y);
                 if (tut) tutEvent('eat');
                 popups.push({ x: food.x, y: food.y - g / 2, life: 1 });
@@ -2991,7 +3081,7 @@
                 const hi = p.msk ? mereHead(p.headHit > 0, false, false) : playerHead(p.id, p.headHit > 0, false);
                 const ph = p.id === 2 ? 900 : 0;
                 tongueSnd(p, ph, 0.7);
-                drawHead(p.x, p.y, p.ang, g * 1.6 * (p.msk ? 0.78 : 1), hi, p.msk ? '#ff8fb8' : p.id === 2 ? '#FF9100' : '#e0566f', p.msk ? '#ffc2d6' : p.id === 2 ? '#FFAA00' : '#ba5d73', ph, equippedImgs(p.id));
+                drawHead(p.x, p.y, p.ang, g * 1.6 * (p.msk ? 0.78 : 1), hi, p.msk ? '#ff8fb8' : p.id === 2 ? '#FF9100' : '#e0566f', p.msk ? '#ffc2d6' : p.id === 2 ? '#FFAA00' : '#ba5d73', ph, p.accI ? p.accI.filter(im => im && im.ok) : equippedImgs(p.id));
                 ctx.restore(); }
                 ctx.globalAlpha = 1;
             }
@@ -3015,7 +3105,7 @@
 
             for (const p of players) {
                 if (!p.alive) continue;
-                if (twoP) { ctx.fillStyle = p.pal.spot; ctx.font = "bold 16px Arial"; ctx.fillText("J" + p.slot, p.x, p.y + g * 1.25); }
+                if (twoP) { ctx.fillStyle = p.pal.spot; ctx.font = "bold 16px Arial"; ctx.fillText(p.nick || ("J" + p.slot), p.x, p.y + g * 1.25); }
                 if (p.body <= 0.02) {
                     ctx.fillStyle = "#ff0000"; ctx.font = "bold 20px Arial";
                     ctx.fillText(`¡${p.critLeft.toFixed(1)}s!`, p.x, p.y - g * 1.1);
@@ -3139,7 +3229,7 @@
             for (let i = foods2.length - 1; i >= 0; i--) {
                 const f = foods2[i]; pull(p, f, dt);
                 if (Math.hypot(p.x - f.x, p.y - f.y) < g * 0.8) {
-                    foods2.splice(i, 1); p.dessert++; p.body++; p.eaten++; ST.ate++; hud(); S('eat'); (f.gold && ST.goldEat++), addCoins(f.gold ? 5 : 1); gainXP(p, f.gold ? 30 : 10); if (MODE.id === 'mini') miniPts(p, f.gold ? 5 : 1, f.x, f.y);
+                    foods2.splice(i, 1); p.dessert++; p.body++; p.eaten++; ST.ate++; hud(); S('eat'); (f.gold && ST.goldEat++), addCoins(f.gold ? 5 : 1, p); gainXP(p, f.gold ? 30 : 10); if (MODE.id === 'mini') miniPts(p, f.gold ? 5 : 1, f.x, f.y);
                     popups.push({ x: f.x, y: f.y - g / 2, life: 1 }); burst(f.x, f.y, p.id === 2 ? '#FFAA00' : '#ff9195');
                     if (MODE.foods && !MODE.rain) spawnFood2();
                 }
@@ -4034,7 +4124,7 @@
             shockwaves.push({ x: en.x, y: en.y, radius: 0, opacity: 1, col: '255,213,79', sp: g * 10 / 22, fd: 0.03 });
             burst(en.x, en.y, '#ffd966', 40); S('boom'); triggerShake();
             enemies.forEach(e => { e.dead = 1; }); acids.length = 0; bossBar();
-            addCoins(30 * (stage + 1)); players.forEach(q => { if (q.alive) gainXP(q, 60 * (stage + 1)); });
+            addCoins(30 * (stage + 1)); if (window.NETREM) netRemoteCoin(30 * (stage + 1) * (MODE.xp || 1)); players.forEach(q => { if (q.alive) gainXP(q, 60 * (stage + 1)); });
             popups.push({ x: en.x, y: en.y - g * 2, life: 2, txt: '¡' + en.name + ' derrotado!', col: '#d49a00' });
             const done = stage; stage++; ST.boss++; ST.bossMax = Math.max(ST.bossMax, stage);
             setTimeout(() => {
@@ -4500,6 +4590,536 @@
     showXP(); paintHudFaces(true);
         initLoading();
     </script>
+<script>
+/* =====================================================================
+   ONLINE · SUGAR SNAKE  (multijugador por PeerJS, igual que SweetCards Battle)
+   - El ANFITRIÓN (quien crea la sala) simula todo el juego: serpientes malas, ácido, postres, armas...
+   - El INVITADO manda sus controles y dibuja lo que el anfitrión le envía (20 veces por segundo).
+   - Modos: COOP (los dos contra las malas), DIFÍCIL y DUELO 1 vs 1.
+   - El XP y las monedas que gana el invitado se guardan en SU navegador.
+   ===================================================================== */
+(function () {
+    const PFX = 'sugarsnake-';
+    const ICONS = ['img:postre.svg', 'img:enemy.svg', 'img:sweetcoin.svg', '🍰', '🍓', '🍩', '🧁', '🍪', '🍫', '🐍', '🍬'];
+    const MODE_TXT = {
+        normal: 'El clásico: comen, crecen y sobreviven juntos.',
+        arcade: 'Duelo 1 vs 1 o uno de los 9 minijuegos.',
+        dificil: 'Más malas, más rápidas, creepers. ×2 monedas y XP.',
+        historia: 'Rescaten juntos a Merenguita: 5 jefes, cinemáticas y diálogos.'
+    };
+    const FWD = ['eat', 'kit', 'bump', 'die', 'spit', 'splat', 'sizzle', 'enemyDie', 'shoot', 'boom', 'lvl', 'pop', 'milk'];   // sonidos que el anfitrión le reenvía al invitado
+    const $n = id => document.getElementById(id);
+    const r1 = v => Math.round(v * 10) / 10, r2 = v => Math.round(v * 100) / 100;
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    const NET = window.NET = {
+        on: false, role: null, peer: null, conn: null, code: '', mode: 'normal', sub: 'duelo', rival: null, started: false, gone: false,
+        rem: false, remOp: false, playing: false, ep: -1, hostEp: 0, sq: [], bq: [], sfxq: [], shake: 0, ban: null, eid: 0,
+        gin: { b: 0 }, remXP: 0, hostPick: 1, bak: null, graf: 0, glast: 0, gp: [], ge: new Map(), mh: '', _fromNet: false,
+        lastA: null, lastM: 0, lastB: 0, inT: 0, xps: [0, 0], profT: 0
+    };
+    let myIcon = ICONS[0], myNick = '';
+    try { const i = localStorage.getItem('sugarSnakeIcon'); if (i) myIcon = i; myNick = localStorage.getItem('sweetBattleNick') || ''; } catch (e) {}
+
+    // ---------- avisos ----------
+    let toastT = 0;
+    function toast(t) { const x = $n('net-toast'); x.textContent = t; x.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => x.classList.remove('show'), 2800); }
+    const iconHTML = v => v && v.indexOf('img:') === 0 ? `<img src="${esc(v.slice(4))}" alt="" onerror="this.outerHTML='🐍'">` : (v || '🐍');
+    const send = m => { try { if (NET.conn && NET.conn.open) NET.conn.send(m); } catch (e) {} };
+
+    // ---------- ventanas: icono + nick, y crear / unirse ----------
+    function paintPick() {
+        const box = $n('net-pick'); box.innerHTML = '';
+        ICONS.forEach(v => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = iconHTML(v); if (v === myIcon) b.className = 'on'; b.onclick = () => { myIcon = v; paintPick(); }; box.append(b); });
+    }
+    window.openOnline = function () {
+        if (loadOn) return;
+        audio(); netEnd(); paintPick(); $n('net-nick').value = myNick; $n('net-icon').classList.add('open');
+    };
+    window.netCloseIcon = () => $n('net-icon').classList.remove('open');
+    window.netIconOk = function () {
+        myNick = $n('net-nick').value.trim().slice(0, 12);
+        try { localStorage.setItem('sweetBattleNick', myNick); localStorage.setItem('sugarSnakeIcon', myIcon); } catch (e) {}
+        netCloseIcon();
+        $n('net-code').hidden = true; $n('net-status').textContent = ''; $n('net-crear').hidden = false; $n('net-crear').disabled = false;
+        $n('net-modes').hidden = false; $n('net-mdesc').hidden = false; $n('net-arc').hidden = NET.mode !== 'arcade';
+        $n('net-multi').classList.add('open');
+    };
+    window.netCloseMulti = function () { $n('net-multi').classList.remove('open'); if (!NET.on) netEnd(); };
+    document.querySelectorAll('#net-modes .net-mode').forEach(b => b.addEventListener('click', () => {
+        NET.mode = b.dataset.m; document.querySelectorAll('#net-modes .net-mode').forEach(x => x.classList.toggle('on', x === b)); $n('net-mdesc').textContent = MODE_TXT[NET.mode]; $n('net-arc').hidden = NET.mode !== 'arcade';
+    }));
+    $n('net-mdesc').textContent = MODE_TXT.normal;
+    $n('net-sub').innerHTML = '<option value="duelo">DUELO 1 vs 1</option>' + MINI.map((m, i) => '<option value="' + i + '">' + m.n + '</option>').join('');
+    $n('net-sub').addEventListener('change', () => { NET.sub = $n('net-sub').value; $n('net-duel').hidden = NET.sub !== 'duelo'; });
+    function buildMode() {   // mismos modos que offline
+        if (NET.mode === 'dificil') return Object.assign({}, MODES.dificil);
+        if (NET.mode === 'historia') return Object.assign({}, MODES.historia);
+        if (NET.mode === 'arcade') {
+            if (NET.sub === 'duelo') { ARC.goal = $n('net-goal').value; ARC.n = Math.max(1, Math.min(99, +$n('net-n').value || 15)); return Object.assign({}, MODES.arcade, { en: ARC.goal === 'kills' ? 3 : 1, foods: 3 }); }
+            return Object.assign({ id: 'mini' }, MINI[+NET.sub]);
+        }
+        return Object.assign({}, MODES.normal);
+    }
+    // escribir en los campos no debe mover la serpiente ni disparar atajos del juego
+    ['net-nick', 'net-in', 'net-n', 'net-sub', 'net-goal'].forEach(id => ['keydown', 'keyup'].forEach(ev => $n(id).addEventListener(ev, e => { e.stopPropagation(); if (ev === 'keydown' && e.code === 'Enter') { if (id === 'net-in') netUnir(); else if (id === 'net-nick') netIconOk(); } })));
+    window.addEventListener('keydown', e => {   // con una ventana online abierta, las teclas no llegan al juego
+        const open = $n('net-icon').classList.contains('open') || $n('net-multi').classList.contains('open');
+        if (!open) return;
+        if (e.target && /^(INPUT|SELECT)$/.test(e.target.tagName)) return;
+        e.stopPropagation();
+        if (e.code === 'Escape') { if ($n('net-icon').classList.contains('open')) netCloseIcon(); else netCloseMulti(); }
+    }, true);
+
+    function loadPeer(cb) {
+        if (window.Peer) return cb();
+        const s = document.createElement('script'); s.src = 'https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js'; s.onload = cb;
+        s.onerror = () => { toast('No se pudo cargar el multijugador (revisa tu internet)'); $n('net-crear').disabled = false; }; document.head.appendChild(s);
+    }
+    window.netCrear = function () {
+        netEnd(); $n('net-crear').disabled = true; $n('net-status').textContent = 'Creando sala…';
+        loadPeer(() => {
+            const code = Math.random().toString(36).replace(/[^a-z0-9]/g, '').slice(0, 5).toUpperCase().padEnd(5, 'X');
+            NET.role = 'host'; NET.code = code;
+            const pr = NET.peer = new Peer(PFX + code);
+            pr.on('open', () => {
+                if (NET.peer !== pr) return;
+                $n('net-code').textContent = code; $n('net-code').hidden = false; $n('net-crear').hidden = true; $n('net-modes').hidden = true; $n('net-mdesc').hidden = true; $n('net-arc').hidden = true;
+                $n('net-status').textContent = 'Esperando al otro jugador… pásale este código.';
+            });
+            pr.on('connection', c => { if (NET.peer !== pr || NET.conn) { c.close(); return; } conecta(c); });
+            pr.on('error', e => { if (NET.peer !== pr) return; if (e.type === 'unavailable-id') { netCrear(); return; } toast('Error de conexión: ' + e.type); $n('net-crear').disabled = false; $n('net-status').textContent = ''; });
+        });
+    };
+    window.netUnir = function () {
+        const code = $n('net-in').value.trim().toUpperCase(); if (code.length < 3) { toast('Escribe el código de la sala'); return; }
+        netEnd(); toast('Conectando…');
+        loadPeer(() => {
+            NET.role = 'guest'; NET.code = code;
+            const pr = NET.peer = new Peer();
+            const to = setTimeout(() => { if (NET.peer === pr && !NET.conn) toast('No se pudo conectar con la sala'); }, 12000);
+            pr.on('open', () => { if (NET.peer === pr) conecta(pr.connect(PFX + code, { reliable: true, serialization: 'json' })); });
+            pr.on('error', e => { clearTimeout(to); if (NET.peer === pr) toast(e.type === 'peer-unavailable' ? 'No existe esa sala' : 'Error de conexión: ' + e.type); });
+        });
+    };
+    function conecta(c) {
+        NET.conn = c;
+        const hola = () => send({ t: 'hello', icon: myIcon, nick: myNick, vw: innerWidth, vh: innerHeight });
+        if (c.open) hola(); else c.on('open', hola);
+        c.on('data', netData);
+        c.on('close', () => { if (c === NET.conn) netLost(NET.role === 'host' ? 'El otro jugador salió de la partida.' : 'El anfitrión salió de la partida.'); });
+        c.on('error', () => { if (c === NET.conn) netLost('Se perdió la conexión.'); });
+    }
+
+    // ---------- inicio / fin de la sesión ----------
+    function netBegin() {
+        NET.on = true; NET.started = false; NET.gone = false; NET.bak = { charPick, twoP };
+        document.body.classList.add('net-on');
+        pauseOverlay.querySelector('h2').textContent = 'MENÚ ONLINE'; pauseBtn.innerHTML = 'MENÚ';
+        twoP = true; syncP2UI();
+        $n('net-icon').classList.remove('open'); $n('net-multi').classList.remove('open');
+    }
+    function netEnd() {
+        const c = NET.conn, p = NET.peer, bak = NET.bak, was = NET.on;
+        NET.conn = NET.peer = null; NET.on = false; NET.role = null; NET.rival = null; NET.playing = false; NET.started = false; NET.gone = false;
+        NET.rem = NET.remOp = false; NET.sq.length = 0; NET.bq.length = 0; NET.sfxq.length = 0; NET.bak = null; NET.ep = -1; NET.gp = []; NET.ge = new Map();
+        clearTimeout(NET.profT); cancelAnimationFrame(NET.graf); NET.graf = 0;
+        window.NETREM = null; window.NETV = null;
+        try { if (c) c.close(); } catch (e) {}
+        try { if (p) p.destroy(); } catch (e) {}
+        document.body.classList.remove('net-on');
+        if (bak) { charPick = bak.charPick; twoP = bak.twoP; syncP2UI(); }
+        if (was || bak) { pauseOverlay.querySelector('h2').textContent = 'JUEGO EN PAUSA'; pauseBtn.innerHTML = 'PAUSA'; setHudNames(null, null); $n('go-offline').style.display = ''; $n('go-online').style.display = 'none'; }
+    }
+    function netLost(msg) {
+        if (!NET.on && !NET.peer) return;
+        if (NET.role === 'guest' && NET.on) { toast(msg); netEnd(); goHome(); return; }
+        if (NET.role === 'host' && NET.on) {   // el invitado se fue: su serpiente desaparece y la partida sigue
+            toast(msg); NET.gone = true; NET.conn = null;
+            const p = players[1];
+            if (gameActive && p && p.remote && p.alive) { p.alive = false; p.boost = false; burst(p.x, p.y, p.pal.body, 22); if (MODE.id === 'arcade') gameOver('El otro jugador salió de la partida.', '¡VICTORIA!'); else if (!players.some(q => q.alive)) gameOver('El otro jugador salió de la partida.'); }
+            if (!gameActive) { const b = $n('goRev'); b.disabled = true; b.textContent = 'SIN RIVAL'; }
+            return;
+        }
+        toast(msg); netEnd();
+    }
+    function setHudNames(n1, n2) {   // en online se ve el icono y el nick; fuera de online vuelve "J1" / "J2"
+        [['hud1', 1, n1], ['p2-box', 2, n2]].forEach(([id, i, n]) => {
+            const el = $n(id).querySelector('.phud-name'), f = el.firstChild;
+            if (n) { if (f.nodeType === 3) { const sp = document.createElement('span'); sp.className = 'net-nm'; el.replaceChild(sp, f); } el.firstChild.innerHTML = n + ' '; }
+            else if (f.nodeType === 1 && f.classList.contains('net-nm')) el.replaceChild(document.createTextNode('J' + i + ' '), f);
+        });
+    }
+    const nameHTML = (icon, nick, fb) => '<span class="net-ic">' + iconHTML(icon) + '</span>' + esc(nick || fb);
+
+    // ---------- mensajes ----------
+    function netData(m) {
+        if (!m || !m.t) return;
+        switch (m.t) {
+            case 'hello': if (!NET.rival) { NET.rival = m; if (NET.role === 'host') hostGo(); } break;
+            case 'go': guestGo(m); break;
+            case 'prof': hostProf(m); break;
+            case 's': NET.sq.push(m); if (NET.sq.length > 12) NET.sq.splice(0, NET.sq.length - 6); break;
+            case 'i': hostInput(m); break;
+            case 'fire': case 'cyc': case 'stop': hostAct(m.t); break;
+            case 'xp': guestXP(m.a | 0); break;
+            case 'coin': guestCoin(m.n | 0); break;
+            case 'over': guestOver(m); break;
+            case 'rematch': NET.remOp = true; if (NET.role === 'host' && NET.rem) hostRestart(); else toast('El otro jugador quiere revancha'); break;
+            case 'rst': guestRst(); break;
+            case 'cine': if (guest() && Array.isArray(m.list)) _play(m.list, null); break;
+            case 'leave': netLost(NET.role === 'host' ? 'El otro jugador salió de la partida.' : 'El anfitrión salió de la partida.'); break;
+        }
+    }
+
+    // ===================== ANFITRIÓN =====================
+    function hostGo() {
+        netBegin(); NET.hostPick = charPick; NET.hmode = buildMode();
+        send({ t: 'go', mid: NET.hmode.id, hostPick: charPick, nick: myNick, icon: myIcon });
+        clearTimeout(NET.profT); NET.profT = setTimeout(() => { if (NET.on && !NET.started) hostProf({}); }, 4000);   // si el invitado no responde, se juega con perfil básico
+    }
+    function hostProf(m) {
+        if (NET.role !== 'host' || !NET.on || NET.started) return;
+        NET.started = true; clearTimeout(NET.profT);
+        const gid = 3 - NET.hostPick, skl = (Array.isArray(m.skl) ? m.skl : []).filter(x => typeof x === 'string' && skillById(x)), accs = (Array.isArray(m.accs) ? m.accs : []).filter(x => accImgs[x]);
+        window.NETREM = { skl, weq: typeof m.weq === 'string' ? m.weq : '', accIds: accs, accI: accs.map(id => accImgs[id]), gid };
+        NET.remXP = Math.max(0, m.xp | 0);
+        window.NETV = { w: Math.min(innerWidth, m.vw || innerWidth), h: Math.min(innerHeight, m.vh || innerHeight) };
+        MODE = NET.hmode || buildMode();
+        beginGame();
+    }
+    function hostAfterReset() {   // se llama cada vez que el anfitrión (re)crea la partida
+        NET.ep++; NET.rem = NET.remOp = false;
+        const a = players[0], b = players[1];
+        if (a) a.nick = myNick || '';
+        if (b) b.nick = (NET.rival && NET.rival.nick) || '';
+        setHudNames(nameHTML(myIcon, myNick, 'J1'), nameHTML(NET.rival ? NET.rival.icon : '', NET.rival ? NET.rival.nick : '', 'J2'));
+        pauseBtn.innerHTML = 'MENÚ'; resetOver();
+    }
+    function hostInput(m) {
+        const p = players[1]; if (NET.role !== 'host' || !p || !p.remote) return;
+        p.rin = { a: (m.a === null || m.a === undefined || isNaN(+m.a)) ? null : +m.a, m: m.m ? 1 : 0, b: m.b ? 1 : 0 };
+        if (!!p.rin.b !== !!p.boost) { NET._fromNet = true; try { setBoost(2, !!p.rin.b); } finally { NET._fromNet = false; } }
+    }
+    function hostAct(t) {
+        const p = players[1]; if (NET.role !== 'host' || !p || !p.remote) return;
+        NET._fromNet = true;
+        try { if (t === 'fire') fireWeapon(p); else if (t === 'cyc') cycleWeapon(p); else tryStop(p); } finally { NET._fromNet = false; }
+    }
+    window.netRemoteXP = function (p, a) {   // XP del invitado: el anfitrión se la manda y el invitado la guarda en SU partida
+        const before = lvlInfo(NET.remXP).L; NET.remXP += a; const after = lvlInfo(NET.remXP).L;
+        send({ t: 'xp', a }); showXP(p.slot, after > before);
+        if (after > before) { popups.push({ x: p.x, y: p.y - g * 1.3, life: 1.6, txt: '¡NIVEL ' + after + '!', col: '#e0566f' }); burst(p.x, p.y, '#ffd966', 18); S('lvl'); xpBurst(p.slot, p.id); }
+    };
+    window.netRemoteCoin = n => send({ t: 'coin', n: Math.round(n) });
+    function hostRestart() {
+        NET.rem = NET.remOp = false; send({ t: 'rst' }); resetOver(); _retry();
+    }
+    window.netRevancha = function () {
+        if (NET.gone || !NET.on) return;
+        const b = $n('goRev'); NET.rem = true; b.disabled = true; b.textContent = 'ESPERANDO…'; send({ t: 'rematch' });
+        if (NET.role === 'host' && NET.remOp) hostRestart(); else toast('Esperando al otro jugador…');
+    };
+    function resetOver() { const b = $n('goRev'); if (b) { b.disabled = false; b.textContent = 'REVANCHA'; } }
+
+    // foto del estado (20 por segundo)
+    function netSnap() {
+        const dc = NET.conn.dataChannel; if (dc && dc.bufferedAmount > 200000) return;   // la conexión va lenta: salta esta foto
+        const mh = byId('modehud');
+        const s = { t: 's', ep: NET.ep, T: Math.round(gameClock), W, H, g: r2(g), xp: [xpTotal[identOf(1)] | 0, NET.remXP | 0], mh: mh.classList.contains('on') ? mh.textContent : '' };
+        s.pl = players.map(p => ({
+            i: p.id, s: p.slot, x: r1(p.x), y: r1(p.y), a: r2(p.ang), l: r1(p.visLen), al: p.alive ? 1 : 0, iv: p.invul > 0 ? 1 : 0, hh: p.headHit > 0 ? 1 : 0, bo: p.boost ? 1 : 0,
+            de: p.dessert, ki: p.kills, ea: p.eaten, bd: r1(p.body), fa: r2(p.fatigue > 0 ? p.fatigue : 0), cl: r1(p.critLeft), st: r2(p.stopT > 0 ? p.stopT : 0), sT: r2(p.stopTot), sa: r2(p.stillAmt || 0),
+            wp: p.wp || '', wc: Math.round(p.wcd > 0 ? p.wcd : 0), cs: p.canStop ? 1 : 0, sc: r2(p.stopCd > 0 ? p.stopCd : 0), sC: r2(p.stopCdTot), sh: (p.shield > 0 || p.guard > 0) ? 1 : 0,
+            me: p.mere ? 1 : 0, mt: p.mereThrow > 0 ? 1 : 0, mf: p.mereFace, mk: p.msk ? 1 : 0, n: p.nick || '',
+            ac: p.remote ? (window.NETREM ? NETREM.accIds : []) : eqList(p.id).filter(id => !accLock(id))
+        }));
+        s.pt = portal ? 1 : 0; s.bs = bgStage;
+        s.en = enemies.filter(e => !e.dead).map(e => ({
+            i: e._nid || (e._nid = ++NET.eid), x: r1(e.x), y: r1(e.y), a: r2(e.ang), l: r1(e.len), ty: e.type || '', k: e.kind === 'creeper' ? 1 : 0, sc: e.sc || 1, hp: e.hp || 0,
+            fz: e.freeze > 0 ? 1 : 0, fu: e.fuse != null ? 1 : 0, ch: e.chargeAt != null ? 1 : 0, fa: gameClock < (e.faceUntil || 0) ? 1 : 0, sd: r2(e.seed || 0),
+            bo: e.boss ? 1 : 0, bi: e.bi, ph: e.ph || 0, mx: e.max, nm: e.name, pal: e.boss ? e.pal : undefined
+        }));
+        s.fd = [r1(food.x), r1(food.y)];
+        s.kt = kit.active ? [r1(kit.x), r1(kit.y)] : null;
+        s.f2 = foods2.map(f => [r1(f.x), r1(f.y), f.gold ? 1 : 0]);
+        s.ac = acids.map(a => [r1(a.x), r1(a.y), r1(a.r), a.state === 'warn' ? 0 : 1, Math.round(a.t), a.warnMs, a.life, a.v || 0, r2(a.seed || 0)]);
+        s.sp = spits.map(q => [r1(q.sx), r1(q.sy), r1(q.tx), r1(q.ty), Math.round(q.t), q.dur]);
+        s.sh = shots.map(q => [r1(q.x), r1(q.y), r1(q.vx), r1(q.vy), r2(q.rot), q.id]);
+        s.bm = bombs.map(b => [r1(b.sx), r1(b.sy), r1(b.tx), r1(b.ty), Math.round(b.t), b.dur, b.id]);
+        s.bt = bottles.map(b => [r1(b.sx), r1(b.sy), r1(b.tx), r1(b.ty), Math.round(b.t), b.dur, r2(b.owner.mereR || MERE.r)]);
+        s.mk = milks.map(m => [r1(m.x), r1(m.y), r1(m.r), Math.round(m.t), m.life, m.v, r2(m.seed || 0)]);
+        s.sw = shockwaves.map(w => [r1(w.x), r1(w.y), r1(w.radius), r2(w.opacity), w.col || '', r2(w.sp || 10), r2(w.fd || 0.02)]);
+        s.pu = popups.map(p => [r1(p.x), r1(p.y), r2(p.life), p.txt || '', p.col || '']);
+        if (NET.bq.length) { s.bu = NET.bq; NET.bq = []; }
+        if (NET.sfxq.length) { s.sf = NET.sfxq; NET.sfxq = []; }
+        if (NET.shake) { s.sk = 1; NET.shake = 0; }
+        if (NET.ban) { s.bn = NET.ban; NET.ban = null; }
+        send(s);
+    }
+    setInterval(() => { try { if (NET.on && NET.role === 'host' && gameActive && NET.conn && NET.conn.open && players.length) netSnap(); } catch (e) { console.error('netSnap', e); } }, 50);
+
+    // ===================== INVITADO =====================
+    function guestGo(m) {
+        if (NET.role !== 'guest' || NET.on || !NET.rival) return;
+        netBegin(); MODE = { id: m.mid || 'normal' }; NET.hostPick = m.hostPick === 2 ? 2 : 1; charPick = NET.hostPick;
+        NET.rival.nick = m.nick || NET.rival.nick; NET.rival.icon = m.icon || NET.rival.icon;
+        const gid = identOf(2);
+        send({ t: 'prof', skl: (skillsOwned[gid] || []).slice(), weq: wpnEq[gid] || '', accs: eqList(gid).filter(id => !accLock(id)), xp: xpTotal[gid] || 0, vw: innerWidth, vh: innerHeight });
+        audio(); S('start'); loadTrack(true);
+        showLoading(1700, () => { if (!NET.on) return; demoStop(); startScreen.style.display = 'none'; gameWrapper.style.display = 'block'; guestStart(); });
+    }
+    function guestStart() {
+        gameActive = true; isPaused = false; players = []; enemies = []; fadingEnemies = []; shockwaves = []; popups = []; particles = []; acids = []; spits = []; shots = []; bombs = []; bottles = []; milks = []; foods2 = [];
+        kit.active = false; gameClock = 0; joy = null; portal = false; NET.portal = false; bgStage = 0; bgPrev = -1; warnShown = false; Object.assign(k1, NONE); Object.assign(k2, NONE);
+        gSetup(W, H, g);
+        NET.gp = []; NET.ge = new Map(); NET.ep = -1; NET.sq.length = 0; NET.playing = true; NET.glast = 0; NET.xps = [0, 0]; NET.gin.b = 0; NET.lastA = null;
+        gameOverScreen.style.display = 'none'; pauseOverlay.style.display = 'none'; boostWarningOverlay.style.display = 'none'; pauseBtn.innerHTML = 'MENÚ'; byId('bossbar').classList.remove('on'); banner('');
+        setHudNames(nameHTML(NET.rival ? NET.rival.icon : '', NET.rival ? NET.rival.nick : '', 'J1'), nameHTML(myIcon, myNick, 'J2'));
+        showXP(); paintHudFaces(true); resetOver();
+        cancelAnimationFrame(NET.graf); NET.graf = requestAnimationFrame(gLoop);
+    }
+    function guestRst() {
+        if (NET.role !== 'guest' || !NET.on) return;
+        resetOver(); gameOverScreen.style.display = 'none'; NET.rem = NET.remOp = false; NET.playing = false; cancelAnimationFrame(NET.graf);
+        showLoading(900, () => { if (NET.on) guestStart(); });
+    }
+    function guestOver(m) {
+        if (NET.role !== 'guest' || !NET.on) return;
+        NET.playing = false; gameActive = false; cancelAnimationFrame(NET.graf); NET.graf = 0; boostHiss(false);
+        byId('go-title').textContent = m.title || '¡GAME OVER!'; deathReasonText.innerHTML = m.reason || ''; finalScoreElement.innerHTML = m.score || '';
+        pauseOverlay.style.display = 'none'; boostWarningOverlay.style.display = 'none';
+        $n('go-offline').style.display = 'none'; $n('go-online').style.display = 'flex'; resetOver(); gameOverScreen.style.display = 'flex'; loadTrack(true);
+    }
+    function guestXP(a) {
+        const gid = identOf(2), before = lvlInfo(xpTotal[gid]).L; xpTotal[gid] += a; saveProg();
+        const after = lvlInfo(xpTotal[gid]).L; showXP(2, after > before);
+        if (after > before) { S('lvl'); xpBurst(2, gid); toast('¡Subiste al nivel ' + after + '!'); }
+    }
+    function guestCoin(n) {
+        coins += n; ST.coin += Math.max(0, n); saveShop(); showCoins();
+        const b = coinEl.closest('.counter-box'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+    }
+    function gSetup(w, h, gg) { W = w; H = h; g = gg; canvas.width = W; canvas.height = H; fogs = {}; fog = makeFog('249,216,180'); gFit(); }
+    function gFit() { if (NET.role !== 'guest') return; const s = Math.min(innerWidth / W, innerHeight / H); canvas.style.width = Math.round(W * s) + 'px'; canvas.style.height = Math.round(H * s) + 'px'; }
+    addEventListener('resize', () => { if (NET.on && NET.role === 'guest') gFit(); });
+    canvas.addEventListener('pointermove', e => {   // el puntero (tecla V) se mide sobre el campo, aunque se vea escalado
+        if (!(NET.on && NET.role === 'guest') || e.pointerType !== 'mouse') return;
+        const r = canvas.getBoundingClientRect(); ptr = { x: (e.clientX - r.left) * canvas.width / r.width, y: (e.clientY - r.top) * canvas.height / r.height };
+    });
+
+    // serpientes "fantasma": se mueven suave hacia lo que dice el anfitrión y recrean la cola con su rastro
+    function ghostSet(o, x, y, a, len, T, now) {
+        const dt = (T - (o.hT || 0)) / 1000;
+        if (o.hT && dt > 0.005 && dt < 0.6) { const vx = (x - o.tx) / dt, vy = (y - o.ty) / dt; o.vx = o.vx * 0.4 + vx * 0.6; o.vy = o.vy * 0.4 + vy * 0.6; } else { o.vx = o.vy = 0; }
+        o.tx = x; o.ty = y; o.ta = a; o.lT = len; o.hT = T; o.snapT = now;
+    }
+    function ghostStep(o, dt) {
+        const f = 1 - Math.exp(-dt * 20), age = Math.min(0.1, (performance.now() - o.snapT) / 1000), m = g * 0.45;
+        const tx = NET.portal ? o.tx + o.vx * age : Math.max(m, Math.min(W - m, o.tx + o.vx * age)), ty = Math.max(m, Math.min(H - m, o.ty + o.vy * age));
+        if (Math.abs(tx - o.x) > W * 0.6 && Math.abs(ty - o.y) < g * 3) { const dx = tx - o.x; for (const q of o.trail) q.x += dx; o.x = tx; o.y = ty; } else if (Math.hypot(tx - o.x, ty - o.y) > g * 6) { o.x = tx; o.y = ty; o.trail.length = 0; } else { o.x += (tx - o.x) * f; o.y += (ty - o.y) * f; }
+        o.ang += wrapA(o.ta - o.ang) * f; o.vl += (o.lT - o.vl) * Math.min(1, dt * 12);
+        const l = o.trail[o.trail.length - 1];
+        if (!l || Math.hypot(o.x - l.x, o.y - l.y) >= 2) o.trail.push({ x: o.x, y: o.y });
+        trimTrail(o.trail, o.vl); sampleInto(o.pts, g * 0.2, o.x, o.y, o.trail, o.vl);
+    }
+    function mkGhost(d, len) { const v = newSnake(d.x, d.y, d.a, len); v.tx = d.x; v.ty = d.y; v.ta = d.a; v.vx = v.vy = 0; v.vl = v.lT = len; v.hT = 0; v.snapT = performance.now(); return v; }
+
+    function netApply(s) {
+        if (s.ep !== NET.ep) { NET.ep = s.ep; NET.gp = []; NET.ge = new Map(); fadingEnemies = []; particles = []; popups = []; shockwaves = []; }
+        if (s.W !== W || s.H !== H || Math.abs(s.g - g) > 0.01) gSetup(s.W, s.H, s.g);
+        const now = performance.now(), T = s.T || 0, list = [];
+        s.pl.forEach((d, idx) => {
+            let v = NET.gp[idx];
+            if (!v || v.id !== d.i) { v = NET.gp[idx] = mkGhost({ x: d.x, y: d.y, a: d.a }, d.l); v.id = d.i; v.slot = d.s; v._w = null; }
+            ghostSet(v, d.x, d.y, d.a, d.l, T, now);
+            v.alive = !!d.al; v.invul = d.iv ? 1000 : 0; v.headHit = d.hh ? 1000 : 0; v.boost = !!d.bo; v.dessert = d.de; v.kills = d.ki; v.eaten = d.ea; v.body = d.bd; v.fatigue = d.fa; v.critLeft = d.cl;
+            v.critAt = d.bd <= 0.02 ? 1 : null; v.stopT = d.st; v.stopTot = d.sT || 1; v.stillAmt = d.sa; v.wp = d.wp || null; v.wcd = d.wc; v.canStop = !!d.cs; v.stopCd = d.sc; v.stopCdTot = d.sC || 1;
+            v.shield = d.sh; v.guard = 0; v.mere = !!d.me; v.mereThrow = d.mt ? 450 : 0; v.mereFace = d.mf || 1; v.msk = d.mk ? 1 : 0; v.nick = d.n || ''; v.pal = d.mk ? PALM : d.i === 2 ? PAL2 : PAL1;
+            const key = (d.ac || []).join(','); if (v._ack !== key) { v._ack = key; v.accI = (d.ac || []).map(id => accImgs[id]).filter(Boolean); }
+            list.push(v);
+        });
+        players = list;
+        const seen = new Set(), el = [];
+        for (const d of s.en) {
+            let e = NET.ge.get(d.i);
+            if (!e) { e = mkGhost({ x: d.x, y: d.y, a: d.a }, d.l); e.boss = d.bo ? 1 : undefined; e.seed = d.sd; e.type = d.ty || undefined; e.kind = d.k ? 'creeper' : undefined; e.sc = d.sc; e.pal = d.k ? CREEP_PAL : (ETYPES[d.ty] ? ETYPES[d.ty].pal : ENEMY_PAL); NET.ge.set(d.i, e); }
+            if (d.bo) { e.bi = d.bi; e.ph = d.ph; e.max = d.mx; e.name = d.nm; if (d.pal) e.pal = d.pal; }
+            ghostSet(e, d.x, d.y, d.a, d.l, T, now);
+            e.hp = d.hp; e.freeze = d.fz ? 1 : 0; e.fuse = d.fu ? 1 : null; e.chargeAt = d.ch ? 1 : null; e.faceUntil = d.fa ? gameClock + 90 : 0;
+            seen.add(d.i); el.push(e);
+        }
+        for (const [id, e] of NET.ge) if (!seen.has(id)) { NET.ge.delete(id); if (!e.kind && e.pts.n) fadingEnemies.push({ pts: copyPts(e.pts), angle: e.ang, opacity: 1, off: 0, type: e.type, pal: e.pal, sc: e.sc, boss: e.boss, bi: e.bi, ph: e.ph }); }
+        enemies = el; bossBar();
+        portal = !!s.pt; NET.portal = portal;
+        if (s.bs !== undefined && s.bs !== bgStage) { bgPrev = bgStage; bgStage = s.bs; bgFadeT = performance.now(); }
+        food.x = s.fd[0]; food.y = s.fd[1];
+        if (s.kt) { kit.x = s.kt[0]; kit.y = s.kt[1]; kit.active = true; } else kit.active = false;
+        foods2 = s.f2.map(f => ({ x: f[0], y: f[1], gold: !!f[2] }));
+        acids = s.ac.map(a => ({ x: a[0], y: a[1], r: a[2], state: a[3] ? 'puddle' : 'warn', t: a[4], warnMs: a[5], life: a[6], v: a[7], seed: a[8] }));
+        spits = s.sp.map(q => ({ sx: q[0], sy: q[1], tx: q[2], ty: q[3], t: q[4], dur: q[5] }));
+        shots = s.sh.map(q => ({ x: q[0], y: q[1], vx: q[2], vy: q[3], rot: q[4], spin: 0, id: q[5] }));
+        bombs = s.bm.map(b => ({ sx: b[0], sy: b[1], tx: b[2], ty: b[3], t: b[4], dur: b[5], id: b[6], w: WEAPONS[b[6]] || WEAPONS.bombon }));
+        bottles = s.bt.map(b => ({ sx: b[0], sy: b[1], tx: b[2], ty: b[3], t: b[4], dur: b[5], owner: { mereR: b[6] } }));
+        milks = s.mk.map(m => ({ x: m[0], y: m[1], r: m[2], t: m[3], life: m[4], v: m[5], seed: m[6] }));
+        shockwaves = s.sw.map(w => ({ x: w[0], y: w[1], radius: w[2], opacity: w[3], col: w[4] || undefined, sp: w[5], fd: w[6] }));
+        popups = s.pu.map(p => ({ x: p[0], y: p[1], life: p[2], txt: p[3] || undefined, col: p[4] || undefined }));
+        NET.mh = s.mh || '';
+        if (s.xp && (s.xp[0] !== NET.xps[0])) { NET.xps[0] = s.xp[0]; showXP(1, false); }
+        hud();
+    }
+    function netEvents(s) {
+        if (s.bu) s.bu.forEach(b => burst(b[0], b[1], b[2], b[3]));
+        if (s.sf) s.sf.forEach(q => { if (sfx[q[0]]) S(q[0], q[1]); });
+        if (s.sk) triggerShake();
+        if (s.bn) banner(s.bn[0], s.bn[1]);
+    }
+    function gStep(dt) {
+        while (NET.sq.length) { const s = NET.sq.shift(); netEvents(s); if (!NET.sq.length) netApply(s); }
+        gameClock += dt * 1000;
+        for (const p of players) ghostStep(p, dt);
+        for (const e of enemies) ghostStep(e, dt);
+        const k = dt * 60, ms = dt * 1000;
+        shockwaves = shockwaves.filter(s => { s.radius += (s.sp || 10) * k; s.opacity -= (s.fd || 0.02) * k; return s.opacity > 0; });
+        fadingEnemies = fadingEnemies.filter(e => { e.opacity -= 0.05 * k; e.off -= k; return e.opacity > 0; });
+        popups = popups.filter(p => { p.y -= 1.2 * k; p.life -= 0.03 * k; return p.life > 0; });
+        particles = particles.filter(q => { q.x += q.vx * k; q.y += q.vy * k; q.vy += 0.12 * k; q.life -= 0.03 * k; return q.life > 0; });
+        for (const a of acids) a.t += ms;
+        for (const q of spits) q.t += ms;
+        for (const q of bottles) q.t += ms;
+        for (const q of bombs) q.t += ms;
+        for (const q of milks) q.t += ms;
+        for (const q of shots) { q.x += q.vx * dt; q.y += q.vy * dt; q.spin += dt * 7; }
+        // mis controles -> anfitrión
+        const me = players[1];
+        let a = dirOf(k1, k2);
+        if (a === null && aimOn && ptr && me && Math.hypot(ptr.x - me.x, ptr.y - me.y) > g * 0.6) a = Math.atan2(ptr.x - me.x, -(ptr.y - me.y));
+        if (a === null && joy) a = joy.a;
+        const mv = (dirOf(k1, k2) !== null || (aimOn && ptrDown) || touching) ? 1 : 0, b = NET.gin.b ? 1 : 0;
+        const ch = (a === null) !== (NET.lastA === null) || (a !== null && NET.lastA !== null && Math.abs(wrapA(a - NET.lastA)) > 0.03) || mv !== NET.lastM || b !== NET.lastB;
+        NET.inT += dt;
+        if (ch ? NET.inT > 0.03 : NET.inT > 0.25) { NET.inT = 0; NET.lastA = a; NET.lastM = mv; NET.lastB = b; send({ t: 'i', a: a === null ? null : r2(a), m: mv, b }); }
+        // avisos de la pantalla (siseo del impulso, alarma de postres en cero)
+        boostHiss(players.some(p => p.alive && p.boost && (p.dessert > 0 || p.body > 0)));
+        const warn = !!(me && me.alive && me.dessert <= 0 && me.body <= 0.02);
+        if (warn !== warnShown) { warnShown = warn; boostWarningOverlay.style.display = warn ? 'flex' : 'none'; }
+        weaponBtn.classList.toggle('has', !!(me && me.wp)); stopBtn.classList.toggle('has', !!(me && me.canStop));
+    }
+    function gLoop(ts) {
+        if (!(NET.on && NET.role === 'guest' && NET.playing)) { NET.graf = 0; return; }
+        const dt = Math.min(0.1, (ts - (NET.glast || ts)) / 1000); NET.glast = ts;
+        try { gStep(dt); draw(); } catch (e) { console.error('gLoop', e); }
+        NET.graf = requestAnimationFrame(gLoop);
+    }
+
+    // ===================== enganches con el juego original =====================
+    const host = () => NET.on && NET.role === 'host', guest = () => NET.on && NET.role === 'guest';
+    const _setBoost = setBoost, _fire = fireWeapon, _cycle = cycleWeapon, _stop = tryStop, _steer = steerTarget, _want = wantsMove;
+    setBoost = function (id, on) {
+        if (guest()) { NET.gin.b = on ? 1 : 0; return; }
+        if (host() && !NET._fromNet) id = 1;   // el teclado del anfitrión siempre mueve a SU serpiente
+        return _setBoost(id, on);
+    };
+    fireWeapon = function (p) {
+        if (guest()) { send({ t: 'fire' }); return; }
+        if (host() && !NET._fromNet && p && p.remote) p = players[0];
+        return _fire(p);
+    };
+    cycleWeapon = function (p) {
+        if (guest()) { send({ t: 'cyc' }); return; }
+        if (host() && !NET._fromNet && p && p.remote) p = players[0];
+        return _cycle(p);
+    };
+    tryStop = function (p) {
+        if (guest()) { send({ t: 'stop' }); return; }
+        if (host() && !NET._fromNet && p && p.remote) p = players[0];
+        return _stop(p);
+    };
+    steerTarget = function (p) {
+        if (host()) {
+            if (p.remote) return (p.rin && p.rin.a !== null) ? p.rin.a : p.ang;
+            const a = dirOf(k1, k2); if (a !== null) return a;   // anfitrión: WASD o flechas
+            if (aimOn && ptr && Math.hypot(ptr.x - p.x, ptr.y - p.y) > g * 0.6) return Math.atan2(ptr.x - p.x, -(ptr.y - p.y));
+            return joy ? joy.a : p.ang;
+        }
+        return _steer(p);
+    };
+    wantsMove = function (p) {
+        if (host()) {
+            if (p.boost) return true;
+            if (p.remote) return !!(p.rin && (p.rin.m || p.rin.b));
+            return dirOf(k1, k2) !== null || (aimOn && ptr && ptrDown) || touching;
+        }
+        return _want(p);
+    };
+    const _pause = togglePause;
+    togglePause = function () {   // online el juego NO se detiene: el menú solo se abre encima
+        if (!NET.on) return _pause();
+        if (document.hidden || !gameActive) return;
+        const on = pauseOverlay.style.display !== 'flex'; pauseOverlay.style.display = on ? 'flex' : 'none'; pauseBtn.innerHTML = on ? 'VOLVER' : 'MENÚ'; S('pause', on);
+    };
+    const _play = playScenes;
+    playScenes = function (list, cb) { if (host()) send({ t: 'cine', list }); return _play(list, cb); };   // el invitado ve las mismas cinemáticas
+    const _home = goHome;
+    goHome = function () { if (NET.on || NET.peer) { send({ t: 'leave' }); netEnd(); } return _home(); };
+    const _reset = resetGame;
+    resetGame = function () { _reset(); if (host()) hostAfterReset(); };
+    const _retry = retry;
+    retry = function () { if (NET.on) return; return _retry(); };   // online la revancha se pide con el botón REVANCHA
+    const _over = gameOver;
+    gameOver = function (reason, title) {
+        _over(reason, title);
+        if (!NET.on) { $n('go-offline').style.display = ''; $n('go-online').style.display = 'none'; return; }
+        $n('go-offline').style.display = 'none'; $n('go-online').style.display = 'flex'; resetOver();
+        if (NET.gone) { const b = $n('goRev'); b.disabled = true; b.textContent = 'SIN RIVAL'; }
+        if (host()) { pauseOverlay.style.display = 'none'; send({ t: 'over', title: byId('go-title').textContent, reason: deathReasonText.innerHTML, score: finalScoreElement.innerHTML }); }
+    };
+    const _showXP = showXP;
+    showXP = function (id, flash) {   // en online cada barra de XP muestra a su jugador (el invitado guarda el suyo en su propio navegador)
+        if (!NET.on) return _showXP(id, flash);
+        syncSlotColors();
+        const xs = host() ? [xpTotal[identOf(1)] | 0, NET.remXP | 0] : [NET.xps[0] | 0, xpTotal[identOf(2)] | 0];
+        for (const i of (id ? [id] : [1, 2])) {
+            const li = lvlInfo(xs[i - 1]);
+            byId('xp-fill' + i).style.width = (li.x / li.need * 100) + '%';
+            byId('xp-num' + i).textContent = 'NV ' + li.L + '  ·  ' + li.x + ' / ' + li.need + ' XP';
+            byId('lv' + i).textContent = li.L;
+            if (flash) { const seg = byId('xp' + i); seg.classList.remove('lvl'); void seg.offsetWidth; seg.classList.add('lvl'); }
+        }
+    };
+    const _faces = paintHudFaces;
+    paintHudFaces = function (force) {
+        if (!NET.on) return _faces(force);
+        for (const id of [1, 2]) {
+            const p = players[id - 1], hit = !!(p && p.headHit > 0), alive = !p || p.alive, pid = p ? p.id : identOf(id);
+            const acc = ((p && p.accI) || equippedImgs(pid)).filter(im => im && im.ok);
+            const key = (p ? 'p' : 'n') + (hit ? 'h' : '') + (alive ? '' : 'd') + pid + (p && p.msk ? 'M' : '') + acc.length + (headImg.ok ? 1 : 0) + (head2Img.ok ? 1 : 0) + (headHitImg.ok ? 1 : 0);
+            if (!force && hudFaceKey[id] === key) continue;
+            hudFaceKey[id] = key;
+            const cv = hudFaceCv[id], x = cv.getContext('2d'); x.clearRect(0, 0, 64, 64);
+            const h = (p && p.msk) ? mereHead(hit, false, true) : playerHead(pid, hit, false, true);
+            if (h) x.drawImage(ras(h), 0, 0, 64, 64);
+            for (const a of acc) x.drawImage(ras(a), 0, 0, 64, 64);
+            cv.style.opacity = alive ? 1 : 0.35;
+        }
+    };
+    const _mh = modeHud;
+    modeHud = function () {
+        if (!guest()) return _mh();
+        const t = NET.mh || ''; if (t !== mhTxt) { mhTxt = t; byId('modehud').textContent = t; byId('modehud').classList.toggle('on', !!t); }
+    };
+    // lo que pasa en el mundo del anfitrión (partículas, temblor, avisos, sonidos) se reenvía al invitado
+    const _burst = burst, _shake = triggerShake, _banner = banner;
+    burst = function (x, y, color, n) { if (host() && NET.bq.length < 40) NET.bq.push([r1(x), r1(y), color, n || 12]); return _burst(x, y, color, n); };
+    triggerShake = function () { if (host()) NET.shake = 1; return _shake(); };
+    banner = function (t, ms) { if (host()) NET.ban = [t, ms || 0]; return _banner(t, ms); };
+    Object.keys(sfx).forEach(k => {
+        const f = sfx[k];
+        sfx[k] = function (a) { if (host() && FWD.indexOf(k) >= 0 && NET.sfxq.length < 14) NET.sfxq.push([k, a === undefined ? null : a]); return f.apply(this, arguments); };
+    });
+})();
+
+</script>
 
 <script src="cursor.js"></script>
 
