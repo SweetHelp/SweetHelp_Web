@@ -134,8 +134,9 @@
   document.addEventListener('click', e => {
     const add = e.target.closest('[data-agregar]');
     if (add) {
+      // Solo agrega (y actualiza el contador); el carrito se abre únicamente al tocar el icono
       agregar({ id: add.dataset.id, nombre: add.dataset.nombre, precio: add.dataset.precio, img: add.dataset.img });
-      abrir(); return;
+      return;
     }
     if (e.target.closest('#shCartBtn')) { panel.classList.contains('open') ? cerrar() : abrir(); return; }
     if (!e.target.closest('.shc-panel')) cerrar();
