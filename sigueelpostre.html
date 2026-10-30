@@ -788,29 +788,40 @@
         #scan-v { width: 100%; max-height: 42vh; border-radius: 16px; background: #000; object-fit: cover; }
 
         /* ===== Mando remoto: control en el celular (estilo NES) ===== */
-        #padui { position: fixed; inset: 0; z-index: 900; display: none; flex-direction: column; color: #833c4a; touch-action: none; user-select: none; -webkit-user-select: none; overflow: hidden; --js: min(48vh, 34vw, 210px); --bs: min(30vh, 20vw, 118px);
-            background: url('bginiciojuego.svg') center / cover no-repeat, radial-gradient(circle at 50% 30%, #fff6ef, #f8d3d9 120%); background-color: #f8f3dd; }
+        #padui { position: fixed; inset: 0; z-index: 900; display: none; flex-direction: column; background: #4a2145; color: #fff8ef; touch-action: none; user-select: none; -webkit-user-select: none; overflow: hidden;
+            --js: min(46vh, 32vw, 200px); --bs: min(28vh, 18vw, 110px); --ds: min(15vh, 11vw, 62px); --pk: #ff9195; --dk: #2e1229; --lt: #6b3563; }
         #padui.open { display: flex; }
-        .pd-top { flex: none; height: 52px; margin: 8px 10px 0; border-radius: 26px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 8px 0 18px; font-weight: bold; letter-spacing: 2px; font-size: 12px; color: #833c4a;
-            background: rgba(255,236,238,0.93); border: 3px solid #833c4a; box-shadow: 0 5px 0 rgba(131,60,74,0.25); }
-        .pd-top b { font-family: 'Choco Num', 'Choco Taste', 'Segoe UI', sans-serif; font-size: 24px; font-weight: normal; letter-spacing: 2px; color: #fff8ef; -webkit-text-stroke: 2px #833c4a; paint-order: stroke fill; text-shadow: 0 3px 0 #833c4a; }
-        .pd-top span { color: #ba5d73; display: inline-flex; align-items: center; gap: 6px; }
-        .pd-top span::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 3px rgba(74,222,128,0.35); animation: blink 1.4s infinite; }
-        .pd-main { flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 4vw; gap: 10px; }
-        #pd-hint { display: none; text-align: center; font-size: 13px; font-weight: bold; padding: 8px 14px; margin: 8px auto 0; border-radius: 999px; background: #fff0f1; color: #ba5d73; border: 2px solid #ff9195; }
-        @media (orientation: portrait) { #pd-hint { display: block; } .pd-main { flex-direction: column; justify-content: space-evenly; } #padui { --js: min(40vw, 190px); --bs: min(24vw, 100px); } .pd-ab { align-self: flex-end; } }
-        #pj-base { position: relative; flex: none; width: var(--js); height: var(--js); border-radius: 50%; touch-action: none; background: radial-gradient(circle at 50% 38%, #fff8ef, #ffd1d6 75%); border: 5px solid #833c4a; box-shadow: inset 0 -10px 20px rgba(255,145,149,0.35), inset 0 4px 0 rgba(255,255,255,0.9), 0 8px 0 rgba(131,60,74,0.3); }
-        #pj-base::before { content: ''; position: absolute; inset: 14%; border-radius: 50%; border: 3px dashed rgba(131,60,74,0.3); pointer-events: none; }
-        #pj-knob { position: absolute; left: 50%; top: 50%; width: 46%; height: 46%; margin: -23% 0 0 -23%; border-radius: 50%; pointer-events: none; background: radial-gradient(circle at 35% 30%, #ffc2c6, #ff9195 55%, #ba5d73); border: 3px solid #833c4a; box-shadow: inset 0 3px 0 rgba(255,255,255,0.7), 0 6px 0 #833c4a; }
-        .pd-mid { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+        .pd-top { flex: none; height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 12px 0 18px; font-weight: bold; letter-spacing: 3px; font-size: 11px; color: #d9a9cf; }
+        .pd-top b { font-family: 'Choco Num', 'Choco Taste', 'Segoe UI', sans-serif; font-size: 20px; font-weight: normal; letter-spacing: 2px; color: var(--pk); }
+        .pd-top span { display: inline-flex; align-items: center; gap: 7px; }
+        .pd-top span::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
+        #pd-hint { display: none; text-align: center; font-size: 12px; font-weight: bold; padding: 4px 12px; color: #d9a9cf; letter-spacing: 1px; }
+        .pd-main { flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 4vw 10px; gap: 10px; }
+        @media (orientation: portrait) { #pd-hint { display: block; } .pd-main { flex-direction: column; justify-content: space-evenly; } #padui { --js: min(40vw, 190px); --bs: min(24vw, 100px); --ds: min(15vw, 60px); } .pd-ab { align-self: flex-end; } }
+        #pj-base { position: relative; flex: none; width: var(--js); height: var(--js); border-radius: 50%; touch-action: none; background: var(--dk); border: 3px solid var(--lt); }
+        #pj-base::before { content: ''; position: absolute; inset: 22%; border-radius: 50%; border: 2px dashed var(--lt); pointer-events: none; }
+        #pj-knob { position: absolute; left: 50%; top: 50%; width: 44%; height: 44%; margin: -22% 0 0 -22%; border-radius: 50%; pointer-events: none; background: var(--pk); box-shadow: 0 5px 0 #b9575e; }
+        .pd-mid { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        #pd-ctx { font-size: 10px; letter-spacing: 3px; font-weight: bold; color: #d9a9cf; text-align: center; min-height: 14px; }
+        #pd-wname { font-size: 13px; letter-spacing: 1px; font-weight: bold; color: var(--pk); text-align: center; min-height: 18px; max-width: 200px; }
+        .pd-dpad { display: grid; grid-template-columns: repeat(3, var(--ds)); grid-template-rows: repeat(3, var(--ds)); gap: 5px; }
+        .pd-dpad button { border: 0; padding: 0; border-radius: 14px; background: var(--lt); color: #fff8ef; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 0 var(--dk); touch-action: none; font-family: inherit; font-weight: bold; font-size: 13px; letter-spacing: 1px; }
+        .pd-dpad button svg { width: 46%; height: 46%; fill: none; stroke: currentColor; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+        .pd-dpad .u { grid-area: 1 / 2; } .pd-dpad .l { grid-area: 2 / 1; } .pd-dpad .r { grid-area: 2 / 3; } .pd-dpad .d { grid-area: 3 / 2; }
+        .pd-dpad .ok { grid-area: 2 / 2; border-radius: 50%; background: var(--pk); color: var(--dk); box-shadow: 0 4px 0 #b9575e; }
         .pd-row { display: flex; gap: 10px; }
-        .pd-pill { padding: 11px 18px; border-radius: 999px; border: 3px solid #833c4a; background: linear-gradient(135deg, #fff, #ffd1d6); color: #833c4a; font-weight: bold; font-size: 12px; letter-spacing: 1px; box-shadow: 0 5px 0 #833c4a; touch-action: none; font-family: inherit; text-shadow: 0 1px 0 rgba(255,255,255,0.7); }
-        .pd-pill.on, .pd-pill:active { transform: translateY(4px); box-shadow: 0 1px 0 #833c4a; background: linear-gradient(135deg, #ffe3e6, #ff9195); }
+        .pd-pill { padding: 9px 16px; border-radius: 999px; border: 0; background: var(--lt); color: #fff8ef; font-weight: bold; font-size: 11px; letter-spacing: 2px; box-shadow: 0 4px 0 var(--dk); touch-action: none; font-family: inherit; }
+        .pd-pill.dim, .pd-btn.dim { opacity: 0.35; }
+        .pd-dpad button.on, .pd-pill.on { transform: translateY(3px); box-shadow: 0 1px 0 var(--dk); background: #8a4a80; }
+        .pd-dpad .ok.on { background: #ffc2c6; box-shadow: 0 1px 0 #b9575e; }
         .pd-ab { display: flex; gap: 14px; align-items: flex-end; flex: none; }
-        .pd-btn { width: var(--bs); height: var(--bs); border-radius: 50%; border: 4px solid #833c4a; padding: 0; background: radial-gradient(circle at 35% 28%, #ffd1d6, #ff9195 60%, #ba5d73); color: #fff8ef; font-family: 'Choco Num', 'Choco Taste', 'Segoe UI', sans-serif; font-weight: normal; font-size: 15px; letter-spacing: 1px; line-height: 1.1; -webkit-text-stroke: 2px #833c4a; paint-order: stroke fill; text-shadow: 0 2px 0 #833c4a; box-shadow: inset 0 4px 0 rgba(255,255,255,0.6), 0 8px 0 #833c4a; touch-action: none; display: flex; align-items: center; justify-content: center; text-align: center; }
-        .pd-btn.a { background: radial-gradient(circle at 35% 28%, #ffe6a8, #ffaa00 60%, #b8780a); }
-        .pd-btn.b { margin-bottom: 30px; }
-        .pd-btn.on { transform: translateY(6px); box-shadow: inset 0 4px 0 rgba(255,255,255,0.6), 0 2px 0 #833c4a; }
+        .pd-btn { width: var(--bs); height: var(--bs); border-radius: 50%; border: 0; padding: 0; background: var(--pk); color: var(--dk); font-weight: bold; font-size: 11px; letter-spacing: 2px; line-height: 1.2; box-shadow: 0 6px 0 #b9575e; touch-action: none; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
+        .pd-btn svg { width: 38%; height: 38%; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+        .pd-btn.a { background: #ffb347; box-shadow: 0 6px 0 #b9782a; }
+        .pd-btn.b { margin-bottom: 26px; }
+        .pd-btn.on { transform: translateY(5px); box-shadow: 0 1px 0 #b9575e; }
+        .pd-btn.a.on { box-shadow: 0 1px 0 #b9782a; }
+        .padfocus { outline: 4px solid #ffd966 !important; outline-offset: 3px; }
     </style>
 </head>
 <body>
@@ -1092,15 +1103,23 @@
     </div>
 
     <div id="padui">
-        <div class="pd-top"><b>SUGAR SNAKE</b><span>MANDO CONECTADO</span><button type="button" class="pd-pill" id="pd-exit">SALIR</button></div>
-        <div id="pd-hint">🔄 Gira el celular para jugar más cómodo</div>
+        <div class="pd-top"><b>SUGAR SNAKE</b><span>CONECTADO</span><button type="button" class="pd-pill" id="pd-exit">SALIR</button></div>
+        <div id="pd-hint">Gira el celular para jugar más cómodo</div>
         <div class="pd-main">
             <div id="pj-base"><div id="pj-knob"></div></div>
             <div class="pd-mid">
-                <div class="pd-row"><button type="button" class="pd-pill" id="pd-sel">ARMA ↻</button><button type="button" class="pd-pill" id="pd-start">START</button></div>
-                <button type="button" class="pd-pill" id="pd-stop">FRENAR</button>
+                <div id="pd-ctx">MENÚ</div>
+                <div class="pd-dpad">
+                    <button type="button" class="u" id="pd-u" aria-label="Arriba"><svg viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></svg></button>
+                    <button type="button" class="l" id="pd-l" aria-label="Izquierda"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+                    <button type="button" class="ok" id="pd-ok">OK</button>
+                    <button type="button" class="r" id="pd-r" aria-label="Derecha"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+                    <button type="button" class="d" id="pd-d" aria-label="Abajo"><svg viewBox="0 0 24 24"><path d="M5 9l7 7 7-7"/></svg></button>
+                </div>
+                <div id="pd-wname"></div>
+                <div class="pd-row"><button type="button" class="pd-pill" id="pd-back">ATRÁS</button><button type="button" class="pd-pill" id="pd-stop">FRENAR</button></div>
             </div>
-            <div class="pd-ab"><button type="button" class="pd-btn b" id="pd-b">DISPARAR</button><button type="button" class="pd-btn a" id="pd-a">IMPULSO</button></div>
+            <div class="pd-ab"><button type="button" class="pd-btn b" id="pd-b"><svg viewBox="0 0 24 24"><path d="M4 12h12M12 6l6 6-6 6"/></svg>DISPARAR</button><button type="button" class="pd-btn a" id="pd-a"><svg viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg>IMPULSO</button></div>
         </div>
     </div>
 
@@ -5413,6 +5432,84 @@
         if (gameOverScreen.style.display === 'flex') return retry();
         if (startScreen.style.display !== 'none' && !loadOn) startGame();
     }
+    // ----- PC: navegación de menús y armas desde el control -----
+    function padVis(el) { return !el.disabled && el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden'; }
+    function padLayer() {
+        const open = id => $(id).classList.contains('open');
+        if (open('story')) return { k: 'story' };
+        for (const id of ['config', 'shop', 'diary', 'ach', 'tutorial', 'modesel', 'net-icon', 'net-multi']) if (open(id)) return { k: id, el: $(id) };
+        if (charOpen) return { k: 'charsel', el: $('charsel') };
+        if (gameActive) return pauseOverlay.style.display === 'flex' ? { k: 'pause', el: pauseOverlay } : null;
+        if (gameOverScreen.style.display === 'flex') return { k: 'over', el: gameOverScreen };
+        if (!loadOn && startScreen.style.display !== 'none') return { k: 'start', el: startScreen };
+        return { k: 'none' };
+    }
+    let padFoc = null;
+    function padClear() { if (padFoc) padFoc.classList.remove('padfocus'); padFoc = null; }
+    function padFocus(el) { padClear(); padFoc = el; el.classList.add('padfocus'); try { el.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {} }
+    function padItems(root) { return [...root.querySelectorAll('button, input[type=range], select, a.btn-link, .dnode[data-id]')].filter(padVis); }
+    function padMove(root, d) {
+        const items = padItems(root); if (!items.length) return;
+        if (!padFoc || !root.contains(padFoc) || !padVis(padFoc)) {
+            const pref = root.querySelector('.btn-play:not(.btn-tut):not(.btn-online), .btn-resume, .btn-reset');
+            return padFocus(pref && padVis(pref) ? pref : items[0]);
+        }
+        if (padFoc.type === 'range' && (d === 'left' || d === 'right')) {
+            padFoc.value = Math.max(0, Math.min(100, +padFoc.value + (d === 'right' ? 5 : -5))); padFoc.dispatchEvent(new Event('input', { bubbles: true })); return;
+        }
+        const c = padFoc.getBoundingClientRect(), cx = c.left + c.width / 2, cy = c.top + c.height / 2;
+        let best = null, bs = 1e12;
+        for (const el of items) {
+            if (el === padFoc) continue;
+            const r = el.getBoundingClientRect(), dx = r.left + r.width / 2 - cx, dy = r.top + r.height / 2 - cy;
+            const along = d === 'right' ? dx : d === 'left' ? -dx : d === 'down' ? dy : -dy, perp = (d === 'left' || d === 'right') ? Math.abs(dy) : Math.abs(dx);
+            if (along < 4) continue;
+            const sc = along + perp * 2.2; if (sc < bs) { bs = sc; best = el; }
+        }
+        if (best) padFocus(best);
+    }
+    function padWeapon(dir) {
+        const p = players[0]; if (!p || !p.alive || !p.wlist || p.wlist.length < 2) return;
+        p.wp = p.wlist[(p.wlist.indexOf(p.wp) + dir + p.wlist.length) % p.wlist.length];
+        S('toggle', true); popups.push({ x: p.x, y: p.y - g * 1.2, life: 1, txt: WEAPONS[p.wp].name, col: '#833c4a' });
+        if (tut) tutEvent('cycle');
+    }
+    function padNav(d) {
+        const ly = padLayer();
+        if (!ly) { padClear(); if (!isPaused) padWeapon(d === 'left' || d === 'up' ? -1 : 1); return; }
+        if (ly.k === 'story') { if (d === 'right' || d === 'down') storyOk(); return; }
+        if (ly.k === 'charsel' && (d === 'left' || d === 'right')) return csMove();
+        if (ly.k === 'none') return;
+        padMove(ly.el, d);
+    }
+    function padOk() {
+        const ly = padLayer();
+        if (!ly) { padClear(); return togglePause(); }
+        if (ly.k === 'story') return storyOk();
+        if (ly.k === 'charsel') return csConfirm();
+        if (ly.k === 'none') return;
+        if (!padFoc || !ly.el.contains(padFoc) || !padVis(padFoc)) return padMove(ly.el, 'down');
+        const el = padFoc;
+        if (el.tagName === 'SELECT') { el.selectedIndex = (el.selectedIndex + 1) % el.options.length; el.dispatchEvent(new Event('change', { bubbles: true })); return; }
+        if (el.type === 'range') return;
+        el.click();
+        setTimeout(() => { if (padFoc === el && (!document.contains(el) || !padVis(el))) padClear(); }, 80);
+    }
+    function padBack() {
+        const ly = padLayer();
+        if (!ly) return togglePause();
+        padClear();
+        if (ly.k === 'story') return cineSkip();
+        if (ly.k === 'pause') return togglePause();
+        if (ly.k === 'charsel') return closeCharSel();
+        if (ly.el) { const b = [...ly.el.querySelectorAll('.shop-back, #md-back, .shop-close')].find(padVis); if (b) b.click(); }
+    }
+    let lastSt = '';
+    setInterval(() => {
+        if (role !== 'pc' || !conn || !conn.open) { lastSt = ''; return; }
+        const p = players[0], g1 = !!(gameActive && !padLayer() && !isPaused), m = { t: 'st', g: g1 ? 1 : 0, hw: g1 && p && p.wp ? 1 : 0, w: g1 && p && p.wp ? WEAPONS[p.wp].name : '', cs: g1 && p && p.canStop ? 1 : 0 }, k = JSON.stringify(m);
+        if (k !== lastSt) { lastSt = k; sendP(m); }
+    }, 250);
     function onData(m) {
         if (!m || !m.t) return;
         switch (m.t) {
@@ -5428,6 +5525,9 @@
             case 'cyc': if (gameActive) cycleWeapon(players[0]); break;
             case 'stop': if (gameActive) tryStop(players[0]); break;
             case 'start': padStart(); break;
+            case 'nav': padNav(m.d); break;
+            case 'ok': padOk(); break;
+            case 'back': padBack(); break;
             case 'bye': if (conn) { const c = conn; conn = null; try { c.close(); } catch (e) {} lost(); } break;
         }
     }
@@ -5480,7 +5580,7 @@
                 if (peer !== pr) return;
                 const c = conn = pr.connect(PFX + cd, { reliable: true, serialization: 'json' });
                 c.on('open', () => { clearTimeout(to); sendP({ t: 'hi' }); showController(); });
-                c.on('data', m => { if (m && m.t === 'bye') exitController(); });
+                c.on('data', m => { if (!m) return; if (m.t === 'bye') exitController(); else if (m.t === 'st') padState(m); });
                 c.on('close', () => { if (c === conn) exitController(true); });
                 c.on('error', () => { if (c === conn) exitController(true); });
             });
@@ -5535,9 +5635,20 @@
     let fireT = 0;
     hold($('pd-b'), () => { sendP({ t: 'fire' }); clearInterval(fireT); fireT = setInterval(() => sendP({ t: 'fire' }), 140); }, () => clearInterval(fireT));
     hold($('pd-a'), () => { st.b = 1; push(true); }, () => { st.b = 0; push(true); });
-    hold($('pd-sel'), () => sendP({ t: 'cyc' }));
+    function padState(m) {
+        $('pd-ctx').textContent = m.g ? (m.hw ? 'ARMA  ◀  ▶' : 'EN JUEGO') : 'MENÚ';
+        $('pd-wname').textContent = m.g ? (m.w || '') : '';
+        $('pd-ok').textContent = m.g ? 'II' : 'OK';
+        $('pd-b').classList.toggle('dim', !!m.g && !m.hw);
+        $('pd-stop').classList.toggle('dim', !!m.g && !m.cs);
+    }
+    let navT = 0, navD = '';
+    const navDown = d => { sendP({ t: 'nav', d }); navD = d; clearTimeout(navT); navT = setTimeout(function rp() { if (!navD) return; sendP({ t: 'nav', d: navD }); navT = setTimeout(rp, 140); }, 420); };
+    const navUp = () => { navD = ''; clearTimeout(navT); };
+    [['u', 'up'], ['d', 'down'], ['l', 'left'], ['r', 'right']].forEach(([k, d]) => hold($('pd-' + k), () => navDown(d), navUp));
+    hold($('pd-ok'), () => sendP({ t: 'ok' }));
+    hold($('pd-back'), () => sendP({ t: 'back' }));
     hold($('pd-stop'), () => sendP({ t: 'stop' }));
-    hold($('pd-start'), () => sendP({ t: 'start' }));
     $('pd-exit').addEventListener('click', () => exitController());
     $('padui').addEventListener('contextmenu', e => e.preventDefault());
 
