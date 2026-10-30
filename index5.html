@@ -32,6 +32,14 @@
         .sh-faq summary{cursor:pointer;font-weight:700;color:#c0607a}
         .sh-faq p{margin:8px 0 0}
 
+        /* ===== Botón de cartas AR (abajo a la izquierda) ===== */
+        .sh-cartas-izq{position:fixed;left:28px;bottom:20px;z-index:10000;display:block;line-height:0;text-decoration:none;cursor:pointer}
+        .sh-cartas-izq img{width:64px;height:64px;display:block;position:relative;z-index:1}
+        @media (max-width:768px){
+            .sh-cartas-izq{left:calc(14px + env(safe-area-inset-left,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+            .sh-cartas-izq img{width:52px;height:52px}
+        }
+
         img.bottoms,img.bottomspor{background:none;border:0;box-shadow:none;padding:0;width:auto;height:46px;cursor:pointer}
         .termometro-icono{height:115px;width:auto}
     
@@ -66,6 +74,12 @@
         <details><summary>¿Dónde conozco más del equipo?</summary><p>En el menú, dentro de Sobre Nosotros, encontrarás Información y Equipo.</p></details>
     </div>
     <button class="sh-pinky-btn" id="shPinkyBtn" aria-label="Preguntas frecuentes"><span class="sh-ripple"></span><span class="sh-ripple"></span><span class="sh-ripple"></span><img src="pinky.svg" alt="Pinky"></button>
+
+    <!-- CARTAS AR (abajo a la izquierda) -->
+    <a class="sh-cartas-izq" href="ArSweetCards.html" aria-label="Cartas AR">
+        <span class="sh-ripple"></span><span class="sh-ripple"></span><span class="sh-ripple"></span>
+        <img src="cartasicon.svg" alt="Cartas AR">
+    </a>
 
     <header> 
 <br>
