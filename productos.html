@@ -383,6 +383,7 @@ body.ocupado #armaPostre .flecha, body.ocupado #armaPostre .agregar{pointer-even
     <div class="marco" id="marco"></div>
     <div class="cargando3d" id="cargando3d" role="status"><div class="rueda3d"></div><span>Cargando tu postre…</span></div>
     <div class="pista" id="pista" aria-hidden="true"><span>&#8596; Arrástralo para girarlo</span></div>
+    <img class="postre-respaldo" id="postreRespaldo" alt="Tu postre Sweet Help" decoding="async">
 
     <!-- MERMELADA (arriba) -->
     <div class="fila fm">
@@ -482,6 +483,13 @@ body.ocupado #armaPostre .flecha, body.ocupado #armaPostre .agregar{pointer-even
     });
 })();
 </script>
+<style id="fpsRespaldoCss">
+/* Foto de respaldo del armador (solo aparece si el 3D va lento). Posición y tamaño en % de .escena (los pone el script) */
+#armaPostre .postre-respaldo{display:none;position:absolute;z-index:4;max-width:none;pointer-events:none;opacity:0;transition:opacity .5s ease}
+#armaPostre.sin3d .postre-respaldo{display:block}
+#armaPostre.sin3d .postre-respaldo.on{opacity:1}
+#armaPostre.sin3d .visor canvas{visibility:hidden}
+</style>
 <canvas id="particulas"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -491,6 +499,7 @@ body.ocupado #armaPostre .flecha, body.ocupado #armaPostre .agregar{pointer-even
 (function () {
 const $raiz = document.getElementById("armaPostre");
 let enPantalla = true;   // se pausa el dibujo 3D cuando el constructor no se ve
+let respaldo3D = false;  // true = el monitor de FPS apagó el 3D y se muestra la imagen de respaldo
 /* =====================================================================
    CONFIGURACIÓN  —  edita aquí
    ===================================================================== */
@@ -1018,7 +1027,7 @@ class Visor {
     this._ex = this.extra.x; this._ey = this.extra.y;
     this.pivote.rotation.x += this._ex; this.pivote.rotation.y += this._ey;
     this.pivote.rotation.z += this.extra.z;
-    if(enPantalla) this.renderer.render(this.scene, this.camera);
+    if(enPantalla && !respaldo3D) this.renderer.render(this.scene, this.camera);
     requestAnimationFrame(this._animar);
   }
 }
@@ -1660,6 +1669,81 @@ actualizar();
 if("IntersectionObserver" in window) new IntersectionObserver(es => { enPantalla = es[0].isIntersecting; }).observe($raiz);
 document.querySelectorAll("#armaPostre canvas").forEach(c => c.setAttribute("aria-hidden", "true"));
 setTimeout(ocultarCarga, 15000);   // por si algún modelo tarda demasiado
+
+/* =====================================================================
+   MONITOR DE FPS  —  si la página va por debajo de FPS_MIN durante
+   SEGUNDOS_LAG segundos, se apaga el 3D y se muestra la FOTO del postre
+   que está armado (carpeta postres_render, una foto por combinación,
+   tomada de tus mismos modelos .glb con la misma cámara y posiciones).
+   Si la foto no existe, el 3D NO se apaga (así nunca queda en blanco).
+   ===================================================================== */
+(function(){
+  const FPS_MIN = 30, SEGUNDOS_LAG = 3;
+  const CARPETA_FOTOS = "postres_render/";
+  /* posición y tamaño de cada foto, en % de la escena (no lo cambies) */
+  const FOTOS_POS = {"normal_fresa":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686},"normal_maracuya":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686},"normal_mora":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686},"chocolate_fresa":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686},"chocolate_milo":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686},"mixta_fresa":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686},"mixta_milo":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686}};
+  const $img = document.getElementById("postreRespaldo");
+  if(!$img) return;
+
+  function claveCombo(){
+    const b = BASES[iBase], m = mermActual();
+    const k = (m.archivo.match(/Mermelada_([a-z]+)\.glb/i) || [])[1];
+    return b.id + "_" + k;
+  }
+  function cargarFoto(k, ok, mal){
+    const pos = FOTOS_POS[k];
+    if(!pos){ mal(); return; }
+    const im = new Image();
+    im.onload = () => ok(im.src, pos);
+    im.onerror = mal;
+    im.src = CARPETA_FOTOS + k + ".png";
+  }
+  function ponerFoto(src, pos){
+    $img.src = src;
+    $img.style.left = pos.left + "%"; $img.style.top = pos.top + "%";
+    $img.style.width = pos.width + "%"; $img.style.height = pos.height + "%";
+  }
+
+  let frames = 0, ultimo = performance.now(), lag = 0, listo = false, buscando = false, claveActual = "";
+  function usarRespaldo(){
+    listo = true;
+    respaldo3D = true;
+    console.log("Modo seguro: 3D apagado por bajo rendimiento, se muestra la foto del postre.");
+    $raiz.classList.add("sin3d");
+    $carga.classList.add("fuera");
+    requestAnimationFrame(() => $img.classList.add("on"));
+    // si cambian la mermelada o la base, se cambia la foto
+    setInterval(() => {
+      const k = claveCombo();
+      if(k === claveActual) return;
+      claveActual = k;
+      cargarFoto(k, (src, pos) => { if(claveActual === k) ponerFoto(src, pos); }, () => {});
+    }, 150);
+  }
+  function activarRespaldo(){
+    if(buscando) return;
+    buscando = true;
+    const k = claveCombo();
+    cargarFoto(k,
+      (src, pos) => { ponerFoto(src, pos); claveActual = k; buscando = false; usarRespaldo(); },
+      () => { lag = 0; buscando = false; });   // sin foto no apagamos el 3D
+  }
+  function medir(ahora){
+    if(listo) return;
+    frames++;
+    if(ahora - ultimo >= 1000){
+      const fps = Math.round(frames * 1000 / (ahora - ultimo));
+      if(fps < FPS_MIN){ lag++; console.warn("Rendimiento bajo: " + fps + " FPS"); }
+      else if(lag > 0){ lag--; }
+      if(lag >= SEGUNDOS_LAG) activarRespaldo();
+      frames = 0; ultimo = ahora;
+    }
+    if(!listo) requestAnimationFrame(medir);
+  }
+  // Si la pestaña estuvo oculta, no cuenta como lag
+  document.addEventListener("visibilitychange", () => { frames = 0; ultimo = performance.now(); lag = 0; });
+  requestAnimationFrame(medir);
+})();
 
 })();
 </script>
