@@ -1014,7 +1014,7 @@ function mostrarVideo(){
 }
 let nErr = 0;
 window.addEventListener("error", e => { if(nErr++ < 3) avisar("Error: " + (e.message || "desconocido")); console.warn(e.error || e.message); });
-const alArReady = () => { limitarBusqueda(); camOn = true; camCargando = false; pant(null); guiaOn(); mostrarVideo(); setTimeout(mostrarVideo, 600);
+const alArReady = () => { arQRIniciar(); limitarBusqueda(); camOn = true; camCargando = false; pant(null); guiaOn(); mostrarVideo(); setTimeout(mostrarVideo, 600);
   const v = document.querySelector("#ar video"); if(v) avisar("Cámara " + v.videoWidth + "×" + v.videoHeight); };
 const alArError = e => falloCamara(e && e.detail ? e.detail : e);
 
@@ -1049,7 +1049,7 @@ $("btnErrAlb").onclick = () => { camCargando = false; irAlbum(); };
 
 /* ---------- Escáner de QR: desbloquea la carta cuyo QR leas (el QR trae "SWEETHELP:" + el código de 8 letras de la carta) ---------- */
 const QR_PRE = "SWEETHELP:";
-let qStream = null, qRaf = 0, qDet = null, qBusy = false, qUlt = 0, qFria = 0;
+let arQRFria = 0, arQRTimer = 0, arQRDet = null, arQRBusy = false, qStream = null, qRaf = 0, qDet = null, qBusy = false, qUlt = 0, qFria = 0;
 const qMsg = (t, err) => { $("qMsg").textContent = t; $("qMsg").classList.toggle("err", !!err); };
 function cargaJsQR(){ return window.jsQR ? Promise.resolve() : new Promise((ok, no) => { const sc = document.createElement("script"); sc.src = "https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"; sc.onload = ok; sc.onerror = no; document.head.appendChild(sc); }); }
 async function abrirQR(){
@@ -1086,15 +1086,41 @@ function qBucle(){
     if(qStream) qBucle();
   });
 }
-function leeQR(txt){
+function leeQR(txt, desdeAR){          // desdeAR = lo leyó la cámara del modo AR (los avisos salen como mensaje flotante)
+  const dime = (m, err, ms) => { if(desdeAR){ arQRFria = Date.now() + ms + 800; avisar(m); } else { qMsg(m, err); qFria = Date.now() + ms; } };
   const mv = /[?&]vincular=([A-Za-z0-9_-]+)/.exec(String(txt));
-  if(mv && !ES_PC){ cerrarQR(); ofreceVinculo(mv[1]); return true; }
+  if(mv && !ES_PC){ cerrarQR(); arQRFria = Date.now() + 3000; ofreceVinculo(mv[1]); return true; }
   let cod = String(txt).trim().toUpperCase(); if(cod.startsWith(QR_PRE)) cod = cod.slice(QR_PRE.length);
   const c = /^[0-9A-Z]{8}$/.test(cod) ? CODIGOS[cod] : null;
-  if(!c){ qMsg("Ese QR no es de una carta Sweet Help.", true); qFria = Date.now() + 1500; return false; }
-  if(got.has(c.i)){ qMsg("Ya tienes #" + p2(c.num) + " · " + c.nombre + " ✓", false); qFria = Date.now() + 1800; return false; }
-  cerrarQR(); $("vis").hidden = true; desbloquear(c);          // misma animación (y sombrero de Sugar Snake) que al escanear la carta
+  if(!c){ if(!desdeAR || String(txt).trim().toUpperCase().startsWith(QR_PRE)) dime("Ese QR no es de una carta Sweet Help.", true, 1500); else arQRFria = Date.now() + 1200; return false; }
+  if(got.has(c.i)){ dime("Ya tienes #" + p2(c.num) + " · " + c.nombre + " ✓", false, 1800); return false; }
+  cerrarQR(); $("vis").hidden = true; arQRFria = Date.now() + 4000; desbloquear(c);          // misma animación (y sombrero de Sugar Snake) que al escanear la carta
   return true;
+}
+/* ---------- El lector del modo AR también lee QR: cartas y vinculación con el PC ---------- */
+function arQRIniciar(){
+  if(arQRTimer) return;
+  arQRDet = null; if("BarcodeDetector" in window){ try{ arQRDet = new BarcodeDetector({ formats: ["qr_code"] }); }catch(e){ arQRDet = null; } }
+  if(!arQRDet) cargaJsQR().catch(() => {});
+  arQRTimer = setInterval(arQRLeer, 420);
+}
+async function arQRLeer(){
+  if(arQRBusy || document.hidden || $("arbar").hidden || !camOn || Date.now() < arQRFria) return;
+  if(["desb", "vis", "pVinc", "pCarga", "pError", "fin", "ssRec", "pQR"].some(id => !$(id).hidden)) return;
+  const v = document.querySelector("#ar video"); if(!v || v.readyState < 2 || !v.videoWidth) return;
+  arQRBusy = true; let txt = "";
+  try{
+    if(arQRDet){ const r = await arQRDet.detect(v); if(r.length) txt = r[0].rawValue; }
+    else if(window.jsQR){
+      const c = $("qCv"), k = Math.min(1, 480 / Math.max(v.videoWidth, v.videoHeight, 1));
+      c.width = Math.max(1, Math.round(v.videoWidth * k)); c.height = Math.max(1, Math.round(v.videoHeight * k));
+      const x = c.getContext("2d", { willReadFrequently: true }); x.drawImage(v, 0, 0, c.width, c.height);
+      const d = x.getImageData(0, 0, c.width, c.height), r = jsQR(d.data, d.width, d.height, { inversionAttempts: "attemptBoth" });
+      if(r) txt = r.data;
+    }
+  }catch(e){}
+  arQRBusy = false;
+  if(txt) leeQR(txt, true);
 }
 $("vQR").onclick = () => { $("vis").hidden = true; abrirQR(); };
 $("cQR").onclick = () => { cerrarCodigo(); abrirQR(); };
@@ -2512,7 +2538,7 @@ function crearPeerPC(){
   p.on("disconnected", () => { try{ if(p === vPeer && !p.destroyed) p.reconnect(); }catch(e){} });
   p.on("error", err => { if(p !== vPeer) return;
     if(err && err.type === "unavailable-id") return crearPeerPC();
-    if(!vinc) estadoVinc("error", "No se pudo conectar con el servicio de vinculación.", vincPC, "Reintentar"); });
+    if(!vinc) estadoVinc("error", "No se pudo conectar con el servicio de vinculación" + (err && err.type ? " (" + err.type + ")." : "."), vincPC, "Reintentar"); });
 }
 function aceptaTel(c){
   if(vConn && vConn !== c){ try{ vConn.close(); }catch(e){} }
@@ -2560,15 +2586,15 @@ async function vincularTel(id){
   try{ if(telPeer) telPeer.destroy(); }catch(e){} telConn = null; marcaVinculo();
   let listo = false;
   const p = telPeer = new Peer();
-  const falla = () => { if(listo) return; avisar("No se pudo vincular. Revisa que la PC siga con la página abierta."); try{ p.destroy(); }catch(e){} if(telPeer === p) telPeer = null; };
-  const t = setTimeout(falla, 15000);
-  p.on("error", () => { clearTimeout(t); falla(); });
+  const falla = why => { if(listo) return; avisar("No se pudo vincular" + (why ? " (" + why + ")" : "") + ". Revisa que la PC siga con la página abierta."); try{ p.destroy(); }catch(e){} if(telPeer === p) telPeer = null; };
+  const t = setTimeout(() => falla("sin respuesta"), 15000);
+  p.on("error", err => { clearTimeout(t); falla(err && err.type); });
   p.on("open", () => {
     const c = p.connect(id, { reliable: true });
     c.on("open", () => { listo = true; clearTimeout(t); telConn = c; marcaVinculo(); vincEnviar(); });
     c.on("data", d => { if(d && d.t === "ok") avisar("📱 ¡Vinculado! Tus cartas ya están en la PC ✓"); else if(d && d.t === "bye") c.close(); });
     c.on("close", () => { if(telConn === c){ telConn = null; marcaVinculo(); avisar("La PC se desvinculó"); } try{ p.destroy(); }catch(e){} });
-    c.on("error", () => { clearTimeout(t); falla(); });
+    c.on("error", () => { clearTimeout(t); falla("conexión"); });
   });
 }
 $("vincNo").onclick = () => { $("pVinc").hidden = true; idPend = null; };
