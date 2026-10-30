@@ -47,6 +47,13 @@
         .sh-visor3d{--subir-texto:-70px;width:100%;display:flex;justify-content:center;margin:0 0 var(--subir-texto);position:relative;z-index:1}
         .sh-visor3d + .text1{margin-top:0 !important;padding-top:0 !important}
         .sh-visor3d model-viewer{width:min(1400px,96vw);height:min(760px,85vh);background:transparent;--poster-color:transparent;outline:none}
+        /* Imagen de respaldo: solo aparece si el 3D va lento (monitor de FPS) */
+        /* La foto ocupa EXACTAMENTE la misma caja que el model-viewer (mismo ancho, alto y posición).
+           --escala-foto la hace más pequeña dentro de esa caja: 1 = tamaño completo, .8 = 80 %, .7 = 70 %... */
+        .sh-visor3d{--escala-foto:.8}
+        .sh-visor3d img.sh-cocina-fallback{display:none;width:min(1400px,96vw);height:min(760px,85vh);max-width:100%;object-fit:contain;object-position:center;transform:scale(var(--escala-foto));opacity:0;transition:opacity .5s ease}
+        .sh-visor3d.sin3d img.sh-cocina-fallback{display:block}
+        .sh-visor3d.sin3d img.sh-cocina-fallback.on{opacity:1}
     </style>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
     <link rel="stylesheet" href="responsive.css">
@@ -140,10 +147,12 @@
     </header>
 <main>
         <!-- VISOR 3D: cambia src="cocina.gltf" por la ruta de tu archivo .gltf o .glb -->
-        <section class="sh-visor3d">
+        <section class="sh-visor3d" id="shVisor3d">
             <model-viewer src="cocina-optimizado.glb" alt="Modelo 3D de la cocina de Sweet Help"
                 camera-controls shadow-intensity="1" touch-action="pan-y">
             </model-viewer>
+            <!-- Imagen de respaldo (oculta por defecto) -->
+            <img class="sh-cocina-fallback" id="cocina-fallback-img" src="cocina_render.png" alt="Render de la cocina de Sweet Help" decoding="async">
         </section>
 
         <section class="text1">
@@ -357,6 +366,131 @@
         }
         // En fase de captura sobre window, para que ningún otro script de la página lo bloquee
         window.addEventListener('keydown', onKey, true);
+    })();
+</script>
+<script>
+    // Monitor de FPS con ida y vuelta:
+    //  - Si va por debajo de 30 FPS durante 3 s -> quita el <model-viewer> (libera GPU) y muestra cocina_render.png
+    //  - Si luego se estabiliza (>= 50 FPS sostenido) -> vuelve a poner el 3D
+    // Para guardar la foto desde el propio modelo: abre la página con ?foto y toca "Descargar foto de la cocina".
+    (function () {
+        const FPS_MIN = 30;          // por debajo de esto cuenta como lag
+        const SEG_LAG = 3;           // segundos de lag para pasar a foto
+        const FPS_OK = 50;           // FPS considerados "estables" para volver al 3D
+        const SEG_ESTABLE = 30;      // segundos estables (se multiplica por cada recaída)
+        const SEG_GRACIA = 5;        // tras volver al 3D no se mide (está cargando el modelo)
+        const MAX_FALLOS = 3;        // tras 3 recaídas se queda en foto definitivamente
+        const FORZAR = /[?&]lento\b/.test(location.search);   // para probar: abre index5.html?lento
+
+        const visor = document.getElementById('shVisor3d');
+        let modelo = visor && visor.querySelector('model-viewer');
+        const img = document.getElementById('cocina-fallback-img');
+        if (!visor || !modelo || !img) return;
+
+        const plantilla = modelo.cloneNode(false);   // copia de los atributos para recrearlo
+        const fotoArchivo = img.getAttribute('src');
+        let fotoGenerada = null;                      // foto tomada del propio modelo (se reutiliza)
+        let archivoListo = false;
+        const pre = new Image();
+        pre.onload = () => { archivoListo = true; };
+        pre.src = fotoArchivo;
+
+        // Botón para descargar la foto (solo con ?foto)
+        if (/[?&]foto\b/.test(location.search)) {
+            const bt = document.createElement('button');
+            bt.textContent = '📷 Descargar foto de la cocina';
+            bt.style.cssText = 'position:fixed;left:14px;bottom:80px;z-index:2147483000;padding:12px 18px;border:0;border-radius:999px;background:#ff9195;color:#fff;font:800 15px system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.3)';
+            bt.onclick = async () => {
+                if (!modelo || !modelo.loaded) { alert('Espera a que cargue la cocina e inténtalo otra vez.'); return; }
+                const blob = await modelo.toBlob({ mimeType: 'image/png' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob); a.download = 'cocina_render.png'; a.click();
+            };
+            document.body.appendChild(bt);
+        }
+
+        let modo = '3d';             // '3d' | 'foto'
+        let frames = 0, ultimo = performance.now();
+        let lag = 0, estable = 0, gracia = 0, fallos = 0, cambiando = false;
+
+        async function pasarAFoto() {
+            if (cambiando) return;
+            cambiando = true;
+            // Primero el archivo cocina_render.png; solo si no existe, se intenta sacar una foto del modelo
+            let origen = archivoListo ? fotoArchivo : null;
+            if (!origen) {
+                if (modelo && modelo.loaded && !fotoGenerada) {
+                    try { fotoGenerada = URL.createObjectURL(await modelo.toBlob({ mimeType: 'image/png' })); } catch (e) {}
+                }
+                origen = fotoGenerada;
+            }
+            if (!origen) { console.warn('No se encontró cocina_render.png ni se pudo generar foto; se mantiene el 3D.'); lag = 0; cambiando = false; return; }
+            img.src = origen;
+
+            fallos++;
+            modo = 'foto';
+            estable = 0;
+            console.log('Modo seguro: 3D reemplazado por la foto (rendimiento bajo).');
+            visor.classList.add('sin3d');
+            if (modelo) { modelo.remove(); modelo = null; }      // libera el contexto WebGL
+            requestAnimationFrame(() => img.classList.add('on'));
+            cambiando = false;
+        }
+
+        function volverAl3D() {
+            if (cambiando) return;
+            cambiando = true;
+            console.log('Rendimiento estable: volviendo al 3D.');
+            const nuevo = plantilla.cloneNode(false);
+            // Se carga "escondido" encima de la foto; cuando termina, se intercambian sin parpadeo
+            nuevo.style.cssText = 'position:absolute;top:0;left:50%;transform:translateX(-50%);opacity:0;pointer-events:none';
+            const terminar = (ok) => {
+                nuevo.style.cssText = '';
+                if (ok) {
+                    img.classList.remove('on');
+                    visor.classList.remove('sin3d');
+                    modelo = nuevo;
+                    modo = '3d';
+                    lag = 0;
+                    gracia = SEG_GRACIA;
+                } else {
+                    nuevo.remove();
+                    fallos = MAX_FALLOS;                          // no volver a intentarlo
+                }
+                cambiando = false;
+            };
+            nuevo.addEventListener('load', () => terminar(true), { once: true });
+            nuevo.addEventListener('error', () => terminar(false), { once: true });
+            visor.insertBefore(nuevo, img);
+        }
+
+        function medir(ahora) {
+            frames++;
+            if (ahora - ultimo >= 1000) {
+                let fps = Math.round(frames * 1000 / (ahora - ultimo));
+                if (FORZAR && modo === '3d') fps = 5;     // modo de prueba: simula lag
+                frames = 0; ultimo = ahora;
+
+                if (gracia > 0) {
+                    gracia--;
+                } else if (modo === '3d') {
+                    if (fps < FPS_MIN) { lag++; console.warn('Rendimiento bajo: ' + fps + ' FPS'); }
+                    else if (lag > 0) lag--;
+                    if (lag >= SEG_LAG) pasarAFoto();
+                } else if (fallos < MAX_FALLOS && !cambiando) {
+                    // En modo foto: ¿el equipo se estabilizó?
+                    estable = fps >= FPS_OK ? estable + 1 : 0;
+                    if (estable >= SEG_ESTABLE * fallos) volverAl3D();   // cada recaída exige más espera
+                }
+            }
+            requestAnimationFrame(medir);
+        }
+
+        // Si la pestaña estuvo oculta, no cuenta ni como lag ni como estable
+        document.addEventListener('visibilitychange', () => {
+            frames = 0; ultimo = performance.now(); lag = 0; estable = 0;
+        });
+        requestAnimationFrame(medir);
     })();
 </script>
 <script src="perfil.js"></script>
