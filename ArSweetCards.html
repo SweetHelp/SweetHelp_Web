@@ -214,6 +214,7 @@ button{font-family:var(--cuerpo);cursor:pointer;border:0}
 .cod{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;background:var(--crema);color:var(--marron);border:3px solid var(--rosa);border-radius:26px;padding:5px 6px 5px 16px;font-size:.95rem}
 .codq{flex-basis:100%;display:flex;justify-content:center;padding:2px 0 8px}
 .codq canvas{width:min(124px,15vh);height:min(124px,15vh);border-radius:10px;image-rendering:pixelated}
+#vCod .codq{display:none}
 .cod b{font-weight:400;font-size:1.2rem;letter-spacing:.18em;color:var(--antojo)}
 .cod button{background:var(--agregar);color:#fff;border-radius:999px;padding:6px 14px;font-size:.9rem}
 /* ---------- Solo PC: botón de código, ventana de código y modo debug ---------- */
@@ -1139,6 +1140,7 @@ function copiar(t){
 function ponCodigo(id, c){
   const el = $(id); el.hidden = !(c && mostrarCodigos()); if(el.hidden) return;
   el.querySelector("b").textContent = c.cod; el.querySelector("button").onclick = () => copiar(c.cod);
+  if(id === "vCod") return;                                                                       // en la previsualización del álbum no se muestra el QR
   try{ dibujaQR(el.querySelector("canvas"), QR_PRE + c.cod); }catch(e){ console.warn(e); }       // QR que lee el escáner del PC
 }
 
