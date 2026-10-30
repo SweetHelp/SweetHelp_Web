@@ -482,7 +482,7 @@ a.glass{text-decoration:none;display:inline-block}
 <script>
 /* =====================================================================
    SWEETCARDS BATTLE
-   - Usa las cartas de ArSweetCards (mismo orden DATOS = mismo orden del .mind; imágenes cartas/NN.png)
+   - Usa las cartas de ArSweetCards (mismo orden DATOS = mismo orden del .mind; imágenes cartas/NN.png, NN = número de carta 01…45)
    - Las cartas desbloqueadas se leen de localStorage "arsweetcards_album".
    - Prueba rápida con todas las cartas: SweetCardsBattle.html?demo=1
    - Flujo: Menú → ícono → (Online: crear/unirse) → Elige 5 cartas → READY → ronda → ... mejor de 3.
@@ -494,32 +494,59 @@ const ICONOS = ["img:cartasicono2.svg","img:enemy.svg","🍰","🍓","🍩","�
 
 const PI = "Ingredientes: leche entera, leche condensada, crema de leche, bizcocho de ";
 const DATOS = [
-  [22,"Sneake Merenguita","legendaria","Carta de la colección Sweet Help."],
-  [21,"Sneake Mandarina","legendaria","Carta de la colección Sweet Help."],
-  [20,"Sneake Frambuesa","legendaria","Carta de la colección Sweet Help."],
-  [19,"Choco Fresh",false,"Carta de la colección Sweet Help."],
-  [6,"Choco Mix",false,PI + "mixto, Milo."],
-  [5,"Choco Fresa",false,PI + "chocolate, mermelada de fresa."],
-  [4,"Choco Milo",false,PI + "chocolate, Milo."],
-  [3,"Fresa Tentación",false,PI + "vainilla, mermelada de fresa."],
-  [2,"Mora Silvestre",false,PI + "vainilla, mermelada de mora."],
-  [18,"Postre","mitica","La estrella de Sweet Help: el postre tres leches."],
-  [17,"Kit","mitica","Con cada compra, parte del dinero se destina a un kit alimenticio."],
-  [16,"Pinky Arroz","mitica","Pinky se disfraza de arroz para ayudar contra el hambre."],
-  [15,"Punto de Venta","exotica","Aquí se venden los postres de Sweet Help."],
-  [14,"Pinky Repostera","mitica","Pinky prepara los postres que ayudan a combatir el hambre."],
-  [13,"Pinky Repartidora","legendaria","Pinky lleva la ayuda en moto hasta quien la necesita."],
   [1,"Maracuyá Tropical",false,PI + "vainilla, pulpa de maracuyá."],
+  [2,"Mora Silvestre",false,PI + "vainilla, mermelada de mora."],
+  [3,"Fresa Tentación",false,PI + "vainilla, mermelada de fresa."],
+  [4,"Choco Milo",false,PI + "chocolate, Milo."],
+  [5,"Choco Fresa",false,PI + "chocolate, mermelada de fresa."],
+  [6,"Choco Mix",false,PI + "mixto, Milo."],
   [7,"Pinky Lisa",true,"Pinky se inspira en La Mona Lisa."],
   [8,"Pinky Grito",true,"Pinky se inspira en El grito, de Munch."],
   [9,"Pinky Noche",true,"Pinky se inspira en La noche estrellada, de Van Gogh."],
   [10,"Pinky Creación",true,"Pinky se inspira en La creación de Adán."],
   [11,"Pinky Vitruvio",true,"Pinky se inspira en el Hombre de Vitruvio."],
-  [12,"Pinky Chambeadora","pococomun","Pinky se pone a trabajar por quienes más lo necesitan."]
+  [12,"Pinky Chambeadora","pococomun","Pinky se pone a trabajar por quienes más lo necesitan."],
+  [13,"Pinky Repartidora","legendaria","Pinky lleva la ayuda en moto hasta quien la necesita."],
+  [14,"Pinky Repostera","mitica","Pinky prepara los postres que ayudan a combatir el hambre."],
+  [15,"Punto de Venta","exotica","Aquí se venden los postres de Sweet Help."],
+  [16,"Pinky Arroz","mitica","Pinky se disfraza de arroz para ayudar contra el hambre."],
+  [17,"Kit","mitica","Con cada compra, parte del dinero se destina a un kit alimenticio."],
+  [18,"Postre","mitica","La estrella de Sweet Help: el postre tres leches."],
+  [19,"Choco Fresh",false,"Carta de la colección Sweet Help."],
+  [20,"Sneake Frambuesa","legendaria","Carta de la colección Sweet Help."],
+  [21,"Sneake Mandarina","legendaria","Carta de la colección Sweet Help."],
+  [22,"Sneake Merenguita","legendaria","Carta de la colección Sweet Help."],
+  [23,"Pinky Marimonda","exotica","Con la alegría del Carnaval, Pinky baila al ritmo del Caribe colombiano."],
+  [24,"Dulce Caribe","exotica","Sombrero vueltiao y pollera: una pareja que celebra el sabor y el folclor de nuestra tierra."],
+  [25,"Merenguita Puloy","exotica","Inspirada en las icónicas Negritas Puloy, Pinky le pone sazón y dulzura al cambio social."],
+  [26,"100 Años De Dulzura","exotica","Un homenaje a las mariposas amarillas y al realismo mágico de nuestra literatura."],
+  [27,"La Casique De La Dulzura","exotica","Inspirada en la gran Casique, Pinky le pone sentimiento y sabor a nuestra causa."],
+  [28,"Sierra Sagrada","exotica","Desde las alturas de la Sierra Nevada hasta el mar, Pinky rinde tributo a la riqueza natural de la región."],
+  [29,"PinkNg","legendaria","Colaboración: la versión urbana, moderna y creativa de Pinky."],
+  [30,"Pinkki","legendaria","Colaboración: un universo ilustrado donde el amor y la fantasía cobran vida."],
+  [31,"VikNg","mitica","Colaboración: la unión inseparable de dos mentes creativas que convierten el amor en ayuda real."],
+  [32,"AfroSaberes","legendaria","Colaboración con AfroSaberes: celebra la identidad y el valor de los saberes ancestrales."],
+  [33,"Pinky Uniformada","pococomun","Con el uniforme distintivo de Sweet Help, Pinky está lista para entrar a la cocina."],
+  [34,"Pinky Caribeña","exotica","Con sombrero vueltiao y falda tricolor, Pinky rinde homenaje al color y la alegría de nuestra tierra."],
+  [35,"Pinkera","exotica","Homenaje a la alegría de las palenqueras y a la fuerza de las mujeres de Santa Marta."],
+  [36,"Pinky?","mitica","¡Un Pinky ha aparecido fuera de lugar! Nadie sabe cómo llegó hasta aquí."],
+  [37,"Un Cafecito","legendaria","Colaboración con NEXO: el café local y Sweet Help impulsan la escena artística de Santa Marta."],
+  [38,"Una Señal","legendaria","Colaboración con Ruta Caribe: ¡todos los caminos nos llevan a ayudar!"],
+  [39,"Contenedor De Basura","comun","Un simple contenedor de basura, porque en Sweet Help es fundamental reciclar."],
+  [40,"Pinky Plush","pococomun","Una adorable cerdita de peluche que ayuda a poner alimentos en la mesa de quien los necesita."],
+  [41,"Pinky Buzón","comun","Un simple buzón, porque en Sweet Help es fundamental mantener una comunicación clara."],
+  [42,"Álbum SweetCards","legendaria","El corazón de la colección SweetCards: una carta especial para tu álbum."],
+  [43,"Integra 2026c","legendaria","Carta exclusiva de Integra."],
+  [44,"Dinorberto","legendaria","Carta exclusiva de comunicación audiovisual (teorías de la narrativa)."],
+  [45,"Pinkki Queen","mitica","Un reconocimiento a esa persona que siempre se esfuerza mucho."]
 ];
-const STATS = {1:[2,3,2,""],2:[1,4,2,"guardian"],3:[3,2,2,""],4:[2,3,2,"dulce"],5:[3,3,3,""],6:[3,4,3,"guardian"],7:[3,3,3,"veloz"],8:[4,2,3,"veloz"],
+const STATS = {
+1:[2,3,2,""],2:[1,4,2,"guardian"],3:[3,2,2,""],4:[2,3,2,"dulce"],5:[3,3,3,""],6:[3,4,3,"guardian"],7:[3,3,3,"veloz"],8:[4,2,3,"veloz"],
   9:[2,5,3,"guardian"],10:[3,4,4,"dulce"],11:[4,4,4,""],12:[2,3,2,"azucar"],13:[4,3,4,"veloz"],14:[3,5,5,"dulce"],15:[1,6,3,"guardian"],16:[3,6,5,"guardian"],
-  17:[2,4,3,"azucar"],18:[5,5,6,""],19:[2,3,2,""],20:[4,3,4,"doble"],21:[4,4,5,"veloz"],22:[5,4,6,"doble"]};
+  17:[2,4,3,"azucar"],18:[5,5,6,""],19:[2,3,2,""],20:[4,3,4,"doble"],21:[4,4,5,"veloz"],22:[5,4,6,"doble"],23:[4,3,4,"veloz"],24:[3,4,4,"dulce"],
+  25:[3,3,3,"azucar"],26:[2,5,4,"guardian"],27:[4,4,5,"guardian"],28:[2,6,4,"guardian"],29:[4,3,4,"doble"],30:[3,4,4,"dulce"],31:[5,5,6,"doble"],32:[3,5,5,"guardian"],
+  33:[3,3,3,""],34:[3,4,4,"veloz"],35:[3,5,5,"azucar"],36:[5,4,6,"veloz"],37:[3,3,3,"azucar"],38:[2,5,4,"dulce"],39:[1,5,2,"guardian"],40:[2,4,3,"dulce"],
+  41:[1,4,2,"guardian"],42:[3,6,5,"dulce"],43:[4,4,5,"veloz"],44:[4,5,5,""],45:[5,5,6,"doble"]};
 const HAB = {
   guardian:{ico:"🛡️",n:"Defensa",t:"Guardián (defensa): recibe 1 punto menos de daño."},
   veloz:{ico:"⚡",n:"Ataque veloz",t:"Veloz (ataque): ataca el mismo turno en que llega al centro."},
@@ -532,13 +559,21 @@ const p2 = n => String(n).padStart(2,"0");
 const normRar = v => v === true ? "exotica" : (typeof v === "string" ? v.toLowerCase().normalize("NFD").replace(/[̀-ͯ\s_-]/g,"") : "");
 const ESP = ["exotica","legendaria","mitica"];
 const C = DATOS.map(([num,nombre,esp,desc],i) => { const s = STATS[num], rar = normRar(esp);
-  return {i,num,nombre,desc,rar,esp:ESP.includes(rar),img:CARTAS_DIR+p2(i)+".png",atk:s[0],hp:s[1],cost:s[2],hab:s[3]}; });
+  return {i,num,nombre,desc,rar,esp:ESP.includes(rar),img:CARTAS_DIR+p2(num)+".png",atk:s[0],hp:s[1],cost:s[2],hab:s[3]}; });
 const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const rnd = n => Math.floor(Math.random() * n);
 const shuffle = a => { a = a.slice(); for(let i = a.length - 1; i > 0; i--){ const j = rnd(i + 1); [a[i],a[j]] = [a[j],a[i]]; } return a; };
 
 /* ---------- Cartas desbloqueadas, ícono y estadísticas ---------- */
+/* Migración única: el álbum guardado usaba el orden viejo del .mind (22 cartas). Ahora el índice = número de carta - 1. */
+(function(){ try{
+  if(localStorage.getItem("arsweetcards_orden") === "2") return;
+  const VIEJO = [22,21,20,19,6,5,4,3,2,18,17,16,15,14,13,1,7,8,9,10,11,12];
+  const o = JSON.parse(localStorage.getItem(KEY) || "[]");
+  const n = [...new Set(o.map(i => VIEJO[i] - 1).filter(x => x >= 0))];
+  localStorage.setItem(KEY, JSON.stringify(n)); localStorage.setItem("arsweetcards_orden", "2");
+}catch(e){} })();
 let got = new Set();
 try{ got = new Set(JSON.parse(localStorage.getItem(KEY) || "[]")); }catch(e){}
 const demo = new URLSearchParams(location.search).get("demo") === "1";
