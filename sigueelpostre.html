@@ -728,6 +728,83 @@
         #net-arc, #net-duel { display: flex; flex-direction: column; gap: 6px; align-items: center; }
         #net-arc[hidden], #net-duel[hidden] { display: none; }
 
+    
+        /* ===== v2: pantalla de inicio que no se corta + UI móvil ===== */
+        #start-screen { justify-content: flex-start; padding: 12px 0; box-sizing: border-box; }
+        #start-screen .start-title { margin-top: auto; }
+        #start-screen .btn-link { margin-bottom: auto; flex: none; }
+        .btn-row { flex-wrap: wrap; }
+        .btn-play, .btn-link { flex: none; }
+        .shop-panel, .net-panel, .cfg-panel { max-height: 92vh; overflow-y: auto; }
+        @media (max-width: 760px), (max-height: 520px) {
+            .header { top: 6px; left: 8px; right: 8px; }
+            .phud-face { width: 44px; height: 44px; }
+            .phud { padding: 5px 12px 5px 5px; gap: 6px; border-width: 2px; min-width: 0; border-radius: 40px 16px 16px 40px; }
+            #p2-box.phud { padding: 5px 5px 5px 12px; border-radius: 16px 40px 40px 16px; }
+            .phud-row { font-size: 14px; gap: 8px; }
+            .stat img { width: 16px; height: 16px; }
+            .phud-name { font-size: 10px; gap: 4px; }
+            .phud-lv { font-size: 9px; padding: 0 6px; }
+            .phud-wpn { width: 34px; height: 34px; }
+            .phud-wpn canvas { width: 28px; height: 28px; }
+            .counter-box { padding: 4px 12px; min-width: 0; font-size: 1rem; }
+            .btn-pause { padding: 6px 10px; font-size: 12px; }
+            .xp-num { font-size: 10px; -webkit-text-stroke-width: 2px; }
+            .xp-seg { padding-top: 14px; }
+            .xp-track { height: 8px; }
+            #bossbar { top: 82px; width: 60vw; }
+            #bb-n { font-size: 16px; }
+            #modehud { top: 62px; font-size: 14px; padding: 2px 12px; }
+            #banner { font-size: 32px; }
+            .instructions { display: none; }
+            .btn-boost, .btn-weapon { padding: 10px 20px; font-size: 14px; }
+            .btn-boost { bottom: 40px; } .btn-weapon { bottom: 40px; } #stopBtn { bottom: 96px; }
+            .shop-panel { padding: 16px 12px; }
+            .shop-big { padding: 12px 8px; font-size: 18px; }
+            .start-title { margin-bottom: 14px; }
+            .md-btn { font-size: 19px; padding: 12px 14px; }
+        }
+        @media (max-height: 520px) {
+            #start-screen .start-title { font-size: clamp(34px, 12vh, 70px); margin-bottom: 8px; }
+            #start-screen .btn-play { padding: 8px 34px; font-size: 20px; border-width: 3px; }
+            #start-screen .btn-tut { font-size: 16px; padding: 6px 28px; margin-bottom: 6px; }
+            #start-screen .btn-shop { width: 48px; height: 48px; margin-top: 8px; }
+            #start-screen .btn-shop img { width: 26px; height: 26px; }
+            #start-screen .btn-row { margin-top: 8px; gap: 10px; }
+        }
+
+        /* ===== Mando remoto: ventana en PC ===== */
+        #padwin { position: fixed; right: 14px; top: 50%; transform: translateY(-50%); width: min(290px, 92vw); z-index: 340; display: none; flex-direction: column; align-items: center; gap: 10px; box-sizing: border-box;
+            background: #fff8ef; border: 4px solid var(--primary-color); border-radius: 26px; padding: 22px 16px 16px; text-align: center; box-shadow: 0 14px 40px rgba(0,0,0,0.35); animation: netPop .35s cubic-bezier(.2,1.4,.4,1) both; }
+        #padwin.open { display: flex; }
+        #padwin h3 { margin: 0; font-family: 'Choco Num', 'Choco Taste', 'Segoe UI', sans-serif; font-size: 26px; font-weight: normal; letter-spacing: 1px; color: var(--primary-color); }
+        #padwin p { margin: 0; font-size: 12px; color: #666; }
+        #pad-qr { width: 208px; min-height: 208px; box-sizing: border-box; background: #fff; border: 3px solid var(--primary-color); border-radius: 14px; padding: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #833c4a; word-break: break-all; }
+        #pad-qr canvas { display: none !important; }
+        #pad-qr img { display: block !important; width: 100%; height: auto; }
+        #pad-code { font-family: 'Choco Num', 'Choco Taste', 'Segoe UI', sans-serif; font-size: 32px; letter-spacing: 6px; color: var(--accent-color); -webkit-text-stroke: 1.5px var(--primary-color); paint-order: stroke fill; min-height: 38px; user-select: text; }
+        #pad-st { font-weight: bold; font-size: 13px; color: #ba5d73; }
+        #pad-st.ok { color: #1f9d55; }
+        #scan-v { width: 100%; max-height: 42vh; border-radius: 16px; background: #000; object-fit: cover; }
+
+        /* ===== Mando remoto: control en el celular (estilo NES) ===== */
+        #padui { position: fixed; inset: 0; z-index: 900; display: none; flex-direction: column; background: #bdb8ad; color: #2a2a2a; touch-action: none; user-select: none; -webkit-user-select: none; overflow: hidden; --js: min(48vh, 34vw, 210px); --bs: min(30vh, 20vw, 118px); }
+        #padui.open { display: flex; }
+        .pd-top { flex: none; height: 46px; background: #2a2a2a; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; color: #e8e2d0; font-weight: bold; letter-spacing: 2px; font-size: 12px; }
+        .pd-top b { font-family: 'Choco Num', 'Choco Taste', 'Segoe UI', sans-serif; font-size: 20px; font-weight: normal; color: #ff9195; letter-spacing: 1px; }
+        .pd-main { flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 4vw; gap: 10px; }
+        #pd-hint { display: none; text-align: center; font-size: 13px; font-weight: bold; padding: 8px; background: #ffe9a0; color: #7a5200; }
+        @media (orientation: portrait) { #pd-hint { display: block; } .pd-main { flex-direction: column; justify-content: space-evenly; } #padui { --js: min(40vw, 190px); --bs: min(24vw, 100px); } .pd-ab { align-self: flex-end; } }
+        #pj-base { position: relative; flex: none; width: var(--js); height: var(--js); border-radius: 50%; touch-action: none; background: radial-gradient(circle at 50% 40%, #5a5a5a, #1f1f1f); border: 6px solid #111; box-shadow: inset 0 6px 14px rgba(0,0,0,0.6), 0 6px 0 #8d887d; }
+        #pj-knob { position: absolute; left: 50%; top: 50%; width: 46%; height: 46%; margin: -23% 0 0 -23%; border-radius: 50%; pointer-events: none; background: radial-gradient(circle at 35% 30%, #ff7a85, #c0303f); box-shadow: 0 5px 0 #7a1620; }
+        .pd-mid { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+        .pd-row { display: flex; gap: 10px; }
+        .pd-pill { padding: 10px 16px; border-radius: 999px; border: 0; background: #333; color: #e8e2d0; font-weight: bold; font-size: 12px; letter-spacing: 1px; box-shadow: 0 4px 0 #111; touch-action: none; font-family: inherit; }
+        .pd-pill.on, .pd-pill:active { transform: translateY(3px); box-shadow: none; }
+        .pd-ab { display: flex; gap: 14px; align-items: flex-end; flex: none; }
+        .pd-btn { width: var(--bs); height: var(--bs); border-radius: 50%; border: 0; padding: 0; background: radial-gradient(circle at 35% 30%, #ff5a5a, #b01c1c); color: #fff; font-weight: bold; font-size: 12px; line-height: 1.1; box-shadow: 0 7px 0 #6b0f0f; touch-action: none; font-family: inherit; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .pd-btn.b { margin-bottom: 30px; }
+        .pd-btn.on { transform: translateY(5px); box-shadow: 0 2px 0 #6b0f0f; }
     </style>
 </head>
 <body>
@@ -750,6 +827,7 @@
         <div class="btn-row">
             <button class="btn-shop dia" id="diaryBtn" title="Diario" onclick="openDiary()"><img src="diario.svg" alt="Diario" onerror="this.outerHTML='📖'"></button>
             <button class="btn-shop" id="achBtn" title="Logros" onclick="openAch()"><img src="logro.svg" alt="Logros" onerror="this.outerHTML='🏆'"></button>
+            <button class="btn-shop" id="padBtn" title="Mando remoto" onclick="openPad()"><img src="play.svg" alt="Mando" onerror="this.outerHTML='🎮'"></button>
         </div>
         <a class="btn-link" href="ArSweetCards.html">IR A CAZAR CARTAS</a>
     </div>
@@ -839,6 +917,7 @@
             <div class="btn-row" style="margin-top:6px">
                 <button class="btn-shop" title="Tienda" onclick="openShop()"><img src="carritopng.svg" alt="Tienda"></button>
                 <button class="btn-shop" title="Ajustes" onclick="openConfig()"><img src="config.svg" alt="Ajustes" onerror="this.outerHTML='⚙️'"></button>
+                <button class="btn-shop" title="Mando remoto" onclick="openPad()"><img src="play.svg" alt="Mando" onerror="this.outerHTML='🎮'"></button>
             </div>
         </div>
 
@@ -867,7 +946,7 @@
                 <button class="cs-arrow" onclick="csMove()" aria-label="Cambiar personaje">›</button>
             </div>
             <div class="cs-note" id="cs-note"></div>
-            <button class="btn-resume" onclick="csConfirm()">¡JUGAR!</button>
+            <button class="btn-resume" id="cs-ok" onclick="csConfirm()">¡JUGAR!</button>
         </div>
     </div>
 
@@ -983,7 +1062,44 @@
     </div>
     <div id="net-toast"></div>
 
+        <div id="padwin">
+        <button class="shop-close" onclick="closePadWin()">✕</button>
+        <h3>MANDO REMOTO</h3>
+        <p>En tu celular abre este juego, pulsa el botón del mando 🎮 y escanea el QR.</p>
+        <div id="pad-qr"></div>
+        <div id="pad-code"></div>
+        <div id="pad-st">Preparando…</div>
+        <button class="btn-resume" id="pad-dis" onclick="padDisconnect()" style="display:none;margin-top:0;padding:10px 26px;font-size:15px">DESCONECTAR</button>
+    </div>
+
+    <div class="net-modal" id="padscan" onclick="if (event.target === this) closeScan()">
+        <div class="net-panel">
+            <button class="shop-close" onclick="closeScan()">✕</button>
+            <h2>ESCANEA EL QR</h2>
+            <p class="net-desc">Apunta a la ventana "Mando remoto" que aparece en tu PC.</p>
+            <video id="scan-v" playsinline muted></video>
+            <p class="net-status" id="scan-st"></p>
+            <label class="net-lbl" for="scan-in">O ESCRIBE EL CÓDIGO</label>
+            <input class="net-inp" id="scan-in" maxlength="5" placeholder="▪▪▪▪▪" autocomplete="off">
+            <button class="btn-resume" style="margin-top:0" onclick="padManual()">VINCULAR</button>
+        </div>
+    </div>
+
+    <div id="padui">
+        <div class="pd-top"><b>SUGAR SNAKE</b><span>MANDO CONECTADO</span><button type="button" class="pd-pill" id="pd-exit">SALIR</button></div>
+        <div id="pd-hint">🔄 Gira el celular para jugar más cómodo</div>
+        <div class="pd-main">
+            <div id="pj-base"><div id="pj-knob"></div></div>
+            <div class="pd-mid">
+                <div class="pd-row"><button type="button" class="pd-pill" id="pd-sel">ARMA ↻</button><button type="button" class="pd-pill" id="pd-start">START</button></div>
+                <button type="button" class="pd-pill" id="pd-stop">FRENAR</button>
+            </div>
+            <div class="pd-ab"><button type="button" class="pd-btn b" id="pd-b">DISPARAR</button><button type="button" class="pd-btn a" id="pd-a">IMPULSO</button></div>
+        </div>
+    </div>
+
     <div id="dbgkeys"></div>
+
 
     <div id="debug">
         <div class="shop-panel">
@@ -1480,17 +1596,14 @@
         showCoins(); paintTabIcons(0);
 
         // ===================== Tamaño / pantalla completa / niebla =====================
+        const PAD = { on: false, a: null, m: 0, b: 0 };
         let g = 40, W = 800, H = 800, fog = null, fogs = {};
         const NVW = () => (window.NETV ? window.NETV.w : window.innerWidth), NVH = () => (window.NETV ? window.NETV.h : window.innerHeight);   // online: el campo se ajusta a la pantalla más pequeña
         function setupSize() {
-            const base = Math.max(30, Math.min(56, Math.min(NVW(), NVH()) / 14));
-            const rows = Math.max(8, Math.round(NVH() / base));
-            g = NVH() / rows;
-            W = Math.round(NVW());   // el campo llega justo hasta el borde real de la pantalla (antes se recortaba a múltiplos de la casilla)
-            H = Math.round(rows * g);
+            g = 48; W = 36 * g; H = 20 * g;   // el MISMO escenario en PC y teléfono
             canvas.width = W; canvas.height = H;
-            canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
             fogs = {}; fog = makeFog('249,216,180');
+            camReset();
         }
         // Niebla de los bordes: se dibuja una sola vez por color (rgb 'r,g,b') y luego se reutiliza
         function makeFog(rgb) {
@@ -2360,6 +2473,7 @@
             return (vx || vy) ? Math.atan2(vx, -vy) : null;
         };
         function steerTarget(p) {
+            if (PAD.on && p.slot === 1 && PAD.a !== null) return PAD.a;
             if (p.slot === 2) { const a = dirOf(k2, NONE); return a === null ? p.ang : a; }
             const a = dirOf(k1, twoP ? NONE : k2);          // con 1 jugador, las flechas también sirven
             if (a !== null) return a;
@@ -2370,6 +2484,7 @@
         // ¿El jugador está pidiendo moverse? (solo importa con "Maestro de la quietud": sin movimiento automático)
         let ptrDown = false, touching = false;
         function wantsMove(p) {
+            if (PAD.on && p.slot === 1 && PAD.m) return true;
             if (p.boost) return true;
             if (p.slot === 2) return dirOf(k2, NONE) !== null;
             if (dirOf(k1, twoP ? NONE : k2) !== null) return true;
@@ -2447,7 +2562,7 @@
         canvas.addEventListener('pointermove', e => {
             if (e.pointerType !== 'mouse') return;
             const r = canvas.getBoundingClientRect();
-            ptr = { x: e.clientX - r.left, y: e.clientY - r.top };
+            ptr = { x: (e.clientX - r.left) * canvas.width / r.width, y: (e.clientY - r.top) * canvas.height / r.height };
         });
         canvas.addEventListener('touchstart', e => { const t = e.touches[0]; joy = { ox: t.clientX, oy: t.clientY, a: players[0] ? players[0].ang : 0 }; touching = true; }, { passive: true });
         canvas.addEventListener('touchend', e => { if (!e.touches.length) touching = false; }, { passive: true });
@@ -3043,6 +3158,7 @@
             return out;
         }
         function draw() {
+            camApply();
             ctx.clearRect(0, 0, W, H);
             const sBG = MODE.id === 'historia' && !tut;   // Historia: el fondo de la guarida se ve también al jugar
             if (sBG) drawStoryBG();
@@ -3594,6 +3710,7 @@
             drawHead(x, hy, dir * phi + (talk ? Math.sin(t * 9) * 0.06 : 0), gg * 1.6, img, tc, fill, ph, accs);
         }
         function cineHija(x, gy, hh, t, caged) {
+            const c = ctx;
             drawMere(ctx, x, gy, hh, t, { ph: 0, wear: mereWearNow() });
             if (caged) {
                 c.strokeStyle = '#2a2233'; c.lineWidth = 5;
@@ -4862,7 +4979,7 @@
     // ===================== INVITADO =====================
     function guestGo(m) {
         if (NET.role !== 'guest' || NET.on || !NET.rival) return;
-        netBegin(); MODE = { id: m.mid || 'normal' }; NET.hostPick = m.hostPick === 2 ? 2 : 1; charPick = NET.hostPick;
+        netBegin(); MODE = { id: m.mid || 'normal' }; NET.hostPick = m.hostPick === 2 ? 2 : 1; if (charPick === NET.hostPick) toast('Tu amigo ya eligió ese personaje: juegas con el otro'); charPick = NET.hostPick;
         NET.rival.nick = m.nick || NET.rival.nick; NET.rival.icon = m.icon || NET.rival.icon;
         const gid = identOf(2);
         send({ t: 'prof', skl: (skillsOwned[gid] || []).slice(), weq: wpnEq[gid] || '', accs: eqList(gid).filter(id => !accLock(id)), xp: xpTotal[gid] || 0, vw: innerWidth, vh: innerHeight });
@@ -4901,7 +5018,7 @@
         const b = coinEl.closest('.counter-box'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
     }
     function gSetup(w, h, gg) { W = w; H = h; g = gg; canvas.width = W; canvas.height = H; fogs = {}; fog = makeFog('249,216,180'); gFit(); }
-    function gFit() { if (NET.role !== 'guest') return; const s = Math.min(innerWidth / W, innerHeight / H); canvas.style.width = Math.round(W * s) + 'px'; canvas.style.height = Math.round(H * s) + 'px'; }
+    function gFit() { camReset(); }
     addEventListener('resize', () => { if (NET.on && NET.role === 'guest') gFit(); });
     canvas.addEventListener('pointermove', e => {   // el puntero (tecla V) se mide sobre el campo, aunque se vea escalado
         if (!(NET.on && NET.role === 'guest') || e.pointerType !== 'mouse') return;
@@ -4992,10 +5109,10 @@
         for (const q of shots) { q.x += q.vx * dt; q.y += q.vy * dt; q.spin += dt * 7; }
         // mis controles -> anfitrión
         const me = players[1];
-        let a = dirOf(k1, k2);
+        let a = dirOf(k1, k2); if (a === null && PAD.on && PAD.a !== null) a = PAD.a;
         if (a === null && aimOn && ptr && me && Math.hypot(ptr.x - me.x, ptr.y - me.y) > g * 0.6) a = Math.atan2(ptr.x - me.x, -(ptr.y - me.y));
         if (a === null && joy) a = joy.a;
-        const mv = (dirOf(k1, k2) !== null || (aimOn && ptrDown) || touching) ? 1 : 0, b = NET.gin.b ? 1 : 0;
+        const mv = ((PAD.on && PAD.m) || dirOf(k1, k2) !== null || (aimOn && ptrDown) || touching) ? 1 : 0, b = NET.gin.b ? 1 : 0;
         const ch = (a === null) !== (NET.lastA === null) || (a !== null && NET.lastA !== null && Math.abs(wrapA(a - NET.lastA)) > 0.03) || mv !== NET.lastM || b !== NET.lastB;
         NET.inT += dt;
         if (ch ? NET.inT > 0.03 : NET.inT > 0.25) { NET.inT = 0; NET.lastA = a; NET.lastM = mv; NET.lastB = b; send({ t: 'i', a: a === null ? null : r2(a), m: mv, b }); }
@@ -5038,7 +5155,7 @@
     steerTarget = function (p) {
         if (host()) {
             if (p.remote) return (p.rin && p.rin.a !== null) ? p.rin.a : p.ang;
-            const a = dirOf(k1, k2); if (a !== null) return a;   // anfitrión: WASD o flechas
+            const a = (PAD.on && PAD.a !== null) ? PAD.a : dirOf(k1, k2); if (a !== null) return a;   // anfitrión: WASD o flechas
             if (aimOn && ptr && Math.hypot(ptr.x - p.x, ptr.y - p.y) > g * 0.6) return Math.atan2(ptr.x - p.x, -(ptr.y - p.y));
             return joy ? joy.a : p.ang;
         }
@@ -5048,7 +5165,7 @@
         if (host()) {
             if (p.boost) return true;
             if (p.remote) return !!(p.rin && (p.rin.m || p.rin.b));
-            return dirOf(k1, k2) !== null || (aimOn && ptr && ptrDown) || touching;
+            return !!(PAD.on && PAD.m) || dirOf(k1, k2) !== null || (aimOn && ptr && ptrDown) || touching;
         }
         return _want(p);
     };
@@ -5119,6 +5236,305 @@
     });
 })();
 
+</script>
+
+<script>
+/* =====================================================================
+   v2 · CÁMARA, INDICADORES, MANDO REMOTO Y ONLINE CON PERSONAJE
+   ===================================================================== */
+(function () {
+    const $ = id => document.getElementById(id);
+    const isPhone = () => matchMedia('(pointer: coarse)').matches;
+    let toastT = 0;
+    function toast(t) { const x = $('net-toast'); x.textContent = t; x.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => x.classList.remove('show'), 2800); }
+
+    /* ---------- CÁMARA ----------
+       El escenario mide SIEMPRE lo mismo (36 x 20 casillas) en todos los dispositivos.
+       PC: se ve entero. Teléfono: la cámara sigue a tu serpiente, alejada, y se dibujan indicadores en el borde. */
+    const cam = { x: 0, y: 0, init: false, on: false, t: 0, key: '' };
+    let ov = null, ovc = null;
+    function mkOverlay() {
+        ov = document.createElement('canvas');
+        ov.style.cssText = 'position:absolute;left:0;top:0;transform:none;width:100%;height:100%;max-height:none;border:0;border-radius:0;background:none;margin:0;display:block;pointer-events:none;z-index:18;';
+        gameWrapper.appendChild(ov); ovc = ov.getContext('2d');
+    }
+    function camTarget() {
+        const n = window.NET, p = (n && n.on && n.role === 'guest') ? players[1] : players[0];
+        if (p && p.alive) return p;
+        return players.find(q => q.alive) || p || null;
+    }
+    window.camReset = function () { cam.init = false; };
+    window.camApply = function () {
+        const vw = innerWidth, vh = innerHeight, fit = Math.min(vw / W, vh / H);
+        let s = fit;
+        if (isPhone()) s = Math.max(fit, Math.min(vw, vh) / 18 / g);   // "cámara lejos": ~18 casillas a lo alto
+        cam.on = isPhone() && s > fit * 1.02;
+        const now = performance.now(), dt = Math.min(0.1, (now - (cam.t || now)) / 1000); cam.t = now;
+        const me = camTarget();
+        if (cam.on && me) {
+            if (!cam.init) { cam.x = me.x; cam.y = me.y; cam.init = true; }
+            const f = 1 - Math.exp(-dt * 7);
+            cam.x += (me.x - cam.x) * f; cam.y += (me.y - cam.y) * f;
+        } else { cam.x = W / 2; cam.y = H / 2; cam.init = false; }
+        const tx = W * s <= vw ? (vw - W * s) / 2 : Math.max(vw - W * s, Math.min(0, vw / 2 - cam.x * s));
+        const ty = H * s <= vh ? (vh - H * s) / 2 : Math.max(vh - H * s, Math.min(0, vh / 2 - cam.y * s));
+        const key = [W * s, H * s, tx, ty].map(v => v.toFixed(1)).join('|');
+        if (key !== cam.key) {
+            cam.key = key; const st = canvas.style;
+            st.width = (W * s) + 'px'; st.height = (H * s) + 'px'; st.left = '0px'; st.top = '0px'; st.transform = 'translate(' + tx + 'px,' + ty + 'px)';
+        }
+        if (!ov) mkOverlay();
+        const dpr = Math.min(2, devicePixelRatio || 1), ow = Math.round(vw * dpr), oh = Math.round(vh * dpr);
+        if (ov.width !== ow || ov.height !== oh) { ov.width = ow; ov.height = oh; }
+        ovc.setTransform(dpr, 0, 0, dpr, 0, 0); ovc.clearRect(0, 0, vw, vh);
+        if (cam.on && me && gameActive) overlay(ovc, vw, vh, s, tx, ty, me);
+    };
+    function overlay(c, vw, vh, s, tx, ty, me) {
+        const t = performance.now() / 1000, clampX = v => Math.max(26, Math.min(vw - 26, v)), clampY = v => Math.max(112, Math.min(vh - 64, v));
+        let dmin = 1e9;
+        // ---- enemigos que se acercan ----
+        for (const en of enemies) {
+            if (en.dead) continue;
+            const d = Math.hypot(en.x - me.x, en.y - me.y) / g;
+            if (d < dmin) dmin = d;
+            const sx = tx + en.x * s, sy = ty + en.y * s;
+            if (sx >= -10 && sx <= vw + 10 && sy >= -10 && sy <= vh + 10) continue;   // ya se ve en pantalla
+            if (d > 24) continue;
+            const px = clampX(sx), py = clampY(sy), ang = Math.atan2(sy - py, sx - px), near = 1 - d / 24, pulse = d < 10 ? 0.75 + 0.25 * Math.sin(t * 12) : 1, k = en.boss ? 1.5 : 1;
+            c.save(); c.translate(px, py); c.rotate(ang); c.globalAlpha = (0.45 + 0.55 * near) * pulse;
+            c.fillStyle = en.kind === 'creeper' ? '#4caf50' : '#ff3b5c'; c.strokeStyle = '#fff'; c.lineWidth = 3; c.lineJoin = 'round';
+            c.beginPath(); c.moveTo(18 * k, 0); c.lineTo(-10 * k, -13 * k); c.lineTo(-4 * k, 0); c.lineTo(-10 * k, 13 * k); c.closePath(); c.fill(); c.stroke();
+            c.restore();
+        }
+        if (dmin < 6) {   // peligro cerca: los bordes se ponen rojos
+            const k = 1 - dmin / 6, pulse = 0.65 + 0.35 * Math.sin(t * 11), gr = c.createRadialGradient(vw / 2, vh / 2, Math.min(vw, vh) * 0.35, vw / 2, vh / 2, Math.hypot(vw, vh) / 2);
+            gr.addColorStop(0, 'rgba(255,40,70,0)'); gr.addColorStop(1, 'rgba(255,40,70,' + (0.45 * k * pulse) + ')');
+            c.fillStyle = gr; c.fillRect(0, 0, vw, vh);
+        }
+        // ---- tu amigo: bolita con su cabeza SOLO en el borde ----
+        for (const q of players) {
+            if (q === me || !q.alive) continue;
+            const sx = tx + q.x * s, sy = ty + q.y * s, r = 27;
+            if (sx >= -r * 0.3 && sx <= vw + r * 0.3 && sy >= -r * 0.3 && sy <= vh + r * 0.3) continue;
+            const cx = Math.max(r + 8, Math.min(vw - r - 8, sx)), cy = Math.max(r + 8, Math.min(vh - r - 8, sy)), ang = Math.atan2(sy - cy, sx - cx), col = q.id === 2 ? '#b8780a' : '#833c4a', k = 1 + 0.05 * Math.sin(t * 5);
+            c.save(); c.translate(cx, cy); c.scale(k, k);
+            c.fillStyle = col; c.save(); c.rotate(ang); c.beginPath(); c.moveTo(r + 14, 0); c.lineTo(r - 2, -10); c.lineTo(r - 2, 10); c.closePath(); c.fill(); c.restore();
+            c.beginPath(); c.arc(0, 0, r + 3, 0, Math.PI * 2); c.fillStyle = '#fff'; c.fill();
+            c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fillStyle = q.id === 2 ? '#ffd98a' : '#ffc9d0'; c.fill();
+            c.save(); c.clip();
+            const im = q.msk ? mereHead(false, false, true) : playerHead(q.id, false, false, true);
+            if (im) c.drawImage(ras(im), -r * 1.15, -r * 1.15, r * 2.3, r * 2.3);
+            for (const a of (q.accI || equippedImgs(q.id))) if (a && a.ok) c.drawImage(ras(a), -r * 1.15, -r * 1.15, r * 2.3, r * 2.3);
+            c.restore();
+            c.lineWidth = 4; c.strokeStyle = col; c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.stroke();
+            c.restore();
+        }
+    }
+
+    /* ---------- ONLINE: elegir personaje antes de crear / unirse ---------- */
+    let netPick = false;
+    const iconOkOrig = window.netIconOk;
+    window.netIconOkOrig = iconOkOrig;
+    window.netIconOk = function () {
+        $('net-icon').classList.remove('open');
+        openCharSel();
+        if (charOpen) { netPick = true; $('cs-ok').textContent = 'CONTINUAR'; csPaint(); }
+        else $('net-icon').classList.add('open');
+    };
+    const _ccl = closeCharSel, _cc = csConfirm, _cp = csPaint;
+    closeCharSel = function () { if (netPick) { netPick = false; $('cs-ok').textContent = '¡JUGAR!'; } _ccl(); };
+    csConfirm = function () {
+        if (!charOpen) return;
+        if (netPick) { closeCharSel(); S('join'); window.netIconOkOrig(); } else _cc();
+    };
+    csPaint = function () { _cp(); if (netPick) byId('cs-note').textContent += ' · ONLINE: si tu amigo elige el mismo, te toca el otro.'; };
+
+    /* ---------- MANDO REMOTO ---------- */
+    const PFX = 'sugarpad-';
+    let peer = null, conn = null, role = null, code = '';
+    function loadScript(src, ok, bad) { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = bad || function () {}; document.head.appendChild(s); }
+    function loadPeer(cb) { if (window.Peer) return cb(); loadScript('https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js', cb, () => toast('No se pudo cargar la conexión (revisa tu internet)')); }
+    const sendP = m => { try { if (conn && conn.open) conn.send(m); } catch (e) {} };
+    function resetPad() {
+        PAD.on = false; PAD.a = null; PAD.m = 0;
+        if (PAD.b) { PAD.b = 0; try { setBoost(1, false); } catch (e) {} }
+    }
+    function cleanup() {
+        const c = conn, p = peer; conn = null; peer = null; role = null;
+        try { if (c) c.close(); } catch (e) {}
+        try { if (p) p.destroy(); } catch (e) {}
+        resetPad();
+    }
+    const setSt = (t, ok) => { const e = $('pad-st'); e.textContent = t; e.classList.toggle('ok', !!ok); };
+    window.openPad = function () { audio(); if (isPhone()) openScan(); else openWin(); };
+
+    // ----- PC: ventana a la derecha con el QR -----
+    function openWin() { $('padwin').classList.add('open'); if (role === 'pc' && peer) return; setupPC(); }
+    window.closePadWin = function () { $('padwin').classList.remove('open'); };
+    window.padDisconnect = function () { sendP({ t: 'bye' }); setupPC(); };
+    function showQR() {
+        const url = location.href.split(/[?#]/)[0] + '?pad=' + code, box = $('pad-qr');
+        $('pad-code').textContent = code; box.innerHTML = '';
+        const draw = () => { try { new QRCode(box, { text: url, width: 200, height: 200, colorDark: '#833c4a', colorLight: '#ffffff' }); } catch (e) { box.textContent = url; } };
+        if (window.QRCode) draw(); else loadScript('https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js', draw, () => { box.textContent = 'Código: ' + code; });
+    }
+    function lost() { resetPad(); setSt('Celular desconectado. Esperando…', false); $('pad-dis').style.display = 'none'; }
+    function setupPC() {
+        cleanup(); setSt('Preparando…', false); $('pad-qr').innerHTML = ''; $('pad-code').textContent = ''; $('pad-dis').style.display = 'none';
+        loadPeer(() => {
+            code = Math.random().toString(36).replace(/[^a-z0-9]/g, '').slice(0, 5).toUpperCase().padEnd(5, 'X'); role = 'pc';
+            const pr = peer = new Peer(PFX + code);
+            pr.on('open', () => { if (peer !== pr) return; showQR(); setSt('Esperando al celular…', false); });
+            pr.on('connection', c => {
+                if (peer !== pr) return;
+                if (conn) { c.close(); return; }
+                conn = c;
+                const up = () => { PAD.on = true; setSt('¡Celular conectado! 🎮', true); $('pad-dis').style.display = ''; try { S('join'); } catch (e) {} sendP({ t: 'ok' }); };
+                if (c.open) up(); else c.on('open', up);
+                c.on('data', onData);
+                c.on('close', () => { if (c === conn) { conn = null; lost(); } });
+                c.on('error', () => { if (c === conn) { conn = null; lost(); } });
+            });
+            pr.on('error', e => { if (peer !== pr) return; if (e.type === 'unavailable-id') { setupPC(); return; } setSt('Error de conexión: ' + e.type, false); });
+        });
+    }
+    function padStart() {
+        if (charOpen) return csConfirm();
+        if (gameActive) return togglePause();
+        if (gameOverScreen.style.display === 'flex') return retry();
+        if (startScreen.style.display !== 'none' && !loadOn) startGame();
+    }
+    function onData(m) {
+        if (!m || !m.t) return;
+        switch (m.t) {
+            case 'hi': PAD.on = true; break;
+            case 'pi': {
+                PAD.on = true;
+                PAD.a = (m.a === null || m.a === undefined || isNaN(+m.a)) ? null : +m.a; PAD.m = m.m ? 1 : 0;
+                const b = m.b ? 1 : 0;
+                if (b !== PAD.b) { PAD.b = b; if (gameActive) setBoost(1, !!b); }
+                break;
+            }
+            case 'fire': if (gameActive) fireWeapon(players[0]); break;
+            case 'cyc': if (gameActive) cycleWeapon(players[0]); break;
+            case 'stop': if (gameActive) tryStop(players[0]); break;
+            case 'start': padStart(); break;
+            case 'bye': if (conn) { const c = conn; conn = null; try { c.close(); } catch (e) {} lost(); } break;
+        }
+    }
+
+    // ----- Teléfono: escáner de QR -----
+    let stream = null, scanT = 0, det = null;
+    const sc = document.createElement('canvas'), scx = sc.getContext('2d', { willReadFrequently: true });
+    const parseCode = txt => {
+        const m = /[?&]pad=([A-Za-z0-9]{3,8})/.exec(txt || ''); if (m) return m[1].toUpperCase();
+        const t = String(txt || '').trim().toUpperCase(); return /^[A-Z0-9]{4,6}$/.test(t) ? t : null;
+    };
+    window.openScan = function () { $('padscan').classList.add('open'); $('scan-st').textContent = 'Abriendo cámara…'; startCam(); };
+    window.closeScan = function () {
+        $('padscan').classList.remove('open'); clearTimeout(scanT);
+        if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+        try { $('scan-v').srcObject = null; } catch (e) {}
+    };
+    window.padManual = function () { const c = parseCode($('scan-in').value); if (!c) { toast('Escribe el código de 5 letras'); return; } closeScan(); padJoin(c); };
+    ['keydown', 'keyup'].forEach(ev => $('scan-in').addEventListener(ev, e => { e.stopPropagation(); if (ev === 'keydown' && e.code === 'Enter') padManual(); }));
+    async function startCam() {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+            const v = $('scan-v'); v.srcObject = stream; await v.play();
+            if ('BarcodeDetector' in window) { try { det = new BarcodeDetector({ formats: ['qr_code'] }); } catch (e) { det = null; } }
+            if (!det && !window.jsQR) await new Promise(r => loadScript('https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js', r, r));
+            $('scan-st').textContent = 'Buscando el QR…'; scanTick();
+        } catch (e) { $('scan-st').textContent = 'No se pudo abrir la cámara (necesita HTTPS y permiso). Escribe el código de la PC aquí abajo.'; }
+    }
+    async function scanTick() {
+        if (!$('padscan').classList.contains('open')) return;
+        const v = $('scan-v'); let txt = null;
+        try {
+            if (v.videoWidth) {
+                if (det) { const r = await det.detect(v); if (r && r.length) txt = r[0].rawValue; }
+                else if (window.jsQR) { const w = 480, h = Math.round(w * v.videoHeight / v.videoWidth); sc.width = w; sc.height = h; scx.drawImage(v, 0, 0, w, h); const d = scx.getImageData(0, 0, w, h), r = jsQR(d.data, w, h); if (r) txt = r.data; }
+            }
+        } catch (e) {}
+        if (txt) { const c = parseCode(txt); if (c) { closeScan(); padJoin(c); return; } }
+        scanT = setTimeout(scanTick, 160);
+    }
+
+    // ----- Teléfono: el control -----
+    function padJoin(cd) {
+        toast('Conectando con la PC…');
+        loadPeer(() => {
+            cleanup(); role = 'phone'; code = cd;
+            const pr = peer = new Peer();
+            const to = setTimeout(() => { if (peer === pr && !(conn && conn.open)) { toast('No se pudo conectar con la PC'); cleanup(); } }, 12000);
+            pr.on('open', () => {
+                if (peer !== pr) return;
+                const c = conn = pr.connect(PFX + cd, { reliable: true, serialization: 'json' });
+                c.on('open', () => { clearTimeout(to); sendP({ t: 'hi' }); showController(); });
+                c.on('data', m => { if (m && m.t === 'bye') exitController(); });
+                c.on('close', () => { if (c === conn) exitController(true); });
+                c.on('error', () => { if (c === conn) exitController(true); });
+            });
+            pr.on('error', e => { clearTimeout(to); if (peer === pr) { toast(e.type === 'peer-unavailable' ? 'No existe ese código: ¿abriste la ventana en la PC?' : 'Error de conexión: ' + e.type); cleanup(); } });
+        });
+    }
+    function showController() {
+        $('padui').classList.add('open');
+        try { musicPause(); } catch (e) {}
+        try { demoStop(); } catch (e) {}
+    }
+    function exitController(lostConn) {
+        const was = role === 'phone';
+        if (was) sendP({ t: 'bye' });
+        cleanup(); st.a = null; st.m = 0; st.b = 0; lastAng = null; lastM = 0; lastB = 0;
+        $('padui').classList.remove('open');
+        if (was) {
+            try { musicPlay(); } catch (e) {}
+            try { if (startScreen.style.display !== 'none') demoStart(); } catch (e) {}
+            if (lostConn) toast('Se perdió la conexión con la PC');
+        }
+    }
+    const st = { a: null, m: 0, b: 0 };
+    let lastS = 0, lastAng = null, lastM = 0, lastB = 0;
+    function push(force) {
+        const now = performance.now();
+        const ch = st.m !== lastM || st.b !== lastB || (st.a === null) !== (lastAng === null) || (st.a !== null && lastAng !== null && Math.abs(wrapA(st.a - lastAng)) > 0.04);
+        if (!force && (!ch || now - lastS < 35)) return;
+        lastS = now; lastAng = st.a; lastM = st.m; lastB = st.b;
+        sendP({ t: 'pi', a: st.a === null ? null : Math.round(st.a * 100) / 100, m: st.m, b: st.b });
+    }
+    setInterval(() => { if (role === 'phone' && (st.m || st.b)) push(true); }, 120);
+    // joystick
+    (function () {
+        const base = $('pj-base'), knob = $('pj-knob'); let jid = null, jc = { x: 0, y: 0 };
+        function jmove(e) {
+            const R = base.clientWidth / 2, dx = e.clientX - jc.x, dy = e.clientY - jc.y, d = Math.hypot(dx, dy), k = Math.min(d, R * 0.6) / (d || 1);
+            knob.style.transform = 'translate(' + (dx * k) + 'px,' + (dy * k) + 'px)';
+            if (d > R * 0.18) { st.a = Math.atan2(dx, -dy); st.m = 1; } else { st.a = null; st.m = 0; }
+            push();
+        }
+        base.addEventListener('pointerdown', e => { e.preventDefault(); jid = e.pointerId; base.setPointerCapture(e.pointerId); const r = base.getBoundingClientRect(); jc = { x: r.left + r.width / 2, y: r.top + r.height / 2 }; jmove(e); });
+        base.addEventListener('pointermove', e => { if (e.pointerId === jid) jmove(e); });
+        const end = e => { if (e.pointerId !== jid) return; jid = null; knob.style.transform = 'translate(0,0)'; st.a = null; st.m = 0; push(true); };
+        base.addEventListener('pointerup', end); base.addEventListener('pointercancel', end);
+    })();
+    function hold(el, down, up) {
+        el.addEventListener('pointerdown', e => { e.preventDefault(); try { el.setPointerCapture(e.pointerId); } catch (x) {} el.classList.add('on'); if (navigator.vibrate) navigator.vibrate(12); down(); });
+        const end = () => { if (!el.classList.contains('on')) return; el.classList.remove('on'); if (up) up(); };
+        el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end); el.addEventListener('lostpointercapture', end);
+    }
+    let fireT = 0;
+    hold($('pd-b'), () => { sendP({ t: 'fire' }); clearInterval(fireT); fireT = setInterval(() => sendP({ t: 'fire' }), 140); }, () => clearInterval(fireT));
+    hold($('pd-a'), () => { st.b = 1; push(true); }, () => { st.b = 0; push(true); });
+    hold($('pd-sel'), () => sendP({ t: 'cyc' }));
+    hold($('pd-stop'), () => sendP({ t: 'stop' }));
+    hold($('pd-start'), () => sendP({ t: 'start' }));
+    $('pd-exit').addEventListener('click', () => exitController());
+    $('padui').addEventListener('contextmenu', e => e.preventDefault());
+
+    // si abres el enlace del QR con la cámara del celular, se vincula solo
+    try { const q = new URLSearchParams(location.search).get('pad'); if (q && /^[A-Za-z0-9]{3,8}$/.test(q)) setTimeout(() => padJoin(q.toUpperCase()), 800); } catch (e) {}
+})();
 </script>
 
 <script src="cursor.js"></script>
