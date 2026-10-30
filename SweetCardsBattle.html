@@ -454,6 +454,7 @@ a.glass{text-decoration:none;display:inline-block}
         <label class="cl" for="inCode">codigo de sala</label>
         <input class="inp" id="inCode" maxlength="5" placeholder="▪▪▪▪▪" autocomplete="off">
         <button class="glass btn-win sm" id="btnUnir" type="button">Unirme</button>
+        <p id="mEstado2"></p>
       </div>
     </div>
   </div>
@@ -1175,44 +1176,113 @@ document.addEventListener("pointerup", e => {
 });
 document.addEventListener("pointercancel", () => { if(drag && drag.ghost){ drag.ghost.remove(); if(enPick()) $("pkFan").classList.remove("arrastrando"); else if(G){ G.sel = null; render(); } } drag = null; tapIni = null; });
 
-/* ---------- Multijugador (PeerJS) ---------- */
-function cargaPeer(cb){
-  if(window.Peer) return cb();
-  const s = document.createElement("script"); s.src = "https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"; s.onload = cb;
-  s.onerror = () => aviso("No se pudo cargar el multijugador (revisa tu internet)"); document.head.appendChild(s);
+/* ---------- Multijugador (PeerJS + STUN/TURN) ---------- */
+/* 3 CDN de respaldo: si uno está bloqueado o caído se prueba el siguiente */
+const PEER_CDNS = [
+  "https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js",
+  "https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"
+];
+/* STUN para descubrir tu IP pública y TURN (relé) para redes que bloquean la conexión directa (datos móviles, colegios, oficinas) */
+const ICE = {iceServers:[
+  {urls:["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302","stun:stun2.l.google.com:19302"]},
+  {urls:"stun:stun.cloudflare.com:3478"},
+  {urls:["turn:openrelay.metered.ca:80","turn:openrelay.metered.ca:443","turn:openrelay.metered.ca:443?transport=tcp","turns:openrelay.metered.ca:443?transport=tcp"], username:"openrelayproject", credential:"openrelayproject"}
+], iceCandidatePoolSize:4};
+const T_CDN = 7000, T_SERVIDOR = 12000, T_RIVAL = 20000, T_SALA = 300000, T_HOLA = 10000;
+const PEER_OPTS = () => ({config:ICE, debug:0});
+let netTimers = [];
+const netT = (fn, ms) => { const t = setTimeout(fn, ms); netTimers.push(t); return t; };
+const netLimpia = () => { netTimers.forEach(clearTimeout); netTimers = []; };
+function estado(txt, mal){
+  ["mEstado","mEstado2"].forEach(id => { const e = $(id); if(e){ e.textContent = txt; e.style.color = mal ? "#ffd0c8" : ""; } });
+  if(mal) aviso(txt);
 }
-function cierraNet(){ try{ if(NET){ if(NET.conn) NET.conn.close(); if(NET.peer) NET.peer.destroy(); } }catch(e){} NET = null; }
-function crearSala(){
-  cierraNet(); $("btnCrear").disabled = true; $("mEstado").textContent = "Creando sala…";
+function cargaPeer(ok, fallo){
+  if(window.Peer) return ok();
+  let i = 0;
+  const intenta = () => {
+    if(i >= PEER_CDNS.length){ fallo("No se pudo cargar el módulo online. Probé " + PEER_CDNS.length + " servidores y ninguno respondió: revisa tu internet o desactiva el bloqueador de anuncios."); return; }
+    estado("Cargando módulo online… (servidor " + (i + 1) + " de " + PEER_CDNS.length + ")");
+    const s = document.createElement("script"); let hecho = false;
+    const sig = () => { if(hecho) return; hecho = true; clearTimeout(tm); s.remove(); i++; intenta(); };
+    const tm = setTimeout(sig, T_CDN);
+    s.src = PEER_CDNS[i]; s.async = true;
+    s.onload = () => { if(hecho) return; hecho = true; clearTimeout(tm); if(window.Peer) ok(); else{ i++; intenta(); } };
+    s.onerror = sig; document.head.appendChild(s);
+  };
+  intenta();
+}
+function textoError(e){
+  const t = e && e.type;
+  return ({
+    "peer-unavailable":"No existe esa sala. Revisa el código (o puede que el anfitrión ya la cerró).",
+    "network":"Sin conexión con el servidor de salas. Revisa tu internet e inténtalo otra vez.",
+    "server-error":"El servidor de salas no responde ahora mismo. Inténtalo en un minuto.",
+    "socket-error":"Se cortó la conexión con el servidor de salas.",
+    "socket-closed":"Se cerró la conexión con el servidor de salas.",
+    "browser-incompatible":"Tu navegador no soporta juego online (WebRTC). Prueba con Chrome, Edge, Firefox o Safari actualizado.",
+    "webrtc":"Falló la conexión directa con el rival (red o firewall).",
+    "disconnected":"Te desconectaste del servidor de salas.",
+    "invalid-id":"Código de sala inválido."
+  })[t] || ("Error de conexión" + (t ? " (" + t + ")" : "") + ".");
+}
+function cierraNet(){ netLimpia(); try{ if(NET){ if(NET.conn) NET.conn.close(); if(NET.peer) NET.peer.destroy(); } }catch(e){} NET = null; }
+function crearSala(intento){
+  cierraNet(); $("btnCrear").disabled = true; estado("Creando sala…");
+  const me = NET = {host:true, q:Promise.resolve(), rdy:false};
+  const falla = txt => { if(NET !== me) return; cierraNet(); $("btnCrear").disabled = false; $("btnCrear").hidden = false; $("mCode").hidden = true; estado(txt, true); };
   cargaPeer(() => {
+    if(NET !== me) return;
     const code = Math.random().toString(36).replace(/[^a-z0-9]/g, "").slice(0, 5).toUpperCase().padEnd(5, "X");
-    NET = {host:true, code, q:Promise.resolve(), rdy:false};
-    NET.peer = new Peer(PFX + code);
-    NET.peer.on("open", () => { $("mCode").textContent = code; $("mCode").hidden = false; $("btnCrear").hidden = true; $("mEstado").textContent = "Esperando al otro jugador… pásale este código."; });
-    NET.peer.on("connection", c => { if(NET.conn){ c.close(); return; } conecta(c); });
-    NET.peer.on("error", e => { if(e.type === "unavailable-id"){ crearSala(); return; } aviso("Error de conexión: " + e.type); $("btnCrear").disabled = false; });
-  });
+    me.code = code;
+    me.peer = new Peer(PFX + code, PEER_OPTS());
+    netT(() => falla("Tardó demasiado en contactar con el servidor de salas (" + T_SERVIDOR / 1000 + " s). Revisa tu internet y vuelve a pulsar crear."), T_SERVIDOR);
+    me.peer.on("open", () => {
+      if(NET !== me) return; netLimpia();
+      $("mCode").textContent = code; $("mCode").hidden = false; $("btnCrear").hidden = true;
+      estado("Sala lista. Esperando al otro jugador… pásale este código.");
+      netT(() => falla("Nadie se unió en 5 minutos. La sala se cerró; crea una nueva."), T_SALA);
+    });
+    me.peer.on("connection", c => { if(me.conn){ c.close(); return; } netLimpia(); estado("Rival conectando…"); conecta(c); });
+    me.peer.on("disconnected", () => { try{ me.peer.reconnect(); }catch(e){} });
+    me.peer.on("error", e => {
+      if(e.type === "unavailable-id" && (intento || 0) < 5){ crearSala((intento || 0) + 1); return; }
+      falla(textoError(e));
+    });
+  }, txt => falla(txt));
 }
 function unirse(){
   const code = $("inCode").value.trim().toUpperCase(); if(code.length < 3){ aviso("Escribe el código de la sala"); return; }
-  cierraNet(); aviso("Conectando…");
+  cierraNet(); $("btnUnir").disabled = true;
+  const me = NET = {host:false, code, q:Promise.resolve(), rdy:false};
+  const falla = txt => { if(NET !== me) return; cierraNet(); $("btnUnir").disabled = false; estado(txt, true); };
+  estado("Conectando…");
   cargaPeer(() => {
-    NET = {host:false, code, q:Promise.resolve(), rdy:false};
-    NET.peer = new Peer();
-    NET.peer.on("open", () => conecta(NET.peer.connect(PFX + code, {reliable:true})));
-    NET.peer.on("error", e => aviso(e.type === "peer-unavailable" ? "No existe esa sala" : "Error de conexión: " + e.type));
-  });
+    if(NET !== me) return;
+    me.peer = new Peer(PEER_OPTS());
+    netT(() => falla("Tardó demasiado en contactar con el servidor de salas (" + T_SERVIDOR / 1000 + " s). Revisa tu internet."), T_SERVIDOR);
+    me.peer.on("open", () => {
+      if(NET !== me) return; netLimpia();
+      estado("Buscando la sala " + code + "…");
+      const c = me.peer.connect(PFX + code, {reliable:true});
+      netT(() => falla("No se pudo conectar con el anfitrión en " + T_RIVAL / 1000 + " s. Comprueba el código, o prueba con otra red (wifi/datos)."), T_RIVAL);
+      c.on("error", e => falla(textoError(e)));
+      conecta(c);
+    });
+    me.peer.on("error", e => falla(textoError(e)));
+  }, txt => falla(txt));
 }
 function rivalSalio(txt){
   if(G && !G.over){ MATCH.me = 2; finRonda(1); $("fTxt").textContent = txt; setTimeout(() => { $("fTxt").textContent = txt; }, 950); }
   else if(enPick() && PK && !PK.go){ aviso(txt); cierraNet(); mostrarInicio(); }
 }
 function conecta(c){
-  NET.conn = c;
-  const hola = () => c.send({t:"hello", icon:myIcon, nick:myNick});
+  NET.conn = c; const me = NET;
+  const hola = () => { c.send({t:"hello", icon:myIcon, nick:myNick}); netT(() => { if(NET === me && !me.rival){ cierraNet(); $("btnUnir").disabled = false; $("btnCrear").disabled = false; estado("El rival se conectó pero no respondió a tiempo. Inténtalo de nuevo.", true); } }, T_HOLA); };
   if(c.open) hola(); else c.on("open", hola);
   c.on("data", m => {
-    if(m.t === "hello"){ if(NET && !NET.rival){ NET.rival = m; $("mMulti").hidden = true; nuevoMatch(); mostrarPick("net"); } return; }
+    if(m.t === "hello"){ if(NET && !NET.rival){ netLimpia(); NET.rival = m; $("btnUnir").disabled = false; $("mMulti").hidden = true; nuevoMatch(); mostrarPick("net"); } return; }
     if(m.t === "ready"){ NET.rdy = true; NET.rivalN = m.n; if(enPick()){ refrescaPick(); if(PK.ready) arrancar(); } return; }
     if(m.t === "rematch"){ NET.remOp = true; if(NET.rem) reinicia(); else aviso("El rival quiere revancha"); return; }
     if(m.t === "leave"){ rivalSalio("El rival salió de la partida."); return; }
@@ -1225,7 +1295,8 @@ function conecta(c){
       else if(m.t === "end") await startTurn("me");
     });
   });
-  c.on("close", () => rivalSalio("Se perdió la conexión con el rival."));
+  c.on("close", () => { if(NET && NET.conn === c && !NET.rival){ cierraNet(); $("btnUnir").disabled = false; $("btnCrear").disabled = false; $("btnCrear").hidden = false; $("mCode").hidden = true; estado("La conexión se cerró antes de empezar. Inténtalo de nuevo.", true); return; } rivalSalio("Se perdió la conexión con el rival."); });
+  c.on("error", () => { if(NET && NET.conn === c && !NET.rival) estado("Error de conexión con el rival.", true); });
 }
 function reinicia(){ NET.rem = NET.remOp = false; $("mFin").hidden = true; nuevoMatch(); mostrarPick("net"); }
 
@@ -1234,8 +1305,9 @@ function textoInicio(){
   const n = got.size;
   $("stats").textContent = (stats.w + stats.l) ? "Victorias: " + stats.w + " · Derrotas: " + stats.l : "";
   const av = $("avisoCartas");
-  av.hidden = n > 0 && n >= 3; $("btnJugar").style.opacity = $("btnMulti").style.opacity = n ? 1 : .5;
-  av.textContent = n === 0 ? "Aún no tienes cartas. Escanea o desbloquea alguna en ArSweetCards para poder jugar." : "Tienes " + n + (n === 1 ? " carta" : " cartas") + ". ¡Con más cartas tendrás más opciones!";
+  av.hidden = n > 0 && n >= 3; $("btnJugar").style.opacity = $("btnMulti").style.opacity = 1;
+  av.hidden = n > 0 && n >= 3 && !prestadas;
+  av.textContent = prestadas ? "Juegas con " + n + " cartas prestadas. Desbloquea las tuyas en ArSweetCards." : n === 0 ? "Aún no tienes cartas, pero al jugar te prestamos 5." : "Tienes " + n + (n === 1 ? " carta" : " cartas") + ". ¡Con más cartas tendrás más opciones!";
 }
 function mostrarInicio(){ G = null; PK = null; pararTimer(); pararPkTimer(); const gm = $("game"), pk = $("pickScreen"); gm.hidden = true; pk.hidden = true; pk.style.transform = gm.style.transform = pk.style.transition = gm.style.transition = ""; $("mFin").hidden = true; $("start").hidden = false; textoInicio(); afkReset(); }
 
@@ -1257,7 +1329,14 @@ function salirAnimado(){
   setTimeout(() => { st.style.transition = st.style.transform = st.style.animation = ""; mostrarInicio(); }, 900);
 }
 
-const sinCartas = () => { if(!got.size){ aviso("Primero desbloquea alguna carta en ArSweetCards"); return true; } return false; };
+/* Sin cartas ya no te bloquea: te prestamos 5 al azar (solo esta sesión, no se guardan) */
+let prestadas = false;
+function prestaCartas(){
+  if(got.size) return;
+  shuffle(C.map(c => c.i)).slice(0, BANCA).forEach(i => got.add(i)); prestadas = true;
+  aviso("No tienes cartas: te presto " + BANCA + " para jugar 🍬");
+}
+const sinCartas = () => { prestaCartas(); return false; };
 let pendModo = null;
 function abreIcono(modo){ try{ au(); }catch(e){} if(sinCartas()) return; pendModo = modo; pintaPick(); $("inNick").value = myNick; $("mIcono").hidden = false; }
 const cierraMulti = () => { $("mMulti").hidden = true; if(!G && !enPick()) cierraNet(); };
@@ -1268,7 +1347,7 @@ $("btnIcoOk").onclick = () => {
   $("mIcono").hidden = true;
   myNick = $("inNick").value.trim().slice(0, 12); try{ localStorage.setItem("sweetBattleNick", myNick); }catch(e){}
   if(pendModo === "cpu"){ cierraNet(); nuevoMatch(); mostrarPick("cpu"); }
-  else{ $("mCode").hidden = true; $("mEstado").textContent = ""; $("btnCrear").hidden = false; $("btnCrear").disabled = false; $("mMulti").hidden = false; }
+  else{ $("mCode").hidden = true; estado(""); $("btnUnir").disabled = false; $("btnCrear").hidden = false; $("btnCrear").disabled = false; $("mMulti").hidden = false; }
 };
 $("btnCrear").onclick = crearSala;
 $("btnUnir").onclick = unirse;
