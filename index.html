@@ -1,34 +1,557 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="sesion.js"></script>
     <meta charset="UTF-8">
+    <script src="cargando.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Formulario de registro</title>
+    <link rel="stylesheet" href="stylepagyter.css">
+    <title>Inicio Sh</title>
+    <link rel="icon" href="favicon.ico">
+    <style>
+        
+        /* ===== NUEVOS ELEMENTOS (menú, perfil, carrito, Pinky) ===== */
+        .sh-oculto{display:none !important}
+        .sh-cart-wrap{position:fixed;top:124px;right:33px;z-index:10000}
+        
+        .sh-ibtn{position:relative;background:none;border:0;padding:0;cursor:pointer;line-height:0}
+        .sh-ibtn img{width:64px;height:64px}
+
+        .sh-pinky-btn{position:fixed;right:28px;bottom:20px;z-index:10000;background:none;border:0;padding:0;cursor:pointer}
+        .sh-pinky-btn img{width:64px;height:64px;display:block;position:relative;z-index:1}
+        .sh-ripple{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:22%;border:4px solid #ff9195;background:rgba(255,145,149,.35);
+            pointer-events:none;opacity:0;animation:shRipple 2.4s ease-out infinite}
+        .sh-ripple:nth-of-type(2){animation-delay:.8s}
+        .sh-ripple:nth-of-type(3){animation-delay:1.6s}
+        @keyframes shRipple{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.4);opacity:0}}
+        .sh-faq{position:fixed;right:28px;bottom:96px;width:310px;max-width:calc(100vw - 56px);max-height:60vh;overflow:auto;
+            background:#fff;border:3px solid #ff9195;border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:10000;display:none}
+        .sh-faq.open{display:block}
+        .sh-faq-head{display:flex;align-items:center;gap:10px;background:#ff9195;color:#fff;padding:10px 14px;font-weight:800}
+        .sh-faq-head img{width:44px;height:44px}
+        .sh-faq details{padding:10px 14px;border-bottom:1px solid #ffe0e1;color:#864f02;font-size:14px}
+        .sh-faq summary{cursor:pointer;font-weight:700;color:#c0607a}
+        .sh-faq p{margin:8px 0 0}
+
+        /* ===== Botón de cartas AR (abajo a la izquierda) ===== */
+        .sh-cartas-izq{position:fixed;left:28px;bottom:20px;z-index:10000;display:block;line-height:0;text-decoration:none;cursor:pointer}
+        .sh-cartas-izq img{width:64px;height:64px;display:block;position:relative;z-index:1}
+        @media (max-width:768px){
+            .sh-cartas-izq{left:calc(14px + env(safe-area-inset-left,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+            .sh-cartas-izq img{width:52px;height:52px}
+        }
+
+        img.bottoms,img.bottomspor{background:none;border:0;box-shadow:none;padding:0;width:auto;height:46px;cursor:pointer}
+        .termometro-icono{height:115px;width:auto}
+    
+        /* ===== Visor 3D (cocina) ===== */
+        .sh-visor3d{--subir-texto:-70px;width:100%;display:flex;justify-content:center;margin:0 0 var(--subir-texto);position:relative;z-index:1}
+        .sh-visor3d + .text1{margin-top:0 !important;padding-top:0 !important}
+        .sh-visor3d model-viewer{width:min(1400px,96vw);height:min(760px,85vh);background:transparent;--poster-color:transparent;outline:none}
+        /* Imagen de respaldo: solo aparece si el 3D va lento (monitor de FPS) */
+        /* La foto ocupa EXACTAMENTE la misma caja que el model-viewer (mismo ancho, alto y posición).
+           --escala-foto la hace más pequeña dentro de esa caja: 1 = tamaño completo, .8 = 80 %, .7 = 70 %... */
+        .sh-visor3d{--escala-foto:.8}
+        .sh-visor3d img.sh-cocina-fallback{display:none;width:min(1400px,96vw);height:min(760px,85vh);max-width:100%;object-fit:contain;object-position:center;transform:scale(var(--escala-foto));opacity:0;transition:opacity .5s ease}
+        .sh-visor3d.sin3d img.sh-cocina-fallback{display:block}
+        .sh-visor3d.sin3d img.sh-cocina-fallback.on{opacity:1}
+    </style>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
     <link rel="stylesheet" href="responsive.css">
 </head>
 <body>
-    <script src="cursor.js"></script>
-        <script src="cargando.js"></script>
+    <script src="cargando.js"></script>
+    </div>
 
-    <section class="forms-register"> 
-        <img src="icono.png" alt="Logo" class="icono-superior">
-        <br>
-        <h4>Formulario de registro</h4>
-        <input class="controls" type="text" name="nombres" id="nombres" placeholder="Ingrese su nombre de usuario">
-        <input class="controls" type="email" name="correo" id="correo" placeholder="Ingrese su correo">
-        <input class="controls" type="password" name="contraseña" id="contraseña" placeholder="Ingrese su contraseña">
-        <input class="controls" type="password" name="confirmar contraseña" id="confirmar contraseña" placeholder="Confirmar contraseña">
-        <input class="controls" type="text" name="número de teléfono" id="número de teléfono" placeholder="Ingrese su número de teléfono">
-        <p>Estoy de acuerdo con <a href="index3.html"> Terminos y condiciones</a></p>    
-        <p><a href="index4.html"> Políticas de privacidad</a></p>
-                <a href="index5.html" style="text-decoration: none;">
-           <input class="bottoms" type="button" value="Registrarse">
-        </a>    
-        <p> <a href="index2.html">¿ya tengo cuenta?</a></p>
+    <!-- MENÚ (abierto / cerrado) -->
+    <script src="menu.js"></script>
+
+    <!-- CARRITO (arriba a la derecha) -->
+    <div class="sh-cart-wrap">
+        <button class="sh-ibtn" id="shCartBtn" aria-label="Carrito"><img src="carrito.svg" alt="carrito"><span class="sh-badge">0</span></button>
+    </div>
+
+    <!-- PINKY (abajo a la derecha) -->
+    <div class="sh-faq" id="shFaq">
+        <div class="sh-faq-head"><img src="pinky.svg" alt="Pinky"><span>¡Hola! Soy Pinky, ¿en qué te ayudo?</span></div>
+        <details><summary>¿Qué es Sweet Help?</summary><p>Es un emprendimiento social de Santa Marta que vende postres artesanales para combatir el hambre.</p></details>
+        <details><summary>¿Cómo ayuda mi compra?</summary><p>Por cada postre que compras destinamos el 10% para entregar kits alimentarios a familias vulnerables.</p></details>
+        <details><summary>¿Qué es el termómetro de donaciones?</summary><p>Muestra cuántos kits alimentarios hemos entregado este mes frente a la meta. Pulsa "Descubre tu avance" para verlo.</p></details>
+        <details><summary>¿Cómo compro un producto?</summary><p>Entra a Productos, elige tu postre y se agregará al carrito. Allí podrás ver tus compras y pulsar "Pagar ahora".</p></details>
+        <details><summary>¿Mi carrito se pierde si cambio de página?</summary><p>No, tu carrito se mantiene aunque abras otra pestaña o página de Sweet Help.</p></details>
+        <details><summary>¿Dónde conozco más del equipo?</summary><p>En el menú, dentro de Sobre Nosotros, encontrarás Información y Equipo.</p></details>
+    </div>
+    <button class="sh-pinky-btn" id="shPinkyBtn" aria-label="Preguntas frecuentes"><span class="sh-ripple"></span><span class="sh-ripple"></span><span class="sh-ripple"></span><img src="pinky.svg" alt="Pinky"></button>
+
+    <!-- CARTAS AR (abajo a la izquierda) -->
+    <a class="sh-cartas-izq" href="ArSweetCards.html" aria-label="Cartas AR">
+        <span class="sh-ripple"></span><span class="sh-ripple"></span><span class="sh-ripple"></span>
+        <img src="cartasicon.svg" alt="Cartas AR">
+    </a>
+
+    <header> 
+<br>
+
+        <nav class="desplegable">
+            <ul class="menudesplegable2" style="position:fixed;top:8px;left:8px;z-index:10000;">
+                <li class="dropdown"> <a href=""><img src="iconoperfil.png" alt="iconperfil"></a>     
+                    <ul class="submenu">
+                      <li><a href="">Editar</a></li>
+                      <li><a href="iniciaroregistrarse.html">Salir</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </nav>
+    <br>
+    <br>
+        <section>
+        <ul class="yb">
+             <a href=""><img src="yellowbubble.svg" alt="logos"></a>
+        </ul>
     </section>
-        <script src="cargando.js"></script>
+
+    <section>
+        <ul class="logos">
+             <a href=""><img src="logooutline.svg" alt="logos"></a>
+        </ul>
+
+        <a href="informacion.html" style="text-decoration: none;">
+           <img class="bottoms" src="vermaspink.svg" alt="Ver Más...">
+        </a>
+    </section>
+
+    <section class="slider">
+
+        <div class="slides">
+           <div class="slide 1">
+               <img src="slide1.png" alt=""> </div>
+           <div class="slide 2">
+               <img src="slide2.png" alt=""> </div>
+           <div class="slide 3">
+               <img src="slide3.png" alt=""> </div>
+           <div class="slide 4">
+               <img src="slide4.png" alt=""> </div>
+           <div class="slide 5">
+               <img src="slide5.png" alt=""> </div>
+        
+        <div class="navigation">
+            <label for="slide 1" class="bar"></label>
+            <label for="slide 2" class="bar"></label>
+            <label for="slide 3" class="bar"></label>
+            <label for="slide 4" class="bar"></label>
+            <label for="slide 5" class="bar"></label>
+
+
+        </div>
+    </section>
+    </header>
+<main>
+        <!-- VISOR 3D: cambia src="cocina.gltf" por la ruta de tu archivo .gltf o .glb -->
+        <section class="sh-visor3d" id="shVisor3d">
+            <model-viewer src="cocina-optimizado.glb" alt="Modelo 3D de la cocina de Sweet Help"
+                camera-controls shadow-intensity="1" touch-action="pan-y">
+            </model-viewer>
+            <!-- Imagen de respaldo (oculta por defecto) -->
+            <img class="sh-cocina-fallback" id="cocina-fallback-img" src="cocina_render.png" alt="Render de la cocina de Sweet Help" decoding="async">
+        </section>
+
+        <section class="text1">
+        <p>Hola, somos <b>Sweet Help</b>, un <strong>emprendimiento social</strong> <strong>Santa Marta</strong> que combate el hambre. Por cada postre artesanal que compras, <b>destinamos el 10% </b>para entregar <strong>kits alimentarios </strong>directamente a <strong>familias vulnerables.</strong></p> 
+
+    </section>
+</main>
+<br>
+
+<div class="linead1"></div>
+<script src="cursor.js"></script>
+<main>
+    <!-- SECCIÓN TERMÓMETRO -->
+<section class="text2">
+    <h2>TERMOMETRO DE DONACIONES</h2>
+    <p>En SweetHelpCorp© buscamos ayudar a todas aquellas familias que necesitan tener comida en sus mesas y no pueden conseguirlo, <b>Sweet Help</b> apoya a todas esas familia por medio de su modelo de negocio que dona el <b>10% de todas las compras</b>para la creaciones de Kits alimentarios, para ver la meta de kits entregados este Mes. El <b>Termometro</b> es el lugar donde se evidencia el porcentaje de estos kits que llegan a la man de las familias que lo necesitan</p>
+</section>
+    <section class="termometro-section">
+        <div class="termometro-main-container" id="termometroMain">
+            <div class="termometro-wrapper">
+                <div class="termometro-scale">
+                    <span>- 500</span>
+                    <span>- 375</span>
+                    <span>- 250</span>
+                    <span>- 125</span>
+                    <span>- 0.0</span>
+                </div>
+                <div class="termometro-tube">
+                    <div class="termometro-mercury" id="mercuryElement"></div>
+                </div>
+                <div class="termometro-bulb">
+                    <div class="termometro-kits-label" id="kitsLabelElement" style="color:#864f02; text-align:center; font-weight:800;"><img class="termometro-icono" src="termometro.svg" alt="termómetro"></div>
+                </div>
+            </div>
+            <button class="termometro-btn-action" id="termometroBtn" onclick="toggleTermometro()">Descubre tu avance</button>
+            <p class="text3">Aquí veras el <b>%</b> real de la cantidad de Kits entregados por SweetHelp</p>
+
+        </div>
+    </section>
+    <script>
+        (function() {
+            const mercury = document.getElementById('mercuryElement');
+            const kitsLabel = document.getElementById('kitsLabelElement');
+            const container = document.getElementById('termometroMain');
+            const btn = document.getElementById('termometroBtn');
+            const ICONO = `<img class="termometro-icono" src="termometro.svg" alt="termómetro">`;
+            
+            let isRevealed = false;
+
+            window.toggleTermometro = function() {
+                if (!isRevealed) {
+                    container.classList.add('revealed');
+                    btn.innerText = 'Ocultar';
+                    setTimeout(() => { mercury.style.height = '85%'; }, 100);
+                    setTimeout(() => { kitsLabel.innerHTML = `Kits<br>400 / 500`; }, 800);
+                    isRevealed = true;
+                } else {
+                    container.classList.remove('revealed');
+                    btn.innerText = 'Descubre tu avance';
+                    mercury.style.height = '0%';
+                    kitsLabel.innerHTML = ICONO;
+                    isRevealed = false;
+                }
+            };
+        })();
+    </script>
+</main>
+<br>
+<br>
+
+<br>
+<br>
+<div class="linead1"></div>
+<br>
+<br>
+<br>
+
+<main class="grid-container">
+    <section id="productos" class="section-class">
+        <ul class="produtitemul">
+            <!-- Producto 1 -->
+            <li class="product-item">
+                <a href="#">
+                    <img src="mensajevisto.svg" alt="Porcentaje mensaje Visto">
+                </a>
+            </li>
+
+            <!-- Producto 2 (Tarjeta central) -->
+            <li class="product-itemc">
+                <a href="#">
+                    <img src="porcentajekit.svg" alt="Porcentaje kits entregados">
+                </a>
+            </li>
+
+            <!-- Producto 3 -->
+            <li class="product-item">
+                <a href="#">
+                    <img src="qrescaneado.svg" alt="Porcentaje qr leido">
+                </a>
+            </li>
+        </ul>
+        <br>
+        <br>
+    </section>
+
+    <ul class="botoncentralporcentaje">
+           <img class="bottomspor" src="vermaspink.svg" alt="Ver Más...">
+    </ul>
+
+</main>
+
+
+<footer class="footer">
+    <ul class="pietext">
+        <li class="pi">SweetHelpCorp©  <b>|</b>  Derechos Reservados</li>
+    </ul>
+    <ul class="iconospie">
+        <li class="icopie"><a href=""><img src="iconolinktree.svg" alt="iconolinktree"></a></li>
+        <li class="icopie"><a href=""><img src="iconoig.svg" alt="iconoig"></a></li>
+        <li class="icopie"><a href=""><img src="iconoappsh.svg" alt="iconoappsh"></a></li>
+
+    </ul>
+
+</footer>
+
+<script src="carrito.js"></script>
+<script>
+    // Menú hamburguesa, perfil y Pinky
+    (function () {
+        const $ = id => document.getElementById(id);
+        $('shPinkyBtn').onclick = e => { e.stopPropagation(); $('shFaq').classList.toggle('open'); };
+        document.addEventListener('click', e => {
+            if (!e.target.closest('#shFaq')) $('shFaq').classList.remove('open');
+        });
+    })();
+</script>
+<style>
+    #kcapsBox { position: fixed; left: 0; right: 0; top: 50%; transform: translateY(-50%); z-index: 2147483000; display: none; flex-wrap: wrap; gap: 14px; justify-content: center; padding: 0 20px; pointer-events: none; }
+    #kcapsBox.on { display: flex; }
+    .kcap { width: 104px; height: 104px; box-sizing: border-box; padding: 9px; border-radius: 26px; background: #833c4a; box-shadow: 0 10px 0 #5a2833, 0 16px 30px rgba(131,60,74,0.45); }
+    .kcap i { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border-radius: 17px; background: #f8f3dd; box-shadow: inset 0 -7px 0 #ff9195, inset 0 4px 0 #fff; font-style: normal; font-weight: bold; font-size: 56px; color: #833c4a; font-family: Arial, sans-serif; }
+    .kcap i.sm { font-size: 40px; }
+    .kcap.last { animation: kcapPop 0.28s cubic-bezier(.2,1.6,.4,1); }
+    @keyframes kcapPop { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @media (max-width: 700px) { .kcap { width: 64px; height: 64px; padding: 6px; border-radius: 16px; } .kcap i { font-size: 34px; border-radius: 11px; } .kcap i.sm { font-size: 26px; } }
+</style>
+<script>
+    // Códigos secretos (funcionan en toda la página):
+    //   ↑ ↑ ↓ ↓ ← → ← → B A Enter       -> sigueelpostre.html
+    //   ↓ ↓ ↑ ↑ ← → ← → B A Enter       -> SweetCardsBattle.html
+    //   ↑ ↑ ↓ ↓ ← → ← → M I N D Enter   -> mind.html
+    //   ↑ ↑ ↓ ↓ ← → ← → P Z Enter       -> miprez.html
+    //   ↑ ↑ ↓ ↓ ← → ← → A N Enter       -> MODO DEBUG de anuncios (ventana para elegir el anuncio; repetir el código lo apaga)
+    (function () {
+        const U = 'arrowup', D = 'arrowdown', L = 'arrowleft', R = 'arrowright';
+        const SEQS = [
+            { k: [U, U, D, D, L, R, L, R, 'b', 'a', 'enter'],       go: 'sigueelpostre.html' },
+            { k: [D, D, U, U, L, R, L, R, 'b', 'a', 'enter'],       go: 'SweetCardsBattle.html' },
+            { k: [U, U, D, D, L, R, L, R, 'm', 'i', 'n', 'd', 'enter'], go: 'mind.html' },
+            { k: [U, U, D, D, L, R, L, R, 'p', 'z', 'enter'],       go: 'miprez.html' },
+            { k: [U, U, D, D, L, R, L, R, 'a', 'n', 'enter'],       accion: 'debug' }
+        ];
+        const LBL = { arrowup: '↑', arrowdown: '↓', arrowleft: '←', arrowright: '→', enter: '↵' };
+        const IGNORE = ['shift', 'control', 'alt', 'meta', 'capslock', 'altgraph'];
+        let buf = [], timer = 0, sx = 0, sy = 0, going = false;
+
+        // ¿alguna secuencia empieza con estas teclas?
+        const hayPrefijo = b => SEQS.some(s => s.k.length >= b.length && b.every((t, i) => s.k[i] === t));
+        const completa = b => SEQS.find(s => s.k.length === b.length && b.every((t, i) => s.k[i] === t));
+
+        // ---- Sonido (WebAudio, sin archivos) ----
+        let AC = null, master = null;
+        function audio() {
+            if (!AC) {
+                try {
+                    AC = new (window.AudioContext || window.webkitAudioContext)();
+                    master = AC.createGain(); master.gain.value = 0.55; master.connect(AC.destination);
+                } catch (e) { AC = null; }
+            }
+            if (AC && AC.state === 'suspended') AC.resume();
+            return AC;
+        }
+        function tone(f0, f1, dur, type, vol, delay) {
+            if (!AC) return;
+            const t = AC.currentTime + (delay || 0), o = AC.createOscillator(), v = AC.createGain();
+            o.type = type || 'sine'; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(Math.max(1, f1), t + dur);
+            v.gain.setValueAtTime(0.0001, t); v.gain.exponentialRampToValueAtTime(vol, t + 0.01); v.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+            o.connect(v); v.connect(master); o.start(t); o.stop(t + dur + 0.02);
+        }
+        function sKey(i) { const f = [523, 587, 659, 784, 880, 1047, 1175, 1319, 1568, 1760][i % 10]; tone(f, f * 1.003, .24, 'sine', .22); tone(f * 2, f * 2, .14, 'triangle', .06, .02); }
+        function sJoin() { [392, 523, 659, 784].forEach((f, i) => tone(f, f * 1.02, .14, 'triangle', .2, i * .08)); }
+
+        // ---- Teclas en pantalla ----
+        const box = document.createElement('div'); box.id = 'kcapsBox';
+        document.body.appendChild(box);
+        function show() {
+            clearTimeout(timer);
+            if (buf.length < 2) { box.classList.remove('on'); box.innerHTML = ''; return; }
+            box.innerHTML = buf.map((c, i, arr) => {
+                const t = LBL[c] || c.toUpperCase();
+                return '<div class="kcap' + (i === arr.length - 1 ? ' last' : '') + '"><i' + (t.length > 1 ? ' class="sm"' : '') + '>' + t + '</i></div>';
+            }).join('');
+            box.classList.add('on');
+            timer = setTimeout(() => { buf = []; show(); }, 3000);
+        }
+
+        function ejecutar(seq) {
+            going = true; clearTimeout(timer);
+            show(); sJoin();
+            setTimeout(() => {
+                if (seq.go) { location.href = seq.go; return; }
+                buf = []; show(); going = false;
+                if (seq.accion === 'debug' && window.shAnunciosDebug) window.shAnunciosDebug.alternar();
+            }, 700);
+        }
+
+        function onKey(e) {
+            if (going) return;
+            // Si estás escribiendo en un campo (por ejemplo en la ventana de debug), no cuenta como código
+            const t = e.target;
+            if (t && (/^(input|textarea|select)$/i.test(t.tagName) || t.isContentEditable)) return;
+            const k = (e.key || '').toLowerCase();
+            if (!k || IGNORE.indexOf(k) !== -1) return;
+            audio();
+            const nuevo = buf.concat(k);
+            if (hayPrefijo(nuevo)) {
+                if (buf.length === 0) { sx = window.scrollX; sy = window.scrollY; }
+                else e.preventDefault();                // mientras escribes el código, las flechas/Enter no mueven la página
+                buf = nuevo;
+                if (buf.length === 2) window.scrollTo(sx, sy);  // deshace el movimiento de la primera flecha
+                const fin = completa(buf);
+                if (buf.length >= 2 && !fin) sKey(buf.length - 1);
+                if (fin) { ejecutar(fin); return; }
+            } else {
+                buf = hayPrefijo([k]) ? [k] : [];
+                if (buf.length) { sx = window.scrollX; sy = window.scrollY; }
+            }
+            show();
+        }
+        // En fase de captura sobre window, para que ningún otro script de la página lo bloquee
+        window.addEventListener('keydown', onKey, true);
+    })();
+</script>
+<script>
+    // Monitor de FPS con ida y vuelta:
+    //  - Si va por debajo de 30 FPS durante 3 s -> quita el <model-viewer> (libera GPU) y muestra cocina_render.png
+    //  - Si luego se estabiliza (>= 50 FPS sostenido) -> vuelve a poner el 3D
+    // Para guardar la foto desde el propio modelo: abre la página con ?foto y toca "Descargar foto de la cocina".
+    (function () {
+        const FPS_MIN = 30;          // por debajo de esto cuenta como lag
+        const SEG_LAG = 3;           // segundos de lag para pasar a foto
+        const FPS_OK = 50;           // FPS considerados "estables" para volver al 3D
+        const SEG_ESTABLE = 30;      // segundos estables (se multiplica por cada recaída)
+        const SEG_GRACIA = 5;        // tras volver al 3D no se mide (está cargando el modelo)
+        const MAX_FALLOS = 3;        // tras 3 recaídas se queda en foto definitivamente
+        const FORZAR = /[?&]lento\b/.test(location.search);   // para probar: abre index5.html?lento
+
+        const visor = document.getElementById('shVisor3d');
+        let modelo = visor && visor.querySelector('model-viewer');
+        const img = document.getElementById('cocina-fallback-img');
+        if (!visor || !modelo || !img) return;
+
+        const plantilla = modelo.cloneNode(false);   // copia de los atributos para recrearlo
+        const fotoArchivo = img.getAttribute('src');
+        let fotoGenerada = null;                      // foto tomada del propio modelo (se reutiliza)
+        let archivoListo = false;
+        const pre = new Image();
+        pre.onload = () => { archivoListo = true; };
+        pre.src = fotoArchivo;
+
+        // Botón para descargar la foto (solo con ?foto)
+        if (/[?&]foto\b/.test(location.search)) {
+            const bt = document.createElement('button');
+            bt.textContent = '📷 Descargar foto de la cocina';
+            bt.style.cssText = 'position:fixed;left:14px;bottom:80px;z-index:2147483000;padding:12px 18px;border:0;border-radius:999px;background:#ff9195;color:#fff;font:800 15px system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.3)';
+            bt.onclick = async () => {
+                if (!modelo || !modelo.loaded) { alert('Espera a que cargue la cocina e inténtalo otra vez.'); return; }
+                const blob = await modelo.toBlob({ mimeType: 'image/png' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob); a.download = 'cocina_render.png'; a.click();
+            };
+            document.body.appendChild(bt);
+        }
+
+        let modo = '3d';             // '3d' | 'foto'
+        let frames = 0, ultimo = performance.now();
+        let lag = 0, estable = 0, gracia = 0, fallos = 0, cambiando = false;
+
+        async function pasarAFoto() {
+            if (cambiando) return;
+            cambiando = true;
+            // Primero el archivo cocina_render.png; solo si no existe, se intenta sacar una foto del modelo
+            let origen = archivoListo ? fotoArchivo : null;
+            if (!origen) {
+                if (modelo && modelo.loaded && !fotoGenerada) {
+                    try { fotoGenerada = URL.createObjectURL(await modelo.toBlob({ mimeType: 'image/png' })); } catch (e) {}
+                }
+                origen = fotoGenerada;
+            }
+            if (!origen) { console.warn('No se encontró cocina_render.png ni se pudo generar foto; se mantiene el 3D.'); lag = 0; cambiando = false; return; }
+            img.src = origen;
+
+            fallos++;
+            modo = 'foto';
+            estable = 0;
+            console.log('Modo seguro: 3D reemplazado por la foto (rendimiento bajo).');
+            visor.classList.add('sin3d');
+            if (modelo) { modelo.remove(); modelo = null; }      // libera el contexto WebGL
+            requestAnimationFrame(() => img.classList.add('on'));
+            cambiando = false;
+        }
+
+        function volverAl3D() {
+            if (cambiando) return;
+            cambiando = true;
+            console.log('Rendimiento estable: volviendo al 3D.');
+            const nuevo = plantilla.cloneNode(false);
+            // Se carga "escondido" encima de la foto; cuando termina, se intercambian sin parpadeo
+            nuevo.style.cssText = 'position:absolute;top:0;left:50%;transform:translateX(-50%);opacity:0;pointer-events:none';
+            const terminar = (ok) => {
+                nuevo.style.cssText = '';
+                if (ok) {
+                    img.classList.remove('on');
+                    visor.classList.remove('sin3d');
+                    modelo = nuevo;
+                    modo = '3d';
+                    lag = 0;
+                    gracia = SEG_GRACIA;
+                } else {
+                    nuevo.remove();
+                    fallos = MAX_FALLOS;                          // no volver a intentarlo
+                }
+                cambiando = false;
+            };
+            nuevo.addEventListener('load', () => terminar(true), { once: true });
+            nuevo.addEventListener('error', () => terminar(false), { once: true });
+            visor.insertBefore(nuevo, img);
+        }
+
+        function medir(ahora) {
+            frames++;
+            if (ahora - ultimo >= 1000) {
+                let fps = Math.round(frames * 1000 / (ahora - ultimo));
+                if (FORZAR && modo === '3d') fps = 5;     // modo de prueba: simula lag
+                frames = 0; ultimo = ahora;
+
+                if (gracia > 0) {
+                    gracia--;
+                } else if (modo === '3d') {
+                    if (fps < FPS_MIN) { lag++; console.warn('Rendimiento bajo: ' + fps + ' FPS'); }
+                    else if (lag > 0) lag--;
+                    if (lag >= SEG_LAG) pasarAFoto();
+                } else if (fallos < MAX_FALLOS && !cambiando) {
+                    // En modo foto: ¿el equipo se estabilizó?
+                    estable = fps >= FPS_OK ? estable + 1 : 0;
+                    if (estable >= SEG_ESTABLE * fallos) volverAl3D();   // cada recaída exige más espera
+                }
+            }
+            requestAnimationFrame(medir);
+        }
+
+        // Si la pestaña estuvo oculta, no cuenta ni como lag ni como estable
+        document.addEventListener('visibilitychange', () => {
+            frames = 0; ultimo = performance.now(); lag = 0; estable = 0;
+        });
+        requestAnimationFrame(medir);
+    })();
+</script>
+
+<!-- ===== ANUNCIOS (slider arriba del todo) + CARTA ESCONDIDA =====
+     Para agregar un anuncio, añade una línea más en "anuncios".
+     Todas las imágenes deben medir lo mismo que "tamano" (1895 x 26). -->
+<script>
+window.ANUNCIOS = {
+    velocidad: 60,                         // velocidad de deslizamiento (píxeles por segundo; más = más rápido)
+    tamano: { ancho: 1895, alto: 26 },     // tamaño de las imágenes de los anuncios
+
+    anuncios: [
+        { titulo: "Ofertas del año", url: "productos.html", imagen: "anuncio1.png" },
+        // { titulo: "Otro anuncio", url: "informacion.html", imagen: "anuncio2.png" },
+        // { titulo: "Otro más",     url: "equipo.html",      imagen: "anuncio3.png" },
+    ],
+
+    // Carta escondida (aparece al azar)
+    carta: {
+        probabilidad: 0.3,                 // 0.3 = en 3 de cada 10 visitas
+        titulo: "¡Encontraste una carta!",
+        numero: 34,                        // número de carta en ArSweetCards: 34 = Pinky Caribeña
+        nombre: "Pinky Caribeña",
+        imagenCarta: "cartas/34.png",      // imagen que se muestra al conseguirla
+        imagen: "anuncio-carta.png",       // imagen que pasa en el anuncio
+        codigo: "PINKY-CARIBENA",          // código que se puede copiar
+        qr: ""                             // vacío = el QR lleva el mismo código
+    }
+};
+</script>
+<script src="anuncios.js"></script>
+
+<script src="perfil.js"></script>
 <script src="responsive.js"></script>
 </body>
 </html>
