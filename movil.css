@@ -1,0 +1,81 @@
+/* =====================================================================
+   movil.css  -  Ajustes para teléfono de Sweet Help
+   Se enlaza DESPUÉS del resto de estilos:  <link rel="stylesheet" href="movil.css">
+   Todo vive dentro de @media (max-width:700px): en computador no cambia nada.
+   (Se usa "body" delante para ganarle a los estilos que inyecta menu.js)
+   ===================================================================== */
+@media (max-width:700px){
+
+  html, body{ max-width:100%; overflow-x:hidden; }
+  img, svg, canvas, video{ max-width:100%; }
+
+  /* ---------- Menú: botón hamburguesa + lista vertical ---------- */
+  body .sh-menu{ top:8px; right:10px; }
+  body .sh-hamb{ width:60px; height:60px; }
+  body .sh-pill{
+    position:absolute; top:68px; right:0;
+    flex-direction:column; align-items:stretch; gap:10px;
+    height:auto; margin:0; padding:14px 22px;
+    clip-path:none; border-radius:22px; background:#fff;
+    box-shadow:0 8px 24px rgba(0,0,0,.25);
+    transform-origin:top right; transform:scale(.9);
+    transition:opacity .25s ease, transform .25s ease;
+  }
+  body .sh-pill.open{ clip-path:none; transform:none; }
+  body .sh-pill::before{ display:none; }
+  body .sh-pill a{ justify-content:center; }
+  body .sh-pill img{ height:34px; }
+  body .sh-pill .sh-sep{ width:100%; height:2px; }
+  body .sh-sub{ display:block; position:static; box-shadow:none; padding:0; margin-top:6px; text-align:center; }
+  body .sh-sub a{ padding:6px 10px; font-size:14px; }
+
+  /* ---------- Iconos fijos ---------- */
+  body .sh-cart-wrap{ top:14px; right:78px; }
+  body .sh-ibtn img{ width:46px; height:46px; }
+  body .sh-perfil{ top:8px; left:8px; }
+  body .sh-perfil-btn img{ width:56px; height:56px; }
+  body .sh-pinky-btn{ right:14px; bottom:14px; }
+  body .sh-pinky-btn img{ width:52px; height:52px; }
+  body .sh-faq{ right:14px; bottom:76px; width:calc(100vw - 28px); max-width:none; }
+  body .shc-panel{ top:68px; right:10px; width:calc(100vw - 20px); max-width:none; }
+
+  /* ---------- Contenido general ---------- */
+  header{ padding-top:64px; }
+  main.grid-container{ width:100%; box-sizing:border-box; padding-left:14px; padding-right:14px; }
+  .section-class h2{ font-size:clamp(1.6rem, 8vw, 2.4rem); text-align:center; line-height:1.1; }
+  .section-class > p, .textoc p{ font-size:.95rem; padding:0 4px; }
+
+  .footer{ height:auto; flex-wrap:wrap; justify-content:center; text-align:center; gap:8px; padding:12px 10px; }
+  .pietext, .iconospie{ margin:0; padding:0; justify-content:center; }
+
+  /* ---------- Postres (armador) ---------- */
+  #armaPostre{ padding:12px 0 32px; gap:14px; }
+  #armaPostre .carta-giro{ width:min(340px, calc(100vw - 104px)); }
+  #armaPostre .carta{ border-width:10px; border-radius:34px; }
+  #armaPostre .carta-dorso{ border-radius:34px; }
+  #armaPostre .titulo-combo{ min-height:5rem; }
+  #armaPostre .titulo-combo .t1{ font-size:clamp(2.2rem, 12vw, 3.2rem) !important; }
+  #armaPostre .titulo-combo .t2{ font-size:clamp(1.3rem, 7vw, 1.9rem) !important; margin-top:-4px; }
+  #armaPostre .flecha{ padding:4px; }
+  #armaPostre .flecha.izq{ right:calc(100% + 4px); }
+  #armaPostre .flecha.der{ left:calc(100% + 4px); }
+  #armaPostre .flecha svg{ width:22px; height:38px; }
+  #armaPostre .info-combo{ max-width:calc(100vw - 32px); }
+  #armaPostre .acciones, #armaPostre .favs, #armaPostre .ic-social{ width:calc(100vw - 40px); max-width:340px; }
+  #armaPostre .ic-btn{ font-size:.85rem; padding:6px 12px; }
+
+  /* ---------- Equipo ---------- */
+  .produtitemul{
+    display:flex; flex-direction:column; align-items:center;
+    gap:22px; margin:0; padding:0; list-style:none;
+  }
+  .produtitemul .product-item{ width:100%; max-width:420px; margin:0; }
+  .produtitemul .product-item img{ width:100%; height:auto; display:block; }
+}
+
+/* Teléfonos muy angostos */
+@media (max-width:380px){
+  body .sh-cart-wrap{ right:72px; }
+  body .sh-ibtn img{ width:40px; height:40px; }
+  #armaPostre .carta-giro{ width:calc(100vw - 96px); }
+}
