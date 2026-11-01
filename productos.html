@@ -1,0 +1,2564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styleproductos.css">
+    <style>
+/* Menú y Pinky de Sweet Help */
+
+
+.sh-pinky-btn{position:fixed;right:28px;bottom:20px;z-index:10000;background:none;border:0;padding:0;cursor:pointer}
+        .sh-pinky-btn img{width:64px;height:64px;display:block;position:relative;z-index:1}
+        .sh-ripple{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:22%;border:4px solid #ff9195;background:rgba(255,145,149,.35);
+            pointer-events:none;opacity:0;animation:shRipple 2.4s ease-out infinite}
+        .sh-ripple:nth-of-type(2){animation-delay:.8s}
+        .sh-ripple:nth-of-type(3){animation-delay:1.6s}
+        @keyframes shRipple{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.4);opacity:0}}
+        .sh-faq{position:fixed;right:28px;bottom:96px;width:310px;max-width:calc(100vw - 56px);max-height:60vh;overflow:auto;
+            background:#fff;border:3px solid #ff9195;border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:10000;display:none}
+        .sh-faq.open{display:block}
+        .sh-faq-head{display:flex;align-items:center;gap:10px;background:#ff9195;color:#fff;padding:10px 14px;font-weight:800}
+        .sh-faq-head img{width:44px;height:44px}
+        .sh-faq details{padding:10px 14px;border-bottom:1px solid #ffe0e1;color:#864f02;font-size:14px}
+        .sh-faq summary{cursor:pointer;font-weight:700;color:#c0607a}
+        .sh-faq p{margin:8px 0 0}
+
+/* Carrito (icono fijo debajo del menú) */
+.sh-cart-wrap{position:fixed;top:124px;right:33px;z-index:10000}
+.sh-ibtn{position:relative;background:none;border:0;padding:0;cursor:pointer;line-height:0}
+.sh-ibtn img{width:64px;height:64px}
+
+/* Perfil (arriba a la izquierda) para páginas sin el menú original */
+.sh-perfil{position:fixed;top:8px;left:8px;z-index:10000}
+.sh-perfil-btn{background:none;border:0;padding:0;cursor:pointer;line-height:0}
+.sh-perfil-btn img{width:84px;height:84px;display:block}
+.sh-perfil-menu{display:none;list-style:none;margin:6px 0 0;padding:6px;background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.sh-perfil-menu.open{display:block}
+.sh-perfil-menu a{display:block;padding:8px 16px;color:#bd5c73;font-weight:700;text-decoration:none;border-radius:10px;font-family:inherit}
+.sh-perfil-menu a:hover{background:#ffe0e1}
+
+
+
+/* ===== Ventana emergente: catálogo completo ===== */
+.cat-overlay{position:fixed;inset:0;z-index:10050;background:rgba(42,20,8,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.cat-overlay.open{display:flex;animation:ap_fundido .25s ease-out}
+.cat-modal{position:relative;width:min(980px,100%);max-height:92vh;overflow:auto;background:#fff;border:6px solid #f28f95;border-radius:36px;padding:26px 22px 28px;box-shadow:0 18px 50px rgba(0,0,0,.35);animation:ap_aparecer .45s ease-out}
+.cat-titulo{margin:0 0 4px;text-align:center;font-family:"Choco Taste Trial","Lobster","Brush Script MT",cursive;font-weight:400;font-size:2.8rem;color:#8b5e3c;line-height:1.1}
+.cat-sub{margin:0 0 20px;text-align:center;font-size:.95rem;color:#8a3f55}
+.cat-cerrar{position:absolute;top:12px;right:14px;width:40px;height:40px;border-radius:50%;border:0;background:#f28f95;color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;transition:transform .25s cubic-bezier(.3,1.8,.5,1)}
+.cat-cerrar:hover{transform:scale(1.15)}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px}
+.cat-item{background:#f8f2dc;border:4px solid #f28f95;border-radius:28px;padding:12px 12px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.cat-item img.cat-img{width:100%;max-width:230px;height:auto;display:block}
+.cat-nombre{margin:0;font-family:"Choco Taste Trial","Lobster",cursive;font-weight:400;font-size:1.9rem;color:#8b5e3c;line-height:1}
+.cat-precio{font-family:"Lilita One",system-ui,sans-serif;font-size:1.35rem;color:#bc5d75}
+.cat-ing{margin:0;font-size:.85rem;color:#2a1408;line-height:1.35}
+.cat-ing b{color:#8a3f55}
+.cat-mas{width:46px;height:46px;border-radius:50%;border:3px solid #e0527a;background:#e0527a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;line-height:1;font-family:"Lilita One",system-ui,sans-serif;text-decoration:none;cursor:pointer;transition:transform .25s cubic-bezier(.3,1.8,.5,1),background .15s,color .15s}
+.cat-mas:hover{background:#fff;color:#e0527a;transform:scale(1.12)}
+.cat-mas:active{transform:scale(.85)}
+.cat-mas.ok{background:#fff;color:#e0527a;animation:ap_gelatina .55s}
+body.cat-abierto{overflow:hidden}
+
+.cat-filtros{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 0 18px}
+.cat-filtro{font-family:"Lilita One",system-ui,sans-serif;font-size:.95rem;padding:6px 16px;border-radius:999px;border:2px solid #f28f95;background:#fff;color:#f28f95;cursor:pointer;transition:background .15s,color .15s,transform .25s cubic-bezier(.3,1.8,.5,1)}
+.cat-filtro:hover{transform:scale(1.07)}
+.cat-filtro.on{background:#f28f95;color:#fff}
+.cat-item{position:relative}
+.cat-badge{position:absolute;top:10px;left:10px;z-index:2;background:#f39c12;color:#fff;font-family:"Lilita One",system-ui,sans-serif;font-size:.8rem;padding:4px 12px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.2);transform:rotate(-6deg)}
+.cat-antojo{display:flex;align-items:center;justify-content:center;gap:6px;font-family:"Lilita One",system-ui,sans-serif;font-size:.78rem;color:#8a3f55}
+.cat-osos{display:flex;gap:3px}
+.cat-osos img,.cat-osos span{height:20px;width:20px;display:block}
+.cat-osos span{border-radius:50%;background:#8a3f55}
+.cat-osos span.vacio{background:#ecd9c9}
+.cat-armar{font-size:.85rem;color:#bc5d75;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.cat-armar:hover{color:#d9748e}
+.cat-social{margin:22px 0 0;text-align:center;font-size:.95rem;color:#8a3f55;font-weight:700}
+.cat-toast{position:absolute;left:50%;bottom:22px;transform:translate(-50%,30px);opacity:0;pointer-events:none;background:#e0527a;color:#fff;font-family:"Lilita One",system-ui,sans-serif;font-size:1.05rem;padding:10px 22px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.3);transition:transform .3s cubic-bezier(.3,1.6,.5,1),opacity .25s;white-space:nowrap;max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis}
+.cat-toast.show{opacity:1;transform:translate(-50%,0)}
+.cat-modal{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+@media (max-width:600px){
+  .cat-overlay{padding:0;align-items:flex-end}
+  .cat-modal{width:100%;max-height:94vh;border-radius:30px 30px 0 0;border-width:4px;border-bottom:0;padding:22px 14px 28px}
+  .cat-titulo{font-size:2.2rem;padding:0 36px}
+  .cat-grid{grid-template-columns:1fr;gap:16px}
+  .cat-item img.cat-img{max-width:260px}
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Lilita+One&display=swap" rel="stylesheet">
+    <style id="armaPostreCss">
+/* ===== Arma tu postre (constructor 3D) ===== */
+@font-face{
+    font-family:"Choco Taste Trial";
+    src:url("Choco Taste Trial.otf") format("opentype"),
+        url("Choco%20Taste%20Trial.otf") format("opentype");
+    font-display:swap;
+  }
+#armaPostre{
+    --fondo:#ffffff;
+    --rosa:#ff9a9a;          
+    --rosa-carta:#f28f95;    
+    --crema:#f8f2dc;         
+    --flecha:#bc5d75;
+    --flecha-hover:#d9748e;
+    --marron:#8b5e3c;
+    --oscuro:#2a1408;
+    --antojo:#8a3f55;
+    --naranja:#f39c12;
+    --vacio:#ecd9c9;
+    --fuente-titulo:"Choco Taste Trial","Lobster","Brush Script MT",cursive;
+    --tam-titulo:4.4rem;
+    --tam-subtitulo:2.3rem;
+    --color-titulo:#8b5e3c;
+    --color-subtitulo:#2a1408;
+    --color-agregar:#e0527a;   
+  }
+#armaPostre, #armaPostre *{box-sizing:border-box}
+#armaPostre{
+    width:100%;max-width:1180px;
+    padding:28px 12px 48px;
+    display:grid;
+    grid-template-columns:minmax(0,1.2fr) 150px minmax(0,1fr);
+    grid-template-areas:"izq pinky der";
+    column-gap:8px;row-gap:18px;align-items:start;
+  }
+@keyframes ap_gelatina{
+    0%   {transform:scale(1,1)}
+    25%  {transform:scale(1.22,.76)}
+    45%  {transform:scale(.88,1.14)}
+    65%  {transform:scale(1.08,.94)}
+    85%  {transform:scale(.97,1.03)}
+    100% {transform:scale(1,1)}
+  }
+@keyframes ap_aparecer{
+    0%   {transform:scale(.4,.4);opacity:0}
+    55%  {transform:scale(1.15,.9);opacity:1}
+    75%  {transform:scale(.94,1.07)}
+    100% {transform:scale(1,1)}
+  }
+@keyframes ap_respirar{
+    0%,100%{transform:scale(1,1)}
+    50%    {transform:scale(1.015,.985)}
+  }
+#armaPostre .gelatina{animation:ap_gelatina .55s cubic-bezier(.36,.07,.19,.97)}
+#armaPostre .aparecer{animation:ap_aparecer .5s ease-out}
+@keyframes ap_fundido{from{opacity:0}to{opacity:1}}
+#armaPostre .fundido{animation:ap_fundido .4s ease-out}
+#armaPostre .precio{
+    width:min(230px,70vw);
+    border:2px solid var(--rosa);
+    border-radius:999px;
+    text-align:center;
+    padding:7px 16px;
+    font-size:1.3rem;
+    letter-spacing:.04em;
+    min-height:42px;
+    animation:ap_respirar 3.2s ease-in-out infinite;
+  }
+#armaPostre .carta-giro{
+    position:relative;
+    width:min(340px,calc(100vw - 128px));
+    transform-style:preserve-3d;
+  }
+#armaPostre .carta-dorso{
+    position:absolute;inset:0;
+    border-radius:44px;
+    background:var(--rosa-carta);
+    transform:rotateY(180deg);
+    backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    display:flex;align-items:center;justify-content:center;
+  }
+#armaPostre .carta-dorso{flex-direction:column;gap:20px}
+#armaPostre .carta-dorso img{width:42%;height:auto;display:block}
+#armaPostre .estado{position:relative;width:46px;height:46px}
+#armaPostre .estado .rueda{
+    position:absolute;inset:0;border-radius:50%;
+    border:5px solid rgba(255,255,255,.35);border-top-color:#fff;
+    animation:ruedaGira .8s linear infinite;transition:opacity .15s;
+  }
+#armaPostre .estado .chulo{position:absolute;inset:0;width:100%;height:100%;opacity:0}
+#armaPostre .estado .chulo path{stroke-dasharray:1;stroke-dashoffset:1}
+#armaPostre .estado.listo .rueda{opacity:0}
+#armaPostre .estado.listo .chulo{opacity:1;animation:chuloPop .45s cubic-bezier(.3,1.8,.5,1)}
+#armaPostre .estado.listo .chulo path{animation:chuloTrazo .3s ease-out forwards}
+@keyframes ruedaGira{to{transform:rotate(360deg)}}
+@keyframes chuloTrazo{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes chuloPop{0%{transform:scale(.4)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+#armaPostre .carta{
+    position:relative;
+    width:100%;
+    backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    background:var(--crema);
+    border:14px solid var(--rosa-carta);
+    border-radius:44px;
+    padding:6px 0 0;
+  }
+#armaPostre .muesca{
+    position:absolute;left:50%;bottom:-1px;
+    width:104px;height:36px;margin-left:-52px;
+    pointer-events:none;
+  }
+#armaPostre .titulo-combo{
+    margin:0;text-align:center;line-height:1;
+    min-height:7.2rem;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+    padding-top:4px;
+  }
+#armaPostre .titulo-combo .t1{
+    font-family:var(--fuente-titulo);
+    font-size:var(--tam-titulo);font-weight:400;color:var(--color-titulo);
+    letter-spacing:.01em;
+  }
+#armaPostre .titulo-combo .t2{
+    font-family:var(--fuente-titulo);
+    font-size:var(--tam-subtitulo);font-weight:400;color:var(--color-subtitulo);
+    margin-top:-6px;
+  }
+#particulas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+#armaPostre .escena{position:relative;z-index:0}
+#armaPostre .marco{
+    position:absolute;left:4%;right:4%;top:10%;height:66%;z-index:1;
+    border-radius:26px;overflow:hidden;
+    background:linear-gradient(160deg,#fde2a8,#f8b04a) center/cover no-repeat;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);
+  }
+#armaPostre .fila{position:relative}
+#armaPostre .fila.fm{z-index:3}
+#armaPostre .fila.fb{z-index:2}
+#armaPostre .visor{position:relative;width:100%;cursor:grab;touch-action:none}
+#armaPostre .visor:active{cursor:grabbing}
+#armaPostre .visor.mermelada{aspect-ratio:2.3/1;--dx:calc(70px * var(--esc,1));--dy:calc(80px * var(--esc,1))}
+#armaPostre .visor.base{aspect-ratio:1.3/1;--dx:calc(60px * var(--esc,1));--dy:calc(70px * var(--esc,1))}
+#armaPostre .visor.mermelada canvas{opacity:var(--opacidad-merm,.85);transition:opacity .3s}
+#armaPostre .visor.base canvas{opacity:var(--opacidad-base,1);transition:opacity .3s}
+#armaPostre .visor canvas{
+    position:absolute;display:block;pointer-events:none;
+    left:calc(var(--dx) * -1);top:calc(var(--dy) * -1);
+    width:calc(100% + var(--dx) * 2);height:calc(100% + var(--dy) * 2);
+  }
+#armaPostre .visor.extra{
+    position:absolute;left:0;top:0;width:100%;height:100%;aspect-ratio:auto;
+    pointer-events:none;visibility:hidden;
+  }
+#armaPostre .visor.extra.on{visibility:visible}
+#armaPostre #visorTapa{--dx:calc(200px * var(--esc,1));--dy:calc(240px * var(--esc,1));transform:translateY(calc(var(--sube-tapa,0) * -1px))}
+#armaPostre .pinky-flota{position:absolute;left:-200px;top:250px;width:140px;display:flex;flex-direction:column;align-items:center;z-index:5;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#armaPostre .pinky-cuerpo{display:flex;flex-direction:column;align-items:center;animation:ap_flotar 3.6s ease-in-out infinite}
+#armaPostre .pinky-img{width:100px;height:auto;display:block}
+#armaPostre .pinky-globo{position:relative;background:#fff;border:3px solid var(--rosa);color:var(--antojo);font-family:"Lilita One",system-ui,sans-serif;font-size:.8rem;line-height:1.2;padding:8px 12px;border-radius:18px;text-align:center;width:max-content;max-width:170px;margin-bottom:14px}
+#armaPostre .pinky-globo::after{content:"";position:absolute;left:50%;bottom:-10px;width:14px;height:14px;background:#fff;border-right:3px solid var(--rosa);border-bottom:3px solid var(--rosa);transform:translateX(-50%) rotate(45deg)}
+#armaPostre .pinky-sombra{width:60px;height:8px;border-radius:50%;background:rgba(0,0,0,.13);margin-top:8px;animation:ap_sombra 3.6s ease-in-out infinite}
+@keyframes ap_flotar{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-14px) rotate(2deg)}}
+@keyframes ap_sombra{0%,100%{transform:scaleX(1);opacity:.9}50%{transform:scaleX(.7);opacity:.5}}
+@media (max-width:1050px){#armaPostre .pinky-flota{display:none}}
+@media (prefers-reduced-motion: reduce){#armaPostre .pinky-cuerpo,#armaPostre .pinky-sombra{animation:none}}
+.sr-solo{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#armaPostre .escena:focus-visible{outline:3px dashed var(--flecha);outline-offset:8px;border-radius:26px}
+#armaPostre button:focus-visible,#armaPostre a:focus-visible{outline:3px solid var(--flecha);outline-offset:3px}
+#armaPostre .cargando3d{position:absolute;left:4%;right:4%;top:10%;height:66%;z-index:6;border-radius:26px;background:rgba(248,242,220,.88);display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;font-family:"Lilita One",system-ui,sans-serif;font-size:.85rem;color:var(--antojo);transition:opacity .35s}
+#armaPostre .cargando3d.fuera{opacity:0;pointer-events:none}
+#armaPostre .rueda3d{width:42px;height:42px;border-radius:50%;border:5px solid rgba(242,143,149,.35);border-top-color:#f28f95;animation:ruedaGira .8s linear infinite}
+#armaPostre .pista{position:absolute;left:0;right:0;bottom:5%;z-index:6;display:flex;justify-content:center;pointer-events:none;opacity:0;transition:opacity .4s}
+#armaPostre .pista.on{opacity:1}
+#armaPostre .pista span{background:rgba(255,255,255,.92);color:var(--antojo);font-family:"Lilita One",system-ui,sans-serif;font-size:.85rem;padding:5px 14px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.15);animation:ap_vaiven 1.6s ease-in-out infinite}
+@keyframes ap_vaiven{0%,100%{transform:translateX(-8px)}50%{transform:translateX(8px)}}
+#armaPostre .info-combo{width:max-content;max-width:calc(100vw - 40px);text-align:center;display:flex;flex-direction:column;gap:6px;color:var(--oscuro);font-size:.82rem;line-height:1.35}
+#armaPostre .info-combo p{margin:0}
+#armaPostre .ic-ing{font-size:.7rem;line-height:1.3}
+#armaPostre .ic-desglose{font-family:"Lilita One",system-ui,sans-serif;font-size:.95rem;color:var(--flecha)}
+#armaPostre .ic-ing b{color:var(--antojo)}
+#armaPostre .ic-social{margin:-6px 0 0;width:min(340px,calc(100vw - 56px));text-align:center;font-size:.82rem;line-height:1.35;font-weight:700;color:var(--antojo)}
+#armaPostre .ic-kit{height:1.6em;width:auto;vertical-align:middle;margin-left:2px}
+#armaPostre .acciones{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:min(340px,calc(100vw - 56px))}
+#armaPostre .ic-btn{display:inline-flex;align-items:center;gap:6px;font-family:"Lilita One",system-ui,sans-serif;font-size:.9rem;padding:7px 14px;border-radius:999px;border:2px solid var(--rosa);background:#fff;color:var(--rosa);cursor:pointer;transition:background .15s,color .15s,transform .25s cubic-bezier(.3,1.8,.5,1)}
+#armaPostre .ic-btn svg{width:18px;height:18px;display:block}
+#armaPostre .ic-btn:hover{background:var(--rosa);color:#fff;transform:scale(1.07,.95)}
+#armaPostre .ic-btn:active{transform:scale(.9,1.1)}
+#armaPostre #btnFav.on{background:var(--color-agregar);border-color:var(--color-agregar);color:#fff}
+#armaPostre #btnFav.on svg path{fill:currentColor}
+#armaPostre .favs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;width:min(340px,calc(100vw - 56px));font-size:.8rem;color:var(--antojo);font-family:"Lilita One",system-ui,sans-serif}
+#armaPostre .favs[hidden]{display:none}
+#armaPostre .favs button{font:inherit;padding:3px 10px;border-radius:999px;border:2px solid var(--rosa-carta);background:var(--crema);color:var(--marron);cursor:pointer}
+#armaPostre .favs button:hover{background:var(--rosa-carta);color:#fff}
+body.ocupado #armaPostre .ic-btn, body.ocupado #armaPostre .favs button{pointer-events:none}
+.ap-toast{position:fixed;left:50%;bottom:110px;transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:10040;background:#e0527a;color:#fff;font-family:"Lilita One",system-ui,sans-serif;font-size:1rem;padding:9px 20px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.3);transition:transform .3s cubic-bezier(.3,1.6,.5,1),opacity .25s;max-width:calc(100vw - 32px);text-align:center}
+.ap-toast.show{opacity:1;transform:translate(-50%,0)}
+.titulo-seccion{
+    font-family:"Choco Taste Trial","Lobster","Brush Script MT",cursive;
+    font-weight:400;color:#8b5e3c;letter-spacing:.01em;
+  }
+#armaPostre .ver-catalogo{
+    margin-top:-6px;
+    font-family:"Lilita One",system-ui,sans-serif;
+    font-size:1rem;color:var(--flecha);text-decoration:underline;text-underline-offset:4px;
+    transition:color .15s,transform .25s cubic-bezier(.3,1.8,.5,1);
+  }
+#armaPostre .ver-catalogo:hover{color:var(--flecha-hover);transform:scale(1.06)}
+#armaPostre #visorJarra{--dx:calc(120px * var(--esc,1));--dy:calc(150px * var(--esc,1))}
+#armaPostre #visorJarra canvas{opacity:var(--op-jarra,.85)}
+#armaPostre #visorTapa canvas{opacity:var(--op-tapa,.85)}
+#armaPostre .etiqueta{
+    position:absolute;left:0;right:0;bottom:0;text-align:center;
+    font-size:.78rem;pointer-events:none;color:var(--marron);opacity:.75;display:none;
+  }
+#armaPostre .flecha{
+    position:absolute;top:calc(50% - 30px);
+    background:none;border:0;padding:8px;cursor:pointer;line-height:0;
+    color:var(--flecha);
+    transition:transform .25s cubic-bezier(.3,1.8,.5,1),color .12s;
+  }
+#armaPostre .flecha.izq{right:calc(100% + 30px)}
+#armaPostre .flecha.der{left:calc(100% + 30px)}
+#armaPostre .flecha:hover{color:var(--flecha-hover);transform:scale(1.18,.9)}
+#armaPostre .flecha:active{transform:scale(.8,1.2)}
+#armaPostre .flecha svg{width:26px;height:44px;display:block}
+#armaPostre .flecha:disabled{opacity:.2;cursor:default;pointer-events:none}
+#armaPostre .flecha{transition:transform .25s cubic-bezier(.3,1.8,.5,1),color .12s,opacity .25s ease}
+body.fusionando #armaPostre .flecha{opacity:0}
+#armaPostre .antojo{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    margin:4px 0 42px;position:relative;z-index:1;
+  }
+#armaPostre .antojo > span{
+    font-family:"Lilita One",system-ui,sans-serif;
+    font-size:.8rem;color:var(--antojo);letter-spacing:.01em;
+  }
+#armaPostre #osos{display:flex;gap:4px}
+#armaPostre #osos img, #armaPostre #osos svg{height:24px;width:auto;display:block}
+#armaPostre .agregar{
+    width:min(230px,70vw);
+    background:none;color:var(--rosa);
+    border:2px solid var(--rosa);border-radius:999px;
+    padding:9px 20px;font-size:1.2rem;cursor:pointer;
+    transition:background .15s,color .15s,transform .25s cubic-bezier(.3,1.8,.5,1);
+  }
+#armaPostre .agregar:hover{background:var(--rosa);color:#fff;transform:scale(1.08,.94)}
+#armaPostre .agregar:active{transform:scale(.88,1.12)}
+#armaPostre .agregar.agregando{background:var(--color-agregar);border-color:var(--color-agregar);color:#fff}
+body.ocupado #armaPostre .flecha, body.ocupado #armaPostre .agregar{pointer-events:none}
+@media (prefers-reduced-motion: reduce){#armaPostre .precio{animation:none}
+#armaPostre .gelatina, #armaPostre .aparecer{animation:none}}
+#armaPostre{margin:0 auto;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--rosa);position:relative}
+#armaPostre .agregar-wrap{position:relative;width:min(230px,70vw)}
+#armaPostre .agregar-wrap .agregar{width:100%}
+#armaPostre .agregar-proxy{position:absolute;left:50%;top:50%;width:1px;height:1px;opacity:0;pointer-events:none}
+
+/* =====================================================================
+   REDISEÑO v3: panel con el estilo de la marca (crema, vino, rosa y naranja),
+   constructor GRANDE a la izquierda, Pinky al lado, información a la derecha
+   ===================================================================== */
+@property --color-titulo{syntax:"<color>";inherits:true;initial-value:#8b5e3c}
+@property --color-subtitulo{syntax:"<color>";inherits:true;initial-value:#2a1408}
+
+/* la página deja de estar limitada a 1200px */
+main.grid-container{max-width:none;padding:40px clamp(8px,2vw,36px) 20px}
+
+#armaPostre.ap-panel{
+  --esc:1;--borde:20px;--mitad-pill:30px;
+  position:relative;width:100%;max-width:1800px;margin:0 auto;
+  padding:96px clamp(14px,2.4vw,44px) 50px;
+  display:grid;grid-template-columns:minmax(0,1.3fr) 190px minmax(0,1fr);
+  grid-template-areas:"izq pinky der";column-gap:8px;row-gap:22px;align-items:start;
+  transition:--color-titulo .45s ease,--color-subtitulo .45s ease;
+}
+/* FONDO GENERAL de toda la página: crema (teñido por el sabor) con olas vino y gotas rosa arriba y abajo */
+html{--color-titulo:#8b5e3c;transition:--color-titulo .45s ease}
+body{position:relative;min-height:100vh;padding-bottom:110px;overflow-x:hidden;
+  background:#f8f2dc;background:color-mix(in srgb,var(--color-titulo) 7%,#f8f2dc)}
+body::before,body::after{content:"";position:absolute;left:0;right:0;z-index:0;pointer-events:none;background-repeat:no-repeat;background-size:100% 100%}
+body::before{top:0;height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M80 30V88a13 13 0 0 0 26 0V30Z' fill='%23f28f95'/%3E%3Cpath d='M230 30V100a13 13 0 0 0 26 0V30Z' fill='%23f28f95'/%3E%3Cpath d='M420 30V84a13 13 0 0 0 26 0V30Z' fill='%23f28f95'/%3E%3Cpath d='M640 30V104a13 13 0 0 0 26 0V30Z' fill='%23f28f95'/%3E%3Cpath d='M860 30V90a13 13 0 0 0 26 0V30Z' fill='%23f28f95'/%3E%3Cpath d='M1040 30V98a13 13 0 0 0 26 0V30Z' fill='%23f28f95'/%3E%3Cpath d='M0 0H1200V46C1140 84 1085 38 1025 58C965 78 915 36 850 56C785 76 735 34 670 54C605 74 555 34 490 54C425 74 375 36 310 56C245 76 195 38 130 58C75 76 35 52 0 66Z' fill='%23833c4a'/%3E%3C/svg%3E")}
+body::after{bottom:0;height:90px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 90' preserveAspectRatio='none'%3E%3Cpath d='M0 90V34C70 4 140 44 210 24C280 4 350 46 420 26C490 6 560 48 630 28C700 8 770 46 840 26C910 6 980 46 1050 28C1110 12 1160 24 1200 14V90Z' fill='%23f28f95'/%3E%3Cpath d='M0 90V50C70 20 140 60 210 40C280 20 350 62 420 42C490 22 560 64 630 44C700 24 770 62 840 42C910 22 980 62 1050 44C1110 28 1160 40 1200 30V90Z' fill='%23833c4a'/%3E%3C/svg%3E")}
+
+/* --- izquierda: la carta --- */
+#armaPostre .ap-izq{grid-area:izq;position:relative;isolation:isolate;min-width:0;display:flex;flex-direction:column;align-items:center;padding:0 clamp(56px,5vw,90px)}
+#armaPostre .ap-izq::before{content:"";position:absolute;z-index:-1;inset:2% 0 4%;border-radius:50%;pointer-events:none;
+    background:radial-gradient(closest-side,color-mix(in srgb,var(--color-titulo) 24%,transparent),transparent 75%)}
+#armaPostre .ap-izq .carta-giro{width:100%;max-width:820px;margin-bottom:36px}
+#armaPostre .carta{padding:26px 0 56px;border-width:var(--borde);border-radius:56px;box-shadow:0 14px 0 -2px rgba(188,93,117,.35)}
+#armaPostre .carta-dorso{border-radius:56px}
+#armaPostre .carta .precio{position:absolute;left:0;right:0;bottom:calc(var(--borde) / -2 - var(--mitad-pill));margin:0 auto;z-index:7;
+    width:max-content;min-width:210px;min-height:0;padding:6px 34px;
+    background:var(--rosa-carta);border:5px solid var(--crema);color:#fff;border-radius:999px;
+    font-family:"Lilita One",system-ui,sans-serif;font-size:2rem;line-height:1.15;letter-spacing:.03em;text-align:center}
+#armaPostre .ap-total{margin:0;text-align:center;font-family:"Lilita One",system-ui,sans-serif;font-size:1.2rem;line-height:1.3;color:var(--flecha);animation:ap_aparecer .45s ease-out}
+
+/* --- Pinky, a un lado --- */
+#armaPostre .pinky-flota{grid-area:pinky;position:relative;left:auto;top:auto;display:flex;width:190px;align-self:start;margin-top:90px}
+#armaPostre .pinky-img{width:150px}
+#armaPostre .pinky-globo{max-width:190px;font-size:1rem}
+
+/* --- derecha --- */
+#armaPostre .ap-der{grid-area:der;min-width:0;display:flex;flex-direction:column;align-items:center;gap:22px;padding-top:6px}
+#armaPostre .ap-der .titulo-combo{width:100%;min-height:0;padding:0;align-items:center;text-align:center;transform-origin:center;overflow-wrap:anywhere}
+#armaPostre .titulo-combo::after{content:"";display:block;width:min(320px,80%);height:12px;margin-top:14px;background:var(--color-titulo);opacity:.55;
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='10' viewBox='0 0 40 10'%3E%3Cpath d='M0 5Q10-1 20 5T40 5' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") left center/40px 10px repeat-x;
+    mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='10' viewBox='0 0 40 10'%3E%3Cpath d='M0 5Q10-1 20 5T40 5' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") left center/40px 10px repeat-x}
+#armaPostre .ap-der .info-combo{width:100%;max-width:none;align-items:center;text-align:center;gap:10px;font-size:1.15rem;
+    background:#fff;border:3px solid #f6c3c6;border-radius:30px;padding:20px 26px;box-shadow:0 6px 0 rgba(242,143,149,.25)}
+#armaPostre .ap-der .ic-ing{font-size:1.1rem;line-height:1.5}
+#armaPostre .ap-der .ic-desglose{font-size:1.35rem}
+#armaPostre .ap-der .antojo{margin:2px 0 0;justify-content:center;gap:12px}
+#armaPostre .ap-der .antojo > span{font-size:1.1rem}
+#armaPostre .ap-der #osos img,#armaPostre .ap-der #osos svg{height:36px}
+
+#armaPostre .ap-der .agregar-wrap{width:min(520px,100%)}
+#armaPostre .ap-der .agregar{padding:16px 24px;font-size:2.3rem;font-family:"Lilita One",system-ui,sans-serif;letter-spacing:.03em;
+    background:var(--rosa-carta);color:#fff;border:0;box-shadow:0 8px 0 var(--flecha);
+    transition:background .15s,transform .15s,box-shadow .15s}
+#armaPostre .ap-der .agregar:hover{background:var(--rosa-carta);color:#fff;transform:translateY(-3px);box-shadow:0 11px 0 var(--flecha)}
+#armaPostre .ap-der .agregar:active{transform:translateY(6px);box-shadow:0 2px 0 var(--flecha)}
+#armaPostre .ap-der .agregar.agregando{background:var(--color-agregar);box-shadow:0 8px 0 #a83558}
+
+/* mensaje del 10% como las "cajas naranja" de la marca */
+#armaPostre .ap-der .ic-social{width:min(520px,100%);margin:0;padding:14px 22px;border-radius:26px;background:#f5a31a;color:#fff;
+    font-size:1.1rem;line-height:1.4;font-weight:700;text-align:center;box-shadow:0 6px 0 #c9800c}
+#armaPostre .ap-der .ic-kit{height:2.2em}
+
+#armaPostre .ap-der .acciones{width:min(520px,100%);flex-wrap:nowrap;justify-content:center;gap:10px}
+#armaPostre .ap-der .ic-btn{font-size:1.1rem;padding:10px 16px;white-space:nowrap;border-width:3px;color:var(--flecha);border-color:var(--rosa-carta);box-shadow:0 5px 0 rgba(188,93,117,.28)}
+#armaPostre .ap-der .ic-btn svg{width:24px;height:24px}
+#armaPostre .ap-der .ic-btn:hover{background:var(--rosa-carta);color:#fff}
+#armaPostre #btnDomicilio{width:min(520px,100%);justify-content:center;font-size:1.3rem;padding:12px 22px;background:#833c4a;border-color:#833c4a;color:#f8f2dc;box-shadow:0 5px 0 #5a2431}
+#armaPostre #btnDomicilio:hover{background:#a24d5f;border-color:#a24d5f;color:#fff}
+#armaPostre #btnDomicilio.on{background:var(--color-agregar);border-color:var(--color-agregar);color:#fff;box-shadow:0 5px 0 #a83558}
+#armaPostre .ap-der .favs{width:min(520px,100%);justify-content:center;font-size:1rem}
+#armaPostre .ap-der .ver-catalogo{margin-top:0;font-size:1.3rem}
+
+/* --- entrada suave (solo CSS, una vez) --- */
+@keyframes ap_entra_izq{from{opacity:0;transform:translateX(-28px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes ap_entra_der{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+#armaPostre .ap-izq{animation:ap_entra_izq .6s cubic-bezier(.3,1.3,.5,1) backwards}
+#armaPostre .ap-der > *{animation:ap_entra_der .5s ease-out backwards}
+#armaPostre .ap-der > *:nth-child(2){animation-delay:.07s}
+#armaPostre .ap-der > *:nth-child(3){animation-delay:.14s}
+#armaPostre .ap-der > *:nth-child(4){animation-delay:.21s}
+#armaPostre .ap-der > *:nth-child(5){animation-delay:.28s}
+#armaPostre .ap-der > *:nth-child(6){animation-delay:.35s}
+@media (prefers-reduced-motion:reduce){#armaPostre .ap-izq,#armaPostre .ap-der > *{animation:none}#armaPostre.ap-panel{transition:none}}
+
+/* --- tablet: una columna --- */
+@media (max-width:980px){
+  #armaPostre.ap-panel{grid-template-columns:minmax(0,1fr);grid-template-areas:"izq" "pinky" "der";justify-items:center;row-gap:16px;
+    padding:90px 14px 40px}
+  body::before{height:96px}
+  body::after{height:76px}
+  body{padding-bottom:90px}
+  #armaPostre .ap-izq{padding:0 0 6px;width:100%}
+  #armaPostre .ap-izq .carta-giro{width:min(560px,calc(100vw - 170px))}
+  #armaPostre .pinky-flota{width:auto;margin-top:0;justify-self:center}
+  #armaPostre .pinky-cuerpo{flex-direction:row-reverse;gap:12px}
+  #armaPostre .pinky-img{width:90px}
+  #armaPostre .pinky-globo{margin-bottom:0;max-width:230px}
+  #armaPostre .pinky-globo::after{left:-9px;bottom:auto;top:50%;border:0;border-left:3px solid var(--rosa);border-bottom:3px solid var(--rosa);transform:translateY(-50%) rotate(45deg)}
+  #armaPostre .pinky-sombra{display:none}
+  #armaPostre .ap-der{width:100%;max-width:560px;align-items:center}
+  #armaPostre .ap-der .titulo-combo{align-items:center;text-align:center;transform-origin:center}
+  #armaPostre .ap-der .info-combo{align-items:center;text-align:center}
+  #armaPostre .ap-der .antojo,#armaPostre .ap-der .acciones,#armaPostre .ap-der .favs{justify-content:center}
+}
+/* --- celular --- */
+@media (max-width:700px){
+  #armaPostre.ap-panel{--borde:10px;--mitad-pill:24px;padding:80px 6px 30px}
+  body::before{height:76px}
+  body::after{height:64px}
+  body{padding-bottom:70px}
+  #armaPostre .ap-izq .carta-giro{width:min(340px,calc(100vw - 104px))}
+  #armaPostre .carta .precio{font-size:1.3rem;min-width:130px;padding:4px 22px}
+  #armaPostre .ap-der .info-combo{font-size:1rem;padding:16px 18px}
+  #armaPostre .ap-der .ic-ing{font-size:1rem}
+  #armaPostre .ap-der .ic-desglose{font-size:1.1rem}
+  #armaPostre .ap-der .agregar{font-size:1.8rem;padding:12px 20px}
+  #armaPostre .ap-der .ic-social{font-size:1rem}
+  #armaPostre .ap-der .ic-btn{font-size:.78rem;padding:7px 9px;gap:4px}
+  #armaPostre .ap-der .ic-btn svg{width:16px;height:16px}
+  #armaPostre #btnDomicilio{font-size:1.05rem;padding:10px 16px}
+  #armaPostre .ap-der #osos img,#armaPostre .ap-der #osos svg{height:28px}
+}
+
+/* ===== Ventana de domicilio (mapa) ===== */
+.dom-overlay{position:fixed;inset:0;z-index:10055;background:rgba(42,20,8,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.dom-overlay.open{display:flex;animation:ap_fundido .25s ease-out}
+.dom-modal{position:relative;width:min(780px,100%);max-height:94vh;overflow:auto;background:#fff;border:6px solid #f28f95;border-radius:36px;padding:24px 20px 22px;box-shadow:0 18px 50px rgba(0,0,0,.35);animation:ap_aparecer .45s ease-out;overscroll-behavior:contain}
+#domMapa{height:min(48vh,400px);border-radius:22px;overflow:hidden;border:3px solid #f28f95;background:#f8f2dc;isolation:isolate;margin-bottom:14px}
+.dom-info{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+.dom-info div{display:flex;flex-direction:column;align-items:center;min-width:130px;padding:6px 16px;border:2px solid #f28f95;border-radius:18px;background:#f8f2dc;color:#8a3f55;font-size:.8rem}
+.dom-info b{font-family:"Lilita One",system-ui,sans-serif;font-size:1.35rem;font-weight:400;color:#bc5d75}
+.dom-msg{margin:6px 0 12px;min-height:2.4em;text-align:center;font-size:.9rem;line-height:1.35;color:#8a3f55}
+.dom-msg.mal{color:#c0392b;font-weight:700}
+.dom-acciones{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.dom-btn{font-family:"Lilita One",system-ui,sans-serif;font-size:.95rem;padding:9px 18px;border-radius:999px;border:2px solid #f28f95;background:#fff;color:#f28f95;cursor:pointer;transition:background .15s,color .15s,transform .25s cubic-bezier(.3,1.8,.5,1)}
+.dom-btn:hover{background:#f28f95;color:#fff;transform:scale(1.06)}
+.dom-btn:active{transform:scale(.92)}
+.dom-btn.primario{background:#e0527a;border-color:#e0527a;color:#fff}
+.dom-btn.primario:hover{background:#c93d65;border-color:#c93d65}
+.dom-btn[disabled]{opacity:.4;pointer-events:none}
+.dom-btn[hidden]{display:none}
+.dom-pin{background:none;border:0}
+.dom-pin span{display:flex;align-items:center;justify-content:center;width:40px;height:40px;font-size:21px;line-height:1;background:#fff;border:3px solid #f28f95;border-radius:50%;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+.dom-pin.dest span{background:#e0527a;border-color:#fff;animation:ap_aparecer .5s ease-out}
+@media (max-width:600px){
+  .dom-overlay{padding:0;align-items:flex-end}
+  .dom-modal{width:100%;max-height:96vh;border-radius:30px 30px 0 0;border-width:4px;border-bottom:0;padding:22px 14px 22px}
+  #domMapa{height:42vh}
+}
+</style>
+    <title>Productos Sh</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="movil.css">
+<link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+    <header> 
+<br>
+
+        <main class="grid-container">
+    <section id="productos" class="section-class">
+<div id="armaPostre" class="ap-panel">
+  <div class="sr-solo" id="apVoz" role="status" aria-live="polite"></div>
+
+  <!-- IZQUIERDA: constructor de postres en grande -->
+  <div class="ap-izq">
+    <div class="carta-giro" id="cartaGiro">
+    <div class="carta-dorso" aria-hidden="true"><img src="shwhite.svg" alt="" onerror="this.style.display='none'">
+    <div class="estado" id="estadoDorso">
+      <div class="rueda"></div>
+      <svg class="chulo" viewBox="0 0 46 46"><path d="M10 24 L20 34 L37 13" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg>
+    </div>
+  </div>
+    <div class="carta">
+    <div class="escena" id="escena" tabindex="0" role="group" aria-label="Armador de postre. Flechas izquierda y derecha cambian la mermelada; arriba y abajo cambian la base.">
+    <div class="marco" id="marco"></div>
+    <div class="cargando3d" id="cargando3d" role="status"><div class="rueda3d"></div><span>Cargando tu postre…</span></div>
+    <div class="pista" id="pista" aria-hidden="true"><span>&#8596; Arrástralo para girarlo</span></div>
+    <img class="postre-respaldo" id="postreRespaldo" alt="Tu postre Sweet Help" decoding="async">
+
+    <!-- MERMELADA (arriba) -->
+    <div class="fila fm">
+      <button class="flecha izq" id="mermPrev" aria-label="Mermelada anterior">
+        <svg viewBox="0 0 26 44"><polygon points="19,9 19,35 8,22" fill="currentColor" stroke="currentColor" stroke-width="9" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="visor mermelada" id="visorMerm"><canvas id="cvMerm"></canvas></div>
+      <div class="visor mermelada extra" id="visorTapa"><canvas id="cvTapa"></canvas></div>
+      <button class="flecha der" id="mermNext" aria-label="Mermelada siguiente">
+        <svg viewBox="0 0 26 44"><polygon points="7,9 7,35 18,22" fill="currentColor" stroke="currentColor" stroke-width="9" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <!-- BASE (abajo) -->
+    <div class="fila fb">
+      <button class="flecha izq" id="basePrev" aria-label="Base anterior">
+        <svg viewBox="0 0 26 44"><polygon points="19,9 19,35 8,22" fill="currentColor" stroke="currentColor" stroke-width="9" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="visor base"><canvas id="cvBase"></canvas><div class="etiqueta" id="tituloBase"></div></div>
+      <div class="visor base extra" id="visorJarra"><canvas id="cvJarra"></canvas></div>
+      <button class="flecha der" id="baseNext" aria-label="Base siguiente">
+        <svg viewBox="0 0 26 44"><polygon points="7,9 7,35 18,22" fill="currentColor" stroke="currentColor" stroke-width="9" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    </div><!-- /escena -->
+    <div class="precio" id="precio">$0</div>
+    </div>
+    </div><!-- /carta-giro -->
+    <p class="ap-total" id="apTotal" hidden></p>
+  </div><!-- /ap-izq -->
+
+  <!-- AL LADO: Pinky y su globo -->
+  <div class="pinky-flota" id="pinkyFlota" aria-hidden="true">
+    <div class="pinky-cuerpo">
+      <div class="pinky-globo" id="pinkyTexto"></div>
+      <img class="pinky-img" src="pinkyglobo.svg" alt="" onerror="this.onerror=null;this.src='pinky.svg'">
+    </div>
+    <div class="pinky-sombra"></div>
+  </div>
+
+  <!-- DERECHA: título, ingredientes, agregar y botones -->
+  <div class="ap-der">
+    <h1 class="titulo-combo" id="tituloCombo"></h1>
+    <div class="info-combo" id="infoCombo">
+      <div class="ic-desglose" id="icDesglose"></div>
+      <p class="ic-ing"><b>Ingredientes:</b> <span id="icIngT"></span></p>
+      <div class="antojo"><span>Nivel de antojo:</span><div id="osos"></div></div>
+    </div>
+    <div class="agregar-wrap">
+      <button class="agregar" id="btnAgregar">Agregar</button>
+      <a class="agregar-proxy" id="armaPostreProxy" data-agregar data-id="" data-nombre="" data-precio="" data-img="" aria-hidden="true" tabindex="-1"></a>
+    </div>
+    <button type="button" class="ic-btn" id="btnDomicilio" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.500-6.100-6.500-11a6.500 6.500 0 0 1 13 0c0 4.900-6.500 11-6.500 11z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.400" fill="currentColor"/></svg><span id="btnDomTxt">Domicilio</span></button>
+    <p class="ic-social" id="icSocial"></p>
+    <div class="acciones">
+      <button type="button" class="ic-btn" id="btnFav" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 2.6 4.5 6.4 4.5c2.1 0 3.8 1.2 5.6 3.2 1.8-2 3.5-3.2 5.6-3.2 3.8 0 5.5 3.900 4 7.300C19.500 16.400 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span>Favorito</span></button>
+    <button type="button" class="ic-btn" id="btnSorpresa"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8.500" cy="8.500" r="1.600" fill="currentColor"/><circle cx="15.500" cy="15.500" r="1.600" fill="currentColor"/><circle cx="12" cy="12" r="1.600" fill="currentColor"/></svg><span>Sorpréndeme</span></button>
+    <button type="button" class="ic-btn" id="btnCompartir"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="12" r="2.500" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="6" r="2.500" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="18" r="2.500" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.300 10.800L15.700 7.200M8.300 13.200L15.700 16.800" stroke="currentColor" stroke-width="2"/></svg><span>Compartir</span></button>
+    </div>
+    <div class="favs" id="favs" hidden></div>
+    <a class="ver-catalogo" href="#" id="verCatalogo" role="button">Ver catálogo completo</a>
+  </div><!-- /ap-der -->
+</div><!-- /armaPostre -->
+
+<!-- Ventana de domicilio: mapa, distancia y precio -->
+<div class="dom-overlay" id="domOverlay" role="dialog" aria-modal="true" aria-label="Domicilio">
+  <div class="dom-modal">
+    <button type="button" class="cat-cerrar" id="domCerrar" aria-label="Cerrar">&times;</button>
+    <h2 class="cat-titulo">Domicilio</h2>
+    <p class="cat-sub">Toca el mapa donde quieres recibir tu postre</p>
+    <div id="domMapa" aria-label="Mapa para elegir la dirección de entrega"></div>
+    <div class="dom-info">
+      <div><span>Distancia</span><b id="domKm">—</b></div>
+      <div><span>Domicilio</span><b id="domPrecio">—</b></div>
+    </div>
+    <p class="dom-msg" id="domMsg" role="status" aria-live="polite"></p>
+    <div class="dom-acciones">
+      <button type="button" class="dom-btn" id="domGps">📍 Usar mi ubicación</button>
+      <button type="button" class="dom-btn primario" id="domConfirmar" disabled>Confirmar domicilio</button>
+      <button type="button" class="dom-btn" id="domQuitar" hidden>Quitar domicilio</button>
+    </div>
+  </div>
+</div>
+    </section>
+<section  class="textoc">
+    <p>Las ilustraciones que ves en nuestro menú son ilustraciones de referencia para que conozcas nuestros sabores. Como trabajamos de forma artesanal y con ingredientes frescos, el aspecto final de tu postre puede tener ligeras variaciones. ¡Esa es la magia de lo hecho a mano!  </p>
+</section>
+    
+<footer class="footer">
+    <ul class="pietext">
+        <li class="pi">SweetHelpCorp©  <b>|</b>  Derechos Reservados</li>
+    </ul>
+    <ul class="iconospie">
+        <li class="icopie"><a href=""><img src="iconolinktree.svg" alt="iconolinktree"></a></li>
+        <li class="icopie"><a href=""><img src="iconoig.svg" alt="iconoig"></a></li>
+        <li class="icopie"><a href=""><img src="iconoappsh.svg" alt="iconoappsh"></a></li>
+
+    </ul>
+
+</footer>
+
+<!-- MENÚ, PINKY, CARRITO Y PERFIL -->
+ <script src="cargando.js"></script>
+<script src="menu.js"></script>
+
+<div class="sh-faq" id="shFaq">
+        <div class="sh-faq-head"><img src="pinky.svg" alt="Pinky"><span>¡Hola! Soy Pinky, ¿en qué te ayudo?</span></div>
+        <details><summary>¿Qué es Sweet Help?</summary><p>Es un emprendimiento social de Santa Marta que vende postres artesanales para combatir el hambre.</p></details>
+        <details><summary>¿Cómo ayuda mi compra?</summary><p>Por cada postre que compras destinamos el 10% para entregar kits alimentarios a familias vulnerables.</p></details>
+        <details><summary>¿Qué es el termómetro de donaciones?</summary><p>Muestra cuántos kits alimentarios hemos entregado este mes frente a la meta. Pulsa "Descubre tu avance" para verlo.</p></details>
+        <details><summary>¿Cómo compro un producto?</summary><p>Entra a Productos, elige tu postre y se agregará al carrito. Allí podrás ver tus compras y pulsar "Pagar ahora".</p></details>
+        <details><summary>¿Mi carrito se pierde si cambio de página?</summary><p>No, tu carrito se mantiene aunque abras otra pestaña o página de Sweet Help.</p></details>
+        <details><summary>¿Dónde conozco más del equipo?</summary><p>En el menú, dentro de Sobre Nosotros, encontrarás Información y Equipo.</p></details>
+    </div>
+    <button class="sh-pinky-btn" id="shPinkyBtn" aria-label="Preguntas frecuentes"><span class="sh-ripple"></span><span class="sh-ripple"></span><span class="sh-ripple"></span><img src="pinky.svg" alt="Pinky"></button>
+<div class="sh-cart-wrap">
+    <button class="sh-ibtn" id="shCartBtn" aria-label="Carrito"><img src="carrito.svg" alt="carrito"><span class="sh-badge">0</span></button>
+</div>
+<div class="sh-perfil">
+    <button class="sh-perfil-btn" id="shPerfilBtn" aria-label="Perfil"><img src="iconoperfil.png" alt="iconperfil"></button>
+    <ul class="sh-perfil-menu" id="shPerfilMenu"><li><a href="">Editar</a></li><li><a href="iniciaroregistrarse.html">Salir</a></li></ul>
+</div>
+<script>
+(function () {
+    const $ = id => document.getElementById(id);
+    $('shPinkyBtn').onclick = e => { e.stopPropagation(); $('shFaq').classList.toggle('open'); };
+    $('shPerfilBtn').onclick = e => { e.stopPropagation(); $('shPerfilMenu').classList.toggle('open'); };
+    document.addEventListener('click', e => {
+        if (!e.target.closest('#shFaq')) $('shFaq').classList.remove('open');
+        if (!e.target.closest('.sh-perfil')) $('shPerfilMenu').classList.remove('open');
+    });
+})();
+</script>
+<style id="fpsRespaldoCss">
+/* Foto de respaldo del armador (solo aparece si el 3D va lento). Posición y tamaño en % de .escena (los pone el script) */
+#armaPostre .postre-respaldo{display:none;position:absolute;z-index:4;max-width:none;pointer-events:none;opacity:0;transition:opacity .5s ease;transform-origin:50% 92%}
+#armaPostre.sin3d .postre-respaldo{display:block}
+#armaPostre.sin3d .postre-respaldo.on{opacity:1}
+#armaPostre.sin3d .visor canvas{visibility:hidden}
+/* Modo foto: la base y la tapa del frasco SÍ se dibujan mientras se agrega (salen por delante de la foto) */
+#armaPostre.sin3d .visor.extra.on canvas{visibility:visible}
+/* Modo foto al agregar: la mermelada y la base se muestran como DOS piezas separadas (un dibujo quieto de cada una) y la foto se esconde */
+#armaPostre.sin3d.partes .postre-respaldo{visibility:hidden}
+#armaPostre.sin3d.partes .visor:not(.extra) canvas{visibility:visible}
+#armaPostre.sin3d .fila.fb{z-index:5}
+#armaPostre.sin3d .fila.fm{z-index:6}
+</style>
+<canvas id="particulas"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/fflate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js"></script>
+<script>
+(function () {
+const $raiz = document.getElementById("armaPostre");
+let enPantalla = true;   // se pausa el dibujo 3D cuando el constructor no se ve
+if(window.THREE && THREE.Cache) THREE.Cache.enabled = true;   // guarda los modelos ya descargados: volver a un sabor es instantáneo
+let respaldo3D = false;  // true = el monitor de FPS apagó el 3D y se muestra la imagen de respaldo
+/* =====================================================================
+   CONFIGURACIÓN  —  edita aquí
+   ===================================================================== */
+
+const MONEDA = "$";          // símbolo que se muestra
+const LOCALE = "es-CO";      // formato de miles (12.000)
+
+/* CATEGORÍAS = BASES (modelo de abajo).
+   Cada base trae DENTRO sus propias mermeladas.
+
+   Base:
+     archivo -> modelo .glb / .gltf / .fbx de la mermelada
+     titulo  -> título de la carta (1ª palabra grande, el resto pequeño debajo)
+     precio  -> precio de la mermelada
+     antojo  -> "Nivel de antojo" de 0 a 5 (admite medios: 4.5). Opcional.
+     colorTitulo / colorSubtitulo -> colores (hex) del título de ESTA mermelada. Opcionales.
+     (Al unirse, las partículas usan colorTitulo automáticamente)
+     particulas -> cambia las partículas SOLO de esta mermelada, ej: { union: { colores:["#hex"], cantidad:60, forma:"circulo" } }
+     colorParticulas -> color (hex) de las partículas cuando se junta ESTA mermelada con la base.
+                        Puede ser uno "#ff6b81" o varios ["#ff6b81","#ffd166"]. Opcional.
+     opacidad -> transparencia de ESTA mermelada: 1 = sólida, 0.5 = mitad. Opcional
+                (si no la pones, usa OPACIDAD_MERM). En la base también funciona.
+     imagen  -> imagen del cuadro redondeado de la carta (ruta o URL). Opcional.
+                Si no existe, se ve un fondo naranja de relleno.                 */
+const CATEGORIAS = [
+  {
+    id: "normal", archivo: "PostreSweetHelp_Base_normal.glb", titulo: "Tradicional", precio: 5000,
+    mermeladas: [
+      { archivo: "PostreSweetHelp_Mermelada_fresa.glb",    titulo: "Fresa Tentación",     precio: 2500, antojo: 4,
+        colorTitulo: "#CF2C29", colorSubtitulo: "#771010",
+        imagen: "fresatentacionimg.svg" },
+      { archivo: "PostreSweetHelp_Mermelada_maracuya.glb", titulo: "Maracuyá Tropical", precio: 2500, antojo: 3.5,
+        colorTitulo: "#F8A815", colorSubtitulo: "#F77C16",
+        imagen: "maracuyatropicalimg.svg" },
+      { archivo: "PostreSweetHelp_Mermelada_mora.glb",     titulo: "Mora Silvestre",    precio: 2500, antojo: 4.5,
+        colorTitulo: "#811B34", colorSubtitulo: "#823D4B",
+        imagen: "morasilvestreimg.svg" },
+    ]
+  },
+  {
+    id: "chocolate", archivo: "PostreSweetHelp_Base_choco.glb", titulo: "Chocolate", precio: 5000,
+    mermeladas: [
+      { archivo: "PostreSweetHelp_Mermelada_fresa.glb", titulo: "Choco Fresa", precio: 3000, antojo: 4,
+        colorTitulo: "#8C5E3D", colorSubtitulo: "#771010",
+        imagen: "fresatentacionimg.svg" },
+      { archivo: "PostreSweetHelp_Mermelada_milo.glb",  titulo: "Choco Milo",  precio: 2500, antojo: 4.5, opacidad: 100, 
+        colorTitulo: "#8C5E3D", colorSubtitulo: "#2B1810",
+        imagen: "chocomiloimg.svg" },
+    ]
+  },
+  {
+    id: "mixta", archivo: "PostreSweetHelp_Base_mixta.glb", titulo: "Mixto", precio: 5000,
+    mermeladas: [
+      { archivo: "PostreSweetHelp_Mermelada_fresa.glb", titulo: "Fresh Mix", precio: 2500, antojo: 3,
+        colorTitulo: "#b03a48", colorSubtitulo: "#2a1408",
+        imagen: "chocomiximg.svg" },
+      { archivo: "PostreSweetHelp_Mermelada_milo.glb",  titulo: "Choco Mix", precio: 2500, antojo: 5, opacidad: 100,
+        colorTitulo: "#8b5e3c", colorSubtitulo: "#2a1408",
+        imagen: "chocomiximg.svg" },
+    ]
+  },
+];
+
+const BASES = CATEGORIAS.filter(c => c.mermeladas && c.mermeladas.length);
+if(!BASES.length) console.error("Ninguna base tiene mermeladas: revisa CATEGORIAS");
+
+/* ----- Ingredientes por base y por mermelada (EDÍTALOS con los reales) -----
+   INFO_BASE  -> por id de base ("normal", "chocolate", "mixta")
+   INFO_MERM  -> por archivo de la mermelada
+   La carta suma los ingredientes de la base + la mermelada.                      */
+const INFO_BASE = {
+  normal:    { ing: "leche entera, leche condensada, crema de leche, bizcocho de vainilla" },
+  chocolate: { ing: "leche entera, leche condensada, crema de leche, bizcocho de chocolate" },
+  mixta:     { ing: "leche entera, leche condensada, crema de leche, bizcocho mixto" }
+};
+const INFO_MERM = {
+  "PostreSweetHelp_Mermelada_fresa.glb":    { ing: "mermelada de fresa" },
+  "PostreSweetHelp_Mermelada_maracuya.glb": { ing: "pulpa de maracuyá" },
+  "PostreSweetHelp_Mermelada_mora.glb":     { ing: "mermelada de mora" },
+  "PostreSweetHelp_Mermelada_milo.glb":     { ing: "Milo" }
+};
+/* ----- Frases de Pinky (el globo sobre su cabeza). Por archivo de mermelada; si falta, usa una al azar ----- */
+const FRASES_PINKY = {
+  "PostreSweetHelp_Mermelada_fresa.glb":    "¡La fresa nunca falla!",
+  "PostreSweetHelp_Mermelada_maracuya.glb": "Maracuyá: dulce y ácido, ¡me encanta!",
+  "PostreSweetHelp_Mermelada_mora.glb":     "La mora silvestre es mi favorita",
+  "PostreSweetHelp_Mermelada_milo.glb":     "¡Milo y chocolate, doble antojo!"
+};
+const FRASES_GENERICAS = ["¡Buena elección!", "¡Qué antojo!", "Arma el tuyo a tu gusto", "Cada postre ayuda a una familia", "¡Hecho a mano con amor!"];
+const FRASE_AGREGADO = "¡Gracias! Tu compra ayuda a un kit alimenticio";
+const PORCENTAJE_SOCIAL = 0.10;      // 10% de cada postre va a kits alimentarios
+const CLAVE_COMBO = "sh_combo";      // última combinación (localStorage)
+const CLAVE_FAVS  = "sh_favs";       // favoritos
+const CLAVE_PISTA = "sh_pista";      // si ya se mostró la pista de "arrástralo"
+const PIXEL_MAX = (matchMedia("(pointer:coarse)").matches || (navigator.hardwareConcurrency || 8) <= 4) ? 1.5 : 2;  // celulares: menos carga
+
+/* ----- DOMICILIO (mapa) -----
+   tienda    -> punto central del mapa y de donde sale el domicilio. Pega aquí tus coordenadas de Google Maps
+                (clic derecho sobre el punto > copiar "11.2408, -74.1990": el 1º número es lat y el 2º lng)
+   tarifaBase-> lo que cuesta el domicilio hasta kmIncluidos
+   porKmExtra-> lo que se suma por cada km después de kmIncluidos
+   redondeo  -> el precio sube al múltiplo más cercano (500 = $500)
+   maxKm     -> más allá de esta distancia por calle no se hace domicilio
+   factorRuta-> si no se puede trazar la ruta por calles, distancia en línea recta x este número
+   tiles     -> el mapa de fondo (OpenStreetMap gratis; para mucho tráfico usa MapTiler/Mapbox)        */
+const DOMICILIO = {
+  tienda: { lat: 11.2408, lng: -74.1990 },
+  zoom: 14,
+  tarifaBase: 3000,
+  kmIncluidos: 1.5,
+  porKmExtra: 1000,
+  redondeo: 500,
+  maxKm: 12,
+  factorRuta: 1.35,
+  tiles: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  atribucion: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+};
+const CLAVE_DOM = "sh_domicilio";
+const LEAFLET_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";
+const LEAFLET_JS  = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";
+
+// Velocidad de giro automático (radianes por frame)
+const VELOCIDAD_GIRO = 0.01;
+
+// Qué tan gelatinoso es (más alto = rebota más fuerte)
+const FUERZA_SQUISH = 1.0;
+
+/* ----- Tamaño y cámara (mermelada y base comparten escala) ----- */
+const ANCHO_MERM = 2.9;     // tamaño de la MERMELADA (más alto = más grande)
+const ANCHO_TAPA = 3.4;     // tamaño de la TAPA del frasco (más alto = más grande)
+const ANCHO_JARRA_BASE = 2.8;  // tamaño de la BASE del frasco (más alto = más grande)
+const ANCHO_BASE = 2.5;     // tamaño de la BASE
+const VIS_ANCHO    = 3.0;   // ancho visible del visor (no lo cambies sin razón)
+const DIST_CAM     = 5;     // distancia de la cámara
+const ALTO_CAM     = 2.3;   // altura de la cámara (más alto = se ve más la parte de arriba)
+
+/* ----- Títulos (tamaño y colores en HEX) -----
+   También puedes poner colores distintos por mermelada, dentro de cada una:
+   colorTitulo: "#8b5e3c", colorSubtitulo: "#2a1408"                         */
+const TAM_TITULO      = "clamp(3.4rem, 6vw, 7.5rem)";   // "Choco"
+const TAM_SUBTITULO   = "clamp(1.9rem, 3.1vw, 3.9rem)";   // "Milo"
+const COLOR_TITULO    = "#8b5e3c";  // color del título grande
+const COLOR_SUBTITULO = "#2a1408";  // color del subtítulo
+
+/* ----- ILUMINACIÓN REALISTA (todo se puede ajustar) -----
+   entorno    -> reflejos y luz suave de "estudio fotográfico" sobre los modelos (0 = apagado)
+   ambiente   -> luz general suave
+   principal  -> luz fuerte de frente-arriba (la que da volumen)
+   contorno   -> luz de atrás que marca los bordes (efecto "rim light")
+   relleno    -> luz suave del otro lado para no dejar sombras duras
+   sombraSuelo-> sombra suave bajo la base (0 = sin sombra, 0.25 = suave)
+   rugosidad  -> quita brillo: sube la rugosidad mínima de los materiales (0 = deja el original, 1 = totalmente mate)
+   metalico   -> máximo de "metal" permitido en los materiales (0 = nada de brillo metálico)
+   tono       -> "ninguno" (colores tal cual) o "aces" (más cinematográfico, desatura un poco)
+   exposicion -> brillo general (1 = normal)                                          */
+const LUZ = {
+  entorno: 0.45,
+  ambiente: 0.5,
+  principal: 0.75,
+  contorno: 0.4,
+  relleno: 0.25,
+  sombraSuelo: 0.25,
+  rugosidad: 0.8,
+  metalico: 0.15,
+  tono: "ninguno",
+  exposicion: 0.95
+};
+
+/* ----- Transparencia de la mermelada: 1 = sólida, 0.5 = mitad transparente ----- */
+const OPACIDAD_MERM = 0.7;
+
+/* ----- Sonidos (pon los .ogg en la misma carpeta que este HTML) ----- */
+const SONIDOS = {
+  agregar: "splash1.ogg",   // al presionar Agregar
+  unir:    "splash2.ogg"    // cuando la mermelada y la base se juntan
+};
+const VOLUMEN_SONIDO = 0.8;  // de 0 a 1
+
+/* ----- Iconos del nivel de antojo (ponlos en la misma carpeta que este HTML) ----- */
+const ICONOS = {
+  lleno: "pinkydarkicon.svg",     // osito lleno
+  medio: "pinkyorangeicon.svg",   // osito a medias
+  vacio: "pinkynullicon.svg"      // osito vacío
+};
+
+/* ----- Animación al agregar ----- */
+const COLOR_AGREGAR = "#e0527a";  // color del botón y de las chispas cuando le das Agregar
+
+/* ----- PARTÍCULAS (todas se pueden cambiar aquí) -----
+   colores  -> uno o varios hex: ["#ff9a9a", "#ffd166"]  (null = colores variados por defecto)
+   cantidad -> cuántas salen
+   tamano   -> 1 = normal, 2 = el doble de grandes, 0.5 = la mitad
+   fuerza   -> qué tan lejos y rápido salen
+   forma    -> "gota" o "circulo"
+   Eventos:  boton = al darle Agregar | union = cuando mermelada y base se juntan |
+             precio = en el precio al unirse | separar = cuando se separan |
+             flechas = al tocar las flechas                                          */
+/* Al unirse (y separarse) las partículas toman el COLOR DEL TÍTULO de cada producto.
+   Pon false para usar los colores de PARTICULAS.union / separar en su lugar.        */
+const PARTICULAS_COLOR_TITULO = true;
+
+/* Solo hay partículas cuando la mermelada y la base se JUNTAN (union).
+   Los demás eventos quedan en cantidad 0 (apagados): sube el número si quieres volver a activarlos. */
+const PARTICULAS = {
+  boton:   { colores: [COLOR_AGREGAR],           cantidad: 0,  tamano: 1, fuerza: 1.2, forma: "gota" },
+  union:   { colores: ["#ff9a9a", "#ffd166"],    cantidad: 0,  tamano: 1, fuerza: 1.5, forma: "gota" },
+  precio:  { colores: [COLOR_AGREGAR],           cantidad: 0,  tamano: 1, fuerza: 1,   forma: "gota" },
+  separar: { colores: ["#ff9a9a", "#ffd166"],    cantidad: 0,  tamano: 1, fuerza: 0.8, forma: "gota" },
+  flechas: { colores: null,                      cantidad: 0,  tamano: 1, fuerza: 1,   forma: "gota" }
+};
+const AJUSTE_FUSION = -12;  // px extra que baja la mermelada (+ más abajo, - más arriba)
+const SUBIDA_FUSION = 60;   // px que SUBE todo el postre (mermelada + base) al unirse: más alto = más arriba
+const PAUSA_FUSION  = 300;  // ms que se queda unido el postre antes de que salga la base del frasco
+
+/* ----- Frasco: base y tapa que salen al agregar, y giro de la carta ----- */
+const ARCHIVO_JARRA_BASE = "PostreSweetHelp_Mermelada_base.glb";  // sale desde abajo, en la posición de la base
+const ARCHIVO_JARRA_TAPA = "PostreSweetHelp_Mermelada_tapa.glb";  // cae sobre la mermelada
+const SALIDA_BASE_PX  = 170;   // px desde abajo de donde sale la base del frasco
+const SUBE_TAPA_PX    = 26;    // px que la tapa queda MÁS ARRIBA que la mermelada
+const SALIDA_TAPA_PX  = 130;   // px desde arriba de donde cae la tapa
+const RETRASO_TAPA    = 650;   // ms entre que sale la base y aparece la tapa
+const PAUSA_EMPAQUE   = 1000;  // ms que se ve todo junto (después del choque de la tapa) antes de girar la carta
+const OPACIDAD_JARRA_BASE = 0.6;   // transparencia de la base del frasco (1 = sólida)
+const OPACIDAD_TAPA       = 0.6;   // transparencia de la tapa
+const GIRO_MITAD      = 420;   // ms de cada mitad del giro de la carta
+const TIEMPO_CAIDA_TAPA = 300; // ms que tarda la tapa en caer (el segundo "todos juntos" cuenta desde el choque)
+const GIRO_VUELTA     = 230;   // ms de cada mitad del giro de regreso (rápido)
+const PAUSA_CARGA     = 1500;  // ms del circulito de carga en el dorso
+const PAUSA_CHULO     = 900;   // ms que se ve el chulito antes de girar de nuevo
+const DURACION_CHULO  = 450;   // ms que dura la animación del chulito: el postre entra al carrito justo cuando TERMINA
+const POSE_FOTO       = { x: 0, y: 0, z: 0 };   // modo foto: giro (radianes) con el que se dibujan la mermelada y la base al agregar; ponle el de tu foto si no coincide
+const CORTE_FOTO      = null;  // modo foto: dónde se parte la foto en mermelada (arriba) y base (abajo), de 0 a 1 de su altura. null = lo detecta solo
+
+/* ===================================================================== */
+
+const fmt = n => MONEDA + Number(n).toLocaleString(LOCALE);
+
+/* Reinicia una animación CSS en un elemento */
+function animar(el, clase){
+  el.classList.remove(clase);
+  void el.offsetWidth;
+  el.classList.add(clase);
+}
+
+/* Entorno de estudio fotográfico creado por código (domo cálido + 3 "softboxes"),
+   se usa para reflejos e iluminación realista. No necesita ningún archivo. */
+function crearEntorno(renderer){
+  const pm = new THREE.PMREMGenerator(renderer);
+  const sc = new THREE.Scene();
+
+  const geo = new THREE.SphereGeometry(10, 32, 16);
+  const pos = geo.attributes.position, col = [];
+  const arriba = new THREE.Color("#fff6ea"), medio = new THREE.Color("#f2d8c6"), abajo = new THREE.Color("#b99682");
+  const tmp = new THREE.Color();
+  for(let i = 0; i < pos.count; i++){
+    const t = pos.getY(i) / 10;                       // -1 abajo ... 1 arriba
+    if(t >= 0) tmp.copy(medio).lerp(arriba, t); else tmp.copy(medio).lerp(abajo, -t);
+    col.push(tmp.r, tmp.g, tmp.b);
+  }
+  geo.setAttribute("color", new THREE.Float32BufferAttribute(col, 3));
+  sc.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide })));
+
+  const panel = (w, h, x, y, z, fuerza, tinte) => {
+    const c = new THREE.Color(tinte).multiplyScalar(fuerza);
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide }));
+    m.position.set(x, y, z); m.lookAt(0, 0, 0); sc.add(m);
+  };
+  panel(7, 5,  4,  6,  5, 7, "#fff4e6");   // luz principal
+  panel(4, 7, -7,  2,  2, 3, "#e6efff");   // relleno frío
+  panel(6, 2,  0,  4, -8, 5, "#ffe3cf");   // contorno
+
+  const rt = pm.fromScene(sc, 0.02);
+  pm.dispose();
+  geo.dispose();
+  return rt.texture;
+}
+
+/* ---------- Visor 3D reutilizable (con física squishy) ---------- */
+class Visor {
+  constructor(canvas, anchoModelo, sombra = false){
+    this.canvas = canvas;
+    this.el = canvas.parentElement;   // el visor (recibe los toques; el canvas es más grande)
+    this.anchoModelo = anchoModelo;
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+    this.camY = ALTO_CAM;
+    this.cajaLocal = null;      // caja del modelo (para calcular dónde queda arriba/abajo)
+    this.alCargar = null;
+    this.extra = { x:0, y:0, z:0 };  this._ex = 0; this._ey = 0;   // giro extra (tapa de alcantarilla)
+    this.seguir = null;         // otro visor cuya rotación se imita (modo "un solo modelo")
+
+    this.renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio, PIXEL_MAX));
+    this.renderer.outputEncoding = THREE.sRGBEncoding;
+    this.renderer.toneMapping = LUZ.tono === "aces" ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping;
+    this.renderer.toneMappingExposure = LUZ.exposicion;
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    this._luces(sombra);
+
+    this.pivote = new THREE.Group();   // gira sobre su eje Y
+    this.scene.add(this.pivote);
+
+    this.loader = new THREE.GLTFLoader();
+    this.loaderFBX = THREE.FBXLoader ? new THREE.FBXLoader() : null;
+    this.token = 0;
+    this.arrastrando = false;
+
+    // resortes: alto (squash/stretch) e inclinación (bamboleo)
+    this.sy = 1;  this.vy = 0;
+    this.wz = 0;  this.vz = 0;
+    this.t = Math.random() * 10;
+    this.ultimo = performance.now();
+    this._ur = 0;                                         // último dibujo (tope de 60 fps)
+    this.esExtra = this.el.classList.contains("extra");   // base/tapa del frasco: no se dibujan hasta que salen
+
+    this._eventos();
+    new ResizeObserver(() => this._resize()).observe(canvas);
+    this._resize();
+    this._animar = this._animar.bind(this);
+    requestAnimationFrame(this._animar);
+  }
+
+  /* Luces: entorno de estudio + luz principal + contorno + relleno (+ sombra bajo la base) */
+  _luces(sombra){
+    const sc = this.scene;
+    try{
+      this.entorno = crearEntorno(this.renderer);
+      sc.environment = this.entorno;
+    }catch(e){ console.warn("No se pudo crear el entorno de luz", e); }
+
+    sc.add(new THREE.HemisphereLight(0xffffff, 0xb08a78, LUZ.ambiente));
+
+    const sol = new THREE.DirectionalLight(0xfff1e0, LUZ.principal);
+    sol.position.set(3, 5, 4);
+    const conSombra = sombra && LUZ.sombraSuelo > 0;
+    if(conSombra){
+      sol.castShadow = true;
+      sol.shadow.mapSize.set(1024, 1024);
+      const c = sol.shadow.camera;
+      c.left = -3.5; c.right = 3.5; c.top = 3.5; c.bottom = -3.5; c.near = 0.5; c.far = 15;
+      c.updateProjectionMatrix();
+      sol.shadow.bias = -0.0006;
+    }
+    sc.add(sol);
+
+    const contorno = new THREE.DirectionalLight(0xffd9c0, LUZ.contorno);
+    contorno.position.set(-4, 3, -4);
+    sc.add(contorno);
+
+    const relleno = new THREE.DirectionalLight(0xd9e6ff, LUZ.relleno);
+    relleno.position.set(-4, 1, 3);
+    sc.add(relleno);
+
+    if(conSombra){
+      this.suelo = new THREE.Mesh(
+        new THREE.PlaneGeometry(9, 9),
+        new THREE.ShadowMaterial({ opacity: LUZ.sombraSuelo })
+      );
+      this.suelo.rotation.x = -Math.PI / 2;
+      this.suelo.receiveShadow = true;
+      sc.add(this.suelo);
+    }
+  }
+
+  /* Aplasta el modelo: fuerza > 0 lo achata y rebota como gelatina */
+  squish(fuerza = 5, lado){
+    this.vy -= fuerza * FUERZA_SQUISH;
+    this.vz += (lado !== undefined ? lado : (Math.random() - 0.5) * 2) * FUERZA_SQUISH;
+  }
+
+  /* Entrada: aparece diminuto y rebota hasta su tamaño */
+  _entrada(){
+    this.sy = 0.25;
+    this.vy = 4 * FUERZA_SQUISH;
+  }
+
+  _eventos(){
+    let ultX = 0, ultY = 0;
+    const c = this.el;
+    c.addEventListener("pointerdown", e => {
+      this.arrastrando = true; ultX = e.clientX; ultY = e.clientY;
+      c.setPointerCapture(e.pointerId);
+      this.squish(6);
+    });
+    c.addEventListener("pointermove", e => {
+      if(!this.arrastrando) return;
+      const dx = e.clientX - ultX, dy = e.clientY - ultY;
+      this.pivote.rotation.y += dx * 0.012;
+      this.pivote.rotation.x += dy * 0.006;
+      this.pivote.rotation.x = Math.max(-0.7, Math.min(0.7, this.pivote.rotation.x));
+      this.vz -= dx * 0.05;
+      ultX = e.clientX; ultY = e.clientY;
+    });
+    const soltar = () => {
+      if(this.arrastrando) this.squish(-4);
+      this.arrastrando = false;
+    };
+    c.addEventListener("pointerup", soltar);
+    c.addEventListener("pointercancel", soltar);
+  }
+
+  /* Ancho visible (en unidades) del canvas: el canvas es más grande que el visor,
+     así que se escala para que mermelada y base mantengan la misma escala en pantalla */
+  _visAncho(){
+    const w = this.canvas.clientWidth || 1;
+    const ref = this.el.clientWidth || w;
+    return VIS_ANCHO * (w / ref);
+  }
+
+  _aplicarCamara(){
+    const w = this.canvas.clientWidth, h = this.canvas.clientHeight;
+    const aspect = (w && h) ? w / h : 1;
+    this.camera.position.set(0, this.camY, DIST_CAM);
+    this.camera.lookAt(0, 0, 0);
+    const dist = this.camera.position.length();
+    this.camera.fov = 2 * Math.atan((this._visAncho() / aspect / 2) / dist) * 180 / Math.PI;
+    this.camera.aspect = aspect;
+    this.camera.updateProjectionMatrix();
+    this.camera.updateMatrixWorld();
+  }
+
+  _resize(){
+    const w = this.canvas.clientWidth, h = this.canvas.clientHeight;
+    if(!w || !h) return;
+    this.renderer.setSize(w, h, false);
+    this._aplicarCamara();
+    if(this.retener) this.renderer.render(this.scene, this.camera);   // el dibujo quieto no se borra al cambiar de tamaño
+  }
+
+  _limpiar(){
+    while(this.pivote.children.length){
+      const o = this.pivote.children[0];
+      this.pivote.remove(o);
+      o.traverse(n => {
+        if(n.geometry) n.geometry.dispose();
+        if(n.material){
+          (Array.isArray(n.material) ? n.material : [n.material]).forEach(m => m.dispose());
+        }
+      });
+    }
+  }
+
+  /* Ajusta el modelo al ANCHO común (sin pasarse de alto) y lo centra */
+  _ajustar(obj){
+    const caja = new THREE.Box3().setFromObject(obj);
+    const tam = caja.getSize(new THREE.Vector3());
+    const ancho = Math.max(tam.x, tam.z) || 1;
+    const w = this.canvas.clientWidth || 1, h = this.canvas.clientHeight || 1;
+    const altoMax = (this._visAncho() / (w / h)) * 0.92;
+    const k = Math.min(this.anchoModelo / ancho, altoMax / (tam.y || 1));
+    obj.scale.multiplyScalar(k);
+    const caja2 = new THREE.Box3().setFromObject(obj);
+    const centro = caja2.getCenter(new THREE.Vector3());
+    obj.position.sub(centro);
+    this.cajaLocal = new THREE.Box3(caja2.min.clone().sub(centro), caja2.max.clone().sub(centro));
+    this.pivote.add(obj);
+    obj.traverse(n => {
+      if(!n.isMesh) return;
+      n.castShadow = true;
+      (Array.isArray(n.material) ? n.material : [n.material]).forEach(mt => {
+        if(mt && mt.isMeshStandardMaterial){
+          mt.envMapIntensity = LUZ.entorno;
+          mt.roughness = Math.max(mt.roughness, LUZ.rugosidad);   // menos brillo
+          mt.metalness = Math.min(mt.metalness, LUZ.metalico);
+        }
+      });
+    });
+    if(this.suelo) this.suelo.position.y = this.cajaLocal.min.y - 0.02;
+    if(this.alCargar) this.alCargar();
+  }
+
+  /* Dónde queda la parte de arriba y de abajo del modelo, en px dentro del canvas */
+  limitesPx(){
+    const c = this.cajaLocal;
+    if(!c) return null;
+    const h = this.canvas.clientHeight;
+    this.camera.updateMatrixWorld();
+    let top = Infinity, bot = -Infinity;
+    for(const x of [c.min.x, c.max.x]) for(const y of [c.min.y, c.max.y]) for(const z of [c.min.z, c.max.z]){
+      const v = new THREE.Vector3(x, y, z).project(this.camera);
+      const py = (1 - v.y) / 2 * h;
+      if(py < top) top = py;
+      if(py > bot) bot = py;
+    }
+    return { top, bot };
+  }
+
+  _respaldo(){
+    const g = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.8, 0.6, 1, 32),
+      new THREE.MeshStandardMaterial({ color: 0xf0c9a8 })
+    );
+    this._ajustar(g);
+  }
+
+  cargar(archivo){
+    const mi = ++this.token;
+    this.squish(5);
+
+    const listo = obj => {
+      if(mi !== this.token) return;
+      this._limpiar();
+      this.pivote.rotation.set(0, 0, 0);
+      this._ajustar(obj);
+      this._entrada();
+    };
+    const fallo = err => {
+      if(mi !== this.token) return;
+      console.warn("No se pudo cargar", archivo, err);
+      this._limpiar();
+      this._respaldo();
+      this._entrada();
+    };
+
+    const ext = archivo.split("?")[0].split(".").pop().toLowerCase();
+    if(ext === "fbx"){
+      if(!this.loaderFBX) return fallo(new Error("FBXLoader no está disponible"));
+      this.loaderFBX.load(archivo, listo, undefined, fallo);
+    } else {
+      this.loader.load(archivo, gltf => listo(gltf.scene), undefined, fallo);
+    }
+  }
+
+  _animar(ahora){
+    const dt = Math.min((ahora - this.ultimo) / 1000 || 0.016, 0.033);
+    this.ultimo = ahora;
+    this.t += dt;
+
+    const objetivo = 1 + Math.sin(this.t * 2.2) * 0.015;
+    const k = 190, c = 8;
+    this.vy += (-k * (this.sy - objetivo) - c * this.vy) * dt;
+    this.sy += this.vy * dt;
+    this.sy = Math.max(0.15, Math.min(1.8, this.sy));
+
+    this.vz += (-140 * this.wz - 7 * this.vz) * dt;
+    this.wz += this.vz * dt;
+    this.wz = Math.max(-0.5, Math.min(0.5, this.wz));
+
+    const ancho = 1 / Math.sqrt(this.sy);
+    this.pivote.scale.set(ancho, this.sy, ancho);
+    this.pivote.rotation.x -= this._ex; this.pivote.rotation.y -= this._ey;   // quita el giro extra anterior
+    this.pivote.rotation.z = this.wz;
+
+    if(this.seguir){
+      // "un solo modelo": gira exactamente igual que la mermelada
+      let d = this.seguir.pivote.rotation.y - this.pivote.rotation.y;
+      d = Math.atan2(Math.sin(d), Math.cos(d));
+      this.pivote.rotation.y += d * 0.18;
+      this.pivote.rotation.x += (this.seguir.pivote.rotation.x - this.pivote.rotation.x) * 0.18;
+    } else if(!this.arrastrando){
+      this.pivote.rotation.y += VELOCIDAD_GIRO;
+      this.pivote.rotation.x *= 0.92;
+    }
+    this._ex = this.extra.x; this._ey = this.extra.y;
+    this.pivote.rotation.x += this._ex; this.pivote.rotation.y += this._ey;
+    this.pivote.rotation.z += this.extra.z;
+    // no dibuja si el constructor no se ve, si la pieza del frasco está escondida, ni más de ~60 veces por segundo
+    // base/tapa del frasco: solo cuando están visibles (también en modo foto); el resto, solo si el 3D está activo
+    const dibujar = this.esExtra ? this.el.classList.contains("on") : !respaldo3D;
+    if(enPantalla && dibujar && ahora - this._ur >= 14){
+      this._ur = ahora;
+      this.renderer.render(this.scene, this.camera);
+    }
+    requestAnimationFrame(this._animar);
+  }
+}
+
+/* ---------- Partículas ---------- */
+const cvP = document.getElementById("particulas");
+const ctxP = cvP.getContext("2d");
+const COLORES_P = ["#ff6b81", "#ff9a9a", "#ffb347", "#f4a6d7", "#e0527a", "#ffd166"];
+const sinMovimiento = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let parts = [], bucleP = false, ultP = 0, colorParticulas = null, tamanoParticulas = 1, formaParticulas = "gota";
+
+function ajustarCanvasP(){
+  const d = Math.min(devicePixelRatio, 2);
+  cvP.width = innerWidth * d;
+  cvP.height = innerHeight * d;
+  ctxP.setTransform(d, 0, 0, d, 0, 0);
+}
+addEventListener("resize", ajustarCanvasP);
+ajustarCanvasP();
+
+function particulas(x, y, n = 14, fuerza = 1){
+  if(sinMovimiento) return;
+  for(let i = 0; i < n; i++){
+    const ang = Math.random() * Math.PI * 2;
+    const vel = (80 + Math.random() * 220) * fuerza;
+    parts.push({
+      x, y,
+      vx: Math.cos(ang) * vel,
+      vy: Math.sin(ang) * vel - 120 * fuerza,
+      r: (3 + Math.random() * 4.5) * tamanoParticulas,
+      forma: formaParticulas,
+      t: 0, dur: 0.7 + Math.random() * 0.6,
+      color: Array.isArray(colorParticulas)
+        ? colorParticulas[(Math.random() * colorParticulas.length) | 0]
+        : (colorParticulas || COLORES_P[(Math.random() * COLORES_P.length) | 0]),
+      largo: 1.6 + Math.random() * 1.2
+    });
+  }
+  if(!bucleP){ bucleP = true; ultP = performance.now(); requestAnimationFrame(pasoP); }
+}
+
+/* Gotita: cabeza redonda hacia donde va y cola puntiaguda detrás */
+function dibujarGota(r, largo){
+  ctxP.beginPath();
+  ctxP.arc(0, 0, r, -Math.PI / 2, Math.PI / 2);
+  ctxP.quadraticCurveTo(-largo * 0.35, r * 0.9, -largo, 0);
+  ctxP.quadraticCurveTo(-largo * 0.35, -r * 0.9, 0, -r);
+  ctxP.closePath();
+  ctxP.fill();
+  // brillito
+  ctxP.save();
+  ctxP.globalAlpha *= 0.35;
+  ctxP.fillStyle = "#fff4f0";
+  ctxP.beginPath();
+  ctxP.arc(r * 0.25, -r * 0.3, r * 0.28, 0, Math.PI * 2);
+  ctxP.fill();
+  ctxP.restore();
+}
+
+function pasoP(ahora){
+  const dt = Math.min((ahora - ultP) / 1000, 0.033);
+  ultP = ahora;
+  ctxP.clearRect(0, 0, innerWidth, innerHeight);
+  parts = parts.filter(p => p.t < p.dur);
+  for(const p of parts){
+    p.t += dt;
+    p.vy += 520 * dt;                 // gravedad
+    p.vx *= 0.985;
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+    const vida = p.t / p.dur;
+    ctxP.save();
+    ctxP.globalAlpha = Math.max(0, 1 - vida * vida);
+    ctxP.translate(p.x, p.y);
+    ctxP.rotate(Math.atan2(p.vy, p.vx));   // la gota apunta hacia donde va
+    ctxP.fillStyle = p.color;
+    const r = p.r * (1 - vida * 0.5);
+    const vel = Math.hypot(p.vx, p.vy);
+    if(p.forma === "circulo"){
+      ctxP.beginPath(); ctxP.arc(0, 0, r, 0, Math.PI * 2); ctxP.fill();
+    } else {
+      dibujarGota(r, r * p.largo * (0.7 + vel / 320));
+    }   // más rápida = más alargada
+    ctxP.restore();
+  }
+  if(parts.length) requestAnimationFrame(pasoP);
+  else { bucleP = false; ctxP.clearRect(0, 0, innerWidth, innerHeight); }
+}
+
+function particulasDe(el, n, fuerza){
+  const r = el.getBoundingClientRect();
+  particulas(r.left + r.width / 2, r.top + r.height / 2, n, fuerza);
+}
+/* Chispitas sueltas de un color (favorito, domicilio...) */
+function chispas(el, colores, n){
+  colorParticulas = colores; tamanoParticulas = 1; formaParticulas = "gota";
+  particulasDe(el, n, 1);
+  colorParticulas = null;
+}
+/* Vibración corta en el celular */
+function vibra(p){ try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
+
+/* ---------- Estado y UI ---------- */
+const visorMerm = new Visor(document.getElementById("cvMerm"), ANCHO_MERM);
+const visorBase = new Visor(document.getElementById("cvBase"), ANCHO_BASE, true);
+const $visorMerm = document.getElementById("visorMerm");
+
+/* Base y tapa del frasco: mismos visores, escondidos hasta que se agrega.
+   Giran igual que la base y la mermelada (seguir). */
+const visorJarra = new Visor(document.getElementById("cvJarra"), ANCHO_JARRA_BASE);
+const visorTapa  = new Visor(document.getElementById("cvTapa"),  ANCHO_TAPA);
+const $jarra = document.getElementById("visorJarra");
+const $tapa  = document.getElementById("visorTapa");
+visorJarra.seguir = visorBase;
+visorTapa.seguir  = visorMerm;
+visorJarra.alCargar = visorTapa.alCargar = sincronizarCamaras;   // la tapa/base del frasco copian la cámara
+
+/* La cámara de la mermelada se ajusta para que, al posarse sobre la base,
+   su parte de arriba se vea con el mismo ángulo que la de la base */
+function sincronizarCamaras(){
+  const b = visorBase.cajaLocal, m = visorMerm.cajaLocal;
+  if(!b || !m) return;
+  visorMerm.camY = Math.max(0.8, m.max.y + (ALTO_CAM - b.max.y));
+  visorMerm._aplicarCamara();
+  // la tapa usa la cámara de la mermelada y la base del frasco la de la base
+  visorTapa.camY = visorMerm.camY;  visorTapa._aplicarCamara();
+  visorJarra.camY = visorBase.camY; visorJarra._aplicarCamara();
+}
+const cargados = { m:false, b:false };
+function cargaLista(k){ cargados[k] = true; if(cargados.m && cargados.b) ocultarCarga(); }
+visorMerm.alCargar = () => { sincronizarCamaras(); cargaLista("m"); };
+visorBase.alCargar = () => { sincronizarCamaras(); cargaLista("b"); };
+
+let iMerm = 0, iBase = 0;
+let ocupado = false;
+
+const $precio = document.getElementById("precio");
+const $titulo = document.getElementById("tituloCombo");
+const $tBase  = document.getElementById("tituloBase");
+const $osos   = document.getElementById("osos");
+const $marco  = document.getElementById("marco");
+const $mermPrev = document.getElementById("mermPrev");
+const $mermNext = document.getElementById("mermNext");
+
+const mermActual = () => BASES[iBase].mermeladas[iMerm];
+
+function precioActual(){
+  return BASES[iBase].precio + mermActual().precio;
+}
+
+/* Título: primera palabra grande, el resto pequeño debajo */
+function pintarTitulo(texto){
+  const [a, ...resto] = texto.trim().split(/\s+/);
+  $titulo.textContent = "";
+  const t1 = document.createElement("span"); t1.className = "t1"; t1.textContent = a;
+  $titulo.appendChild(t1);
+  if(resto.length){
+    const t2 = document.createElement("span"); t2.className = "t2"; t2.textContent = resto.join(" ");
+    $titulo.appendChild(t2);
+  }
+}
+
+/* Osito de respaldo (solo si no se encuentra tu archivo .svg) */
+let nOso = 0;
+function osoRespaldo(estado){
+  const id = "osoR" + (nOso++);
+  const col = estado === "vacio" ? "#ecd9c9" : "#8a3f55";
+  const corte = estado === "medio" ? 50 : 100;
+  const der = estado === "medio" ? "#f39c12" : col;
+  const t = document.createElement("template");
+  t.innerHTML = `<svg viewBox="0 0 26 24" aria-hidden="true"><defs>
+    <linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" x2="26" y1="0" y2="0">
+      <stop offset="${corte}%" stop-color="${col}"/><stop offset="${corte}%" stop-color="${der}"/>
+    </linearGradient></defs>
+    <g fill="url(#${id})"><circle cx="5" cy="6" r="4.2"/><circle cx="21" cy="6" r="4.2"/><ellipse cx="13" cy="14" rx="11" ry="9"/></g></svg>`;
+  return t.content.firstElementChild;
+}
+
+/* Nivel de antojo: 5 ositos con TUS iconos (lleno / medio / vacío) */
+function pintarAntojo(nivel){
+  const n = Math.round(Math.max(0, Math.min(5, nivel)) * 2) / 2;
+  $osos.textContent = "";
+  for(let i = 0; i < 5; i++){
+    const d = n - i;
+    const estado = d >= 1 ? "lleno" : (d >= 0.5 ? "medio" : "vacio");
+    const img = new Image();
+    img.alt = "";
+    img.onerror = () => img.replaceWith(osoRespaldo(estado));
+    img.src = ICONOS[estado];
+    $osos.appendChild(img);
+  }
+  $osos.setAttribute("aria-label", `Nivel de antojo: ${n} de 5`);
+}
+
+function actualizar(){
+  const b = BASES[iBase], m = mermActual(), n = b.mermeladas.length;
+  pintarTitulo(m.titulo);
+  pintarAntojo(m.antojo !== undefined ? m.antojo : 4.5);
+  const root = $raiz.style;
+  root.setProperty("--opacidad-merm", m.opacidad !== undefined ? m.opacidad : OPACIDAD_MERM);
+  root.setProperty("--opacidad-base", b.opacidad !== undefined ? b.opacidad : 1);
+  root.setProperty("--color-titulo", m.colorTitulo || COLOR_TITULO);
+  document.documentElement.style.setProperty("--color-titulo", m.colorTitulo || COLOR_TITULO);
+  root.setProperty("--color-subtitulo", m.colorSubtitulo || COLOR_SUBTITULO);
+  // imagen del cuadro (si el archivo no existe se ve el degradado naranja de relleno)
+  $marco.style.backgroundImage = (m.imagen ? `url("${encodeURI(m.imagen)}"), ` : "") +
+                                 "linear-gradient(160deg,#fde2a8,#f8b04a)";
+  animar($marco, "fundido");
+  $tBase.textContent = b.titulo;
+  $precio.textContent = fmt(precioActual());
+  pintarTotal();
+  $mermPrev.disabled = $mermNext.disabled = n < 2;
+  animar($titulo, "gelatina");
+  animar($precio, "gelatina");
+  animar($osos, "gelatina");
+  pintarInfo();
+  guardarCombo();
+}
+
+/* ===== Info de la combinación, favoritos, compartir, sorpresa, pista y carga ===== */
+const $icDesglose = document.getElementById("icDesglose");
+const $icIngT = document.getElementById("icIngT");
+const $icSocial = document.getElementById("icSocial");
+const $voz = document.getElementById("apVoz");
+const $btnFav = document.getElementById("btnFav");
+const $btnSorpresa = document.getElementById("btnSorpresa");
+const $btnCompartir = document.getElementById("btnCompartir");
+const $favs = document.getElementById("favs");
+const $escena = document.getElementById("escena");
+const $carga = document.getElementById("cargando3d");
+const $pista = document.getElementById("pista");
+const $toast = document.createElement("div");
+$toast.className = "ap-toast"; $toast.setAttribute("role", "status");
+$raiz.appendChild($toast);
+
+const $pinkyFlota = document.getElementById("pinkyFlota");
+const $pinkyTexto = document.getElementById("pinkyTexto");
+let ultimoPinky = "";
+function decirPinky(txt){
+  $pinkyTexto.textContent = txt;
+  animar($pinkyTexto, "aparecer");
+}
+const fraseAzar = () => FRASES_GENERICAS[(Math.random() * FRASES_GENERICAS.length) | 0];
+$pinkyFlota.addEventListener("click", () => decirPinky(fraseAzar()));
+
+let tToast = null;
+function avisar(txt){
+  $toast.textContent = txt;
+  $toast.classList.add("show");
+  clearTimeout(tToast);
+  tToast = setTimeout(() => $toast.classList.remove("show"), 1800);
+}
+
+const leerFavs = () => { try{ const a = JSON.parse(localStorage.getItem(CLAVE_FAVS) || "[]"); return Array.isArray(a) ? a : []; }catch(e){ return []; } };
+const guardarFavs = a => { try{ localStorage.setItem(CLAVE_FAVS, JSON.stringify(a)); }catch(e){} };
+const claveCombo = () => BASES[iBase].id + ":" + iMerm;
+
+function pintarFavs(){
+  const a = leerFavs().filter(k => { const [bi, mi] = k.split(":"); const b = BASES.find(x => x.id === bi); return b && b.mermeladas[+mi]; });
+  $favs.textContent = "";
+  $favs.hidden = !a.length;
+  if(!a.length) return;
+  const t = document.createElement("span"); t.textContent = "Mis favoritos:";
+  $favs.appendChild(t);
+  a.forEach(k => {
+    const [bi, mi] = k.split(":");
+    const b = BASES.find(x => x.id === bi), m = b.mermeladas[+mi];
+    const bt = document.createElement("button");
+    bt.type = "button"; bt.textContent = m.titulo; bt.title = m.titulo + " (" + b.titulo + ")";
+    bt.onclick = () => { if(!ocupado) irA(bi, +mi); };
+    $favs.appendChild(bt);
+  });
+}
+
+function pintarInfo(){
+  const b = BASES[iBase], m = mermActual();
+  const ib = INFO_BASE[b.id] || { ing:"" }, im = INFO_MERM[m.archivo] || { ing:"" };
+  const total = precioActual();
+  $icDesglose.textContent = `Base ${b.titulo} ${fmt(b.precio)} + ${m.titulo} ${fmt(m.precio)}`;
+  $icIngT.textContent = [ib.ing, im.ing].filter(Boolean).join(", ");
+  $icSocial.textContent = `El ${Math.round(PORCENTAJE_SOCIAL * 100)}% de tu compra va destinado a un kit alimenticio `;
+  const kit = new Image();
+  kit.src = "kitmini.svg"; kit.alt = ""; kit.className = "ic-kit";
+  kit.onerror = () => kit.remove();
+  $icSocial.appendChild(kit);
+  $voz.textContent = `${m.titulo}, base ${b.titulo}, ${fmt(total)}`;
+  const esFav = leerFavs().includes(claveCombo());
+  $btnFav.classList.toggle("on", esFav);
+  $btnFav.setAttribute("aria-pressed", String(esFav));
+  $btnFav.setAttribute("aria-label", esFav ? "Quitar de favoritos" : "Guardar en favoritos");
+  pintarFavs();
+  const kc = claveCombo();
+  if(kc !== ultimoPinky){ ultimoPinky = kc; decirPinky(FRASES_PINKY[m.archivo] || fraseAzar()); }
+}
+
+function guardarCombo(){
+  try{ localStorage.setItem(CLAVE_COMBO, JSON.stringify({ base: BASES[iBase].id, merm: iMerm })); }catch(e){}
+}
+
+/* Combinación inicial: primero la del enlace (?base=..&merm=..), si no la última que usó */
+function restaurarCombo(){
+  let bi = null, mi = 0;
+  try{
+    const q = new URLSearchParams(location.search);
+    if(q.get("base")){ bi = q.get("base"); mi = parseInt(q.get("merm") || "0", 10) || 0; }
+    else{ const g = JSON.parse(localStorage.getItem(CLAVE_COMBO) || "null"); if(g && g.base){ bi = g.base; mi = g.merm | 0; } }
+  }catch(e){}
+  const ib = BASES.findIndex(b => b.id === bi);
+  if(ib >= 0){ iBase = ib; iMerm = Math.min(Math.max(mi, 0), BASES[ib].mermeladas.length - 1); }
+}
+
+/* Ir a una combinación concreta (favoritos, sorpresa y "Armarlo a tu gusto" del catálogo) */
+function irA(baseId, iM){
+  if(ocupado) return;
+  const ib = BASES.findIndex(b => b.id === baseId);
+  if(ib < 0) return;
+  const m = Math.min(Math.max(iM || 0, 0), BASES[ib].mermeladas.length - 1);
+  if(ib === iBase && m === iMerm) return;
+  const cambioBase = ib !== iBase;
+  iBase = ib; iMerm = m;
+  if(cambioBase) visorBase.cargar(BASES[iBase].archivo);
+  visorMerm.cargar(mermActual().archivo);
+  actualizar();
+}
+window.armaPostreIr = irA;
+
+$btnFav.onclick = () => {
+  if(ocupado) return;
+  animar($btnFav, "gelatina");
+  const a = leerFavs(), k = claveCombo(), i = a.indexOf(k);
+  if(i >= 0){ a.splice(i, 1); avisar("Quitado de favoritos"); }
+  else{ a.push(k); avisar("¡Guardado en favoritos! ♥"); chispas($btnFav, ["#e0527a", "#ff9a9a", "#ffd166"], 12); vibra(10); }
+  guardarFavs(a);
+  pintarInfo();
+};
+
+$btnSorpresa.onclick = () => {
+  if(ocupado) return;
+  animar($btnSorpresa, "gelatina");
+  const todas = [];
+  BASES.forEach(b => b.mermeladas.forEach((m, i) => { if(!(b.id === BASES[iBase].id && i === iMerm)) todas.push([b.id, i]); }));
+  if(!todas.length) return;
+  const [bi, mi] = todas[(Math.random() * todas.length) | 0];
+  irA(bi, mi);
+  avisar("¡Sorpresa! " + mermActual().titulo);
+};
+
+$btnCompartir.onclick = async () => {
+  animar($btnCompartir, "gelatina");
+  const m = mermActual(), b = BASES[iBase];
+  const texto = `Mira el postre que armé en Sweet Help: ${m.titulo} (${b.titulo}) por ${fmt(precioActual())}`;
+  const url = location.href.split(/[?#]/)[0] + "?base=" + encodeURIComponent(b.id) + "&merm=" + iMerm + "#armaPostre";
+  if(navigator.share){
+    try{ await navigator.share({ title: "Sweet Help", text: texto, url }); return; }
+    catch(e){ if(e && e.name === "AbortError") return; }
+  }
+  try{ await navigator.clipboard.writeText(texto + " " + url); avisar("Enlace copiado 🔗"); }
+  catch(e){ window.prompt("Copia este enlace:", url); }
+};
+
+/* Teclado: izquierda/derecha = mermelada, arriba/abajo = base (con el postre enfocado) */
+$escena.addEventListener("keydown", e => {
+  if(ocupado) return;
+  if(e.key === "ArrowLeft") cambiarMerm(-1);
+  else if(e.key === "ArrowRight") cambiarMerm(1);
+  else if(e.key === "ArrowUp") cambiarBase(-1);
+  else if(e.key === "ArrowDown") cambiarBase(1);
+  else return;
+  e.preventDefault();
+});
+
+/* Carga y pista de gestos */
+function ocultarCarga(){
+  if($carga.classList.contains("fuera")) return;
+  $carga.classList.add("fuera");
+  setTimeout(mostrarPista, 500);
+  if(window.requestIdleCallback) requestIdleCallback(cargarFrasco, { timeout: 4000 }); else setTimeout(cargarFrasco, 1200);
+}
+function ocultarPista(){
+  $pista.classList.remove("on");
+  try{ localStorage.setItem(CLAVE_PISTA, "1"); }catch(e){}
+}
+function mostrarPista(){
+  let visto = false;
+  try{ visto = localStorage.getItem(CLAVE_PISTA) === "1"; }catch(e){}
+  if(visto) return;
+  $pista.classList.add("on");
+  setTimeout(ocultarPista, 7000);
+}
+[visorMerm.el, visorBase.el].forEach(el => el.addEventListener("pointerdown", ocultarPista));
+
+function cambiarMerm(d){
+  const lista = BASES[iBase].mermeladas;
+  if(lista.length < 2) return;
+  iMerm = (iMerm + d + lista.length) % lista.length;
+  visorMerm.cargar(mermActual().archivo);
+  actualizar();
+}
+
+function cambiarBase(d){
+  iBase = (iBase + d + BASES.length) % BASES.length;
+  iMerm = 0;
+  visorBase.cargar(BASES[iBase].archivo);
+  visorMerm.cargar(mermActual().archivo);
+  actualizar();
+}
+
+/* Cada botón hace "boing" al presionarlo */
+function conBoing(id, fn){
+  const el = document.getElementById(id);
+  el.onclick = () => { if(ocupado) return; animar(el, "gelatina"); lanzar(el, "flechas"); vibra(8); fn(); };
+}
+conBoing("mermPrev", () => cambiarMerm(-1));
+conBoing("mermNext", () => cambiarMerm(1));
+conBoing("basePrev", () => cambiarBase(-1));
+conBoing("baseNext", () => cambiarBase(1));
+
+/* ---------- Domicilio: mapa, distancia y precio ----------
+   Se toca el mapa, se calcula la ruta por calles desde la tienda y se pone un precio.
+   El domicilio NO se suma a cada postre: se guarda en localStorage ("sh_domicilio") y el carrito lo cobra al pagar.
+   El mapa (Leaflet) solo se descarga la primera vez que se abre la ventana. */
+const $btnDom = document.getElementById("btnDomicilio");
+const $btnDomTxt = document.getElementById("btnDomTxt");
+const $apTotal = document.getElementById("apTotal");
+const $domOv = document.getElementById("domOverlay");
+const $domKm = document.getElementById("domKm");
+const $domPrecio = document.getElementById("domPrecio");
+const $domMsg = document.getElementById("domMsg");
+const $domOk = document.getElementById("domConfirmar");
+const $domQuitar = document.getElementById("domQuitar");
+const $domGps = document.getElementById("domGps");
+let domicilio = null, pendiente = null, mapa = null, marcadorDest = null, lineaRuta = null, tokenRuta = 0, ctlRuta = null, leafletP = null;
+try{
+  const g = JSON.parse(localStorage.getItem(CLAVE_DOM) || "null");
+  if(g && [g.lat, g.lng, g.km, g.precio].every(v => Number.isFinite(v))) domicilio = g;
+}catch(e){}
+
+const fmtKm = km => Number(km).toLocaleString(LOCALE, { maximumFractionDigits: 1 }) + " km";
+
+function tarifaDom(km){
+  const bruto = DOMICILIO.tarifaBase + Math.max(0, km - DOMICILIO.kmIncluidos) * DOMICILIO.porKmExtra;
+  return Math.ceil(bruto / DOMICILIO.redondeo) * DOMICILIO.redondeo;
+}
+function haversine(a, b){
+  const R = 6371, rad = x => x * Math.PI / 180;
+  const dLat = rad(b.lat - a.lat), dLng = rad(b.lng - a.lng);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+/* Precio y botón del lado del postre */
+function pintarTotal(){
+  if(!$apTotal) return;
+  const d = domicilio;
+  $apTotal.hidden = !d;
+  if(d) $apTotal.textContent = `🛵 Domicilio ${fmtKm(d.km)}: ${fmt(d.precio)} (se suma al pagar)`;
+  $btnDom.classList.toggle("on", !!d);
+  $btnDomTxt.textContent = d ? "Domicilio " + fmt(d.precio) : "Domicilio";
+}
+
+function cargarLeaflet(){
+  if(window.L) return Promise.resolve();
+  if(leafletP) return leafletP;
+  leafletP = new Promise((ok, mal) => {
+    const css = document.createElement("link");
+    css.rel = "stylesheet"; css.href = LEAFLET_CSS;
+    document.head.appendChild(css);
+    const s = document.createElement("script");
+    s.src = LEAFLET_JS; s.onload = ok;
+    s.onerror = () => { leafletP = null; mal(new Error("No cargó Leaflet")); };
+    document.head.appendChild(s);
+  });
+  return leafletP;
+}
+
+/* Ruta por calles (OSRM, gratis). Si falla, distancia en línea recta x factorRuta */
+async function pedirRuta(dest){
+  if(ctlRuta) ctlRuta.abort();
+  const ctl = ctlRuta = new AbortController();
+  const corte = setTimeout(() => ctl.abort(), 7000);
+  const o = DOMICILIO.tienda;
+  try{
+    const r = await fetch(`https://router.project-osrm.org/route/v1/driving/${o.lng},${o.lat};${dest.lng},${dest.lat}?overview=full&geometries=geojson`, { signal: ctl.signal });
+    const j = await r.json();
+    const rt = j && j.routes && j.routes[0];
+    if(rt) return { km: rt.distance / 1000, linea: rt.geometry.coordinates.map(c => [c[1], c[0]]), real: true };
+  }catch(e){}
+  finally{ clearTimeout(corte); }
+  return { km: haversine(o, dest) * DOMICILIO.factorRuta, linea: [[o.lat, o.lng], [dest.lat, dest.lng]], real: false };
+}
+
+function domAviso(txt, mal){ $domMsg.textContent = txt || ""; $domMsg.classList.toggle("mal", !!mal); }
+
+function pintarDomInfo(){
+  const p = pendiente;
+  $domKm.textContent = p ? fmtKm(p.km) : "—";
+  $domPrecio.textContent = p ? fmt(p.precio) : "—";
+  $domOk.disabled = !p || p.fuera;
+  $domQuitar.hidden = !domicilio;
+  if(!p) domAviso(`Tarifa: ${fmt(DOMICILIO.tarifaBase)} hasta ${fmtKm(DOMICILIO.kmIncluidos)} y ${fmt(DOMICILIO.porKmExtra)} por cada km adicional.`);
+  else if(p.fuera) domAviso(`Ese punto queda a ${fmtKm(p.km)}: fuera de nuestra zona de domicilio (máximo ${fmtKm(DOMICILIO.maxKm)}).`, true);
+  else domAviso(p.real ? "Ruta calculada por las calles 🛵" : "Distancia aproximada (no pudimos trazar la ruta por las calles).");
+}
+
+function ponerMarcador(ll){
+  if(marcadorDest){ marcadorDest.setLatLng(ll); return; }
+  marcadorDest = L.marker(ll, {
+    draggable: true,
+    icon: L.divIcon({ className: "dom-pin dest", html: "<span>🏠</span>", iconSize: [40, 40], iconAnchor: [20, 20] })
+  }).addTo(mapa);
+  marcadorDest.on("dragend", () => elegir(marcadorDest.getLatLng()));
+}
+function dibujarLinea(pts, real){
+  if(lineaRuta) lineaRuta.remove();
+  lineaRuta = L.polyline(pts, { color: "#e0527a", weight: 5, opacity: .85, dashArray: real ? null : "8 10", lineCap: "round", interactive: false }).addTo(mapa);
+  try{
+    const bb = lineaRuta.getBounds();
+    if(!mapa.getBounds().contains(bb)) mapa.fitBounds(bb, { padding: [40, 40], maxZoom: 16 });
+  }catch(e){}
+}
+
+async function elegir(ll){
+  const tk = ++tokenRuta;
+  ponerMarcador(ll);
+  pendiente = null;
+  $domKm.textContent = $domPrecio.textContent = "…";
+  $domOk.disabled = true;
+  domAviso("Calculando la ruta…");
+  const r = await pedirRuta({ lat: ll.lat, lng: ll.lng });
+  if(tk !== tokenRuta) return;     // el cliente ya eligió otro punto
+  pendiente = { lat: +ll.lat.toFixed(6), lng: +ll.lng.toFixed(6), km: Math.round(r.km * 10) / 10, precio: tarifaDom(r.km), fuera: r.km > DOMICILIO.maxKm, real: r.real };
+  dibujarLinea(r.linea, r.real);
+  pintarDomInfo();
+}
+
+function iniciarMapa(){
+  if(mapa) return;
+  const o = DOMICILIO.tienda;
+  mapa = L.map("domMapa", { center: [o.lat, o.lng], zoom: DOMICILIO.zoom });
+  L.tileLayer(DOMICILIO.tiles, { maxZoom: 19, attribution: DOMICILIO.atribucion }).addTo(mapa);
+  L.marker([o.lat, o.lng], {
+    icon: L.divIcon({ className: "dom-pin tienda", html: "<span>🍰</span>", iconSize: [40, 40], iconAnchor: [20, 20] }),
+    interactive: false, keyboard: false
+  }).addTo(mapa);
+  mapa.on("click", e => elegir(e.latlng));
+}
+
+async function abrirDom(){
+  if(ocupado) return;
+  $domOv.classList.add("open");
+  document.body.classList.add("cat-abierto");
+  pintarDomInfo();
+  domAviso("Cargando el mapa…");
+  try{ await cargarLeaflet(); }
+  catch(e){ domAviso("No pudimos cargar el mapa. Revisa tu conexión e inténtalo otra vez.", true); return; }
+  const primera = !mapa;
+  iniciarMapa();
+  setTimeout(() => {
+    mapa.invalidateSize();
+    if(primera && domicilio) elegir(L.latLng(domicilio.lat, domicilio.lng));
+    else pintarDomInfo();
+  }, 80);
+}
+function cerrarDom(){
+  $domOv.classList.remove("open");
+  document.body.classList.remove("cat-abierto");
+}
+
+window.shDomicilio = () => domicilio;   // para que carrito.js lo lea
+function avisarDom(){ try{ window.dispatchEvent(new CustomEvent("shdomicilio", { detail: domicilio })); }catch(e){} }
+$btnDom.onclick = abrirDom;
+document.getElementById("domCerrar").onclick = cerrarDom;
+$domOv.addEventListener("click", e => { if(e.target === $domOv) cerrarDom(); });
+document.addEventListener("keydown", e => { if(e.key === "Escape" && $domOv.classList.contains("open")) cerrarDom(); });
+
+$domGps.onclick = () => {
+  if(!mapa) return;
+  if(!navigator.geolocation){ domAviso("Tu navegador no permite usar la ubicación. Toca el mapa para elegir el punto.", true); return; }
+  domAviso("Buscándote en el mapa…");
+  navigator.geolocation.getCurrentPosition(
+    p => { const ll = L.latLng(p.coords.latitude, p.coords.longitude); mapa.setView(ll, 16); elegir(ll); },
+    () => domAviso("No pudimos obtener tu ubicación. Toca el mapa para elegir el punto.", true),
+    { enableHighAccuracy: true, timeout: 9000, maximumAge: 60000 }
+  );
+};
+
+$domOk.onclick = () => {
+  if(!pendiente || pendiente.fuera) return;
+  domicilio = { lat: pendiente.lat, lng: pendiente.lng, km: pendiente.km, precio: pendiente.precio };
+  try{ localStorage.setItem(CLAVE_DOM, JSON.stringify(domicilio)); }catch(e){}
+  cerrarDom();
+  pintarTotal();
+  avisar("¡Domicilio listo! " + fmt(domicilio.precio) + " 🛵");
+  decirPinky("¡Te lo llevamos hasta la puerta!");
+  chispas($btnDom, ["#e0527a", "#ffd166", "#ff9a9a"], 14);
+  vibra(15);
+  avisarDom();
+};
+$domQuitar.onclick = () => {
+  domicilio = null; pendiente = null; tokenRuta++;
+  try{ localStorage.removeItem(CLAVE_DOM); }catch(e){}
+  if(marcadorDest){ marcadorDest.remove(); marcadorDest = null; }
+  if(lineaRuta){ lineaRuta.remove(); lineaRuta = null; }
+  pintarTotal();
+  cerrarDom();
+  avisar("Domicilio quitado");
+  avisarDom();
+};
+
+/* ---------- Carrito de la página (carrito.js) ----------
+   El postre armado se agrega con el MISMO mecanismo que usaban las cartas de producto:
+   un elemento con data-agregar (id, nombre, precio, img). Así cae en el carrito de siempre. */
+const $proxy = document.getElementById("armaPostreProxy");
+const slug = t => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+function agregarAlCarrito(m, b, precio, img){
+  $proxy.dataset.id     = "arma-" + b.id + "-" + slug(m.titulo);
+  $proxy.dataset.nombre = `${m.titulo} (${b.titulo})`;
+  $proxy.dataset.precio = String(precio !== undefined ? precio : precioActual());
+  $proxy.dataset.img    = img || m.imagen || "";   // la carta del catálogo; si esa combinación no tiene carta, la imagen de la mermelada
+  $proxy.click();
+}
+
+/* ---------- Agregar: la mermelada baja, se vuelve UN solo postre y regresa ---------- */
+const pausa = ms => new Promise(r => setTimeout(r, ms));
+
+/* Cuántos px debe bajar la mermelada para que su parte de arriba
+   quede justo en la parte de arriba de la base */
+function calcularDescenso(){
+  const a = visorMerm.limitesPx(), b = visorBase.limitesPx();
+  if(!a || !b) return 110;
+  const rm = visorMerm.canvas.getBoundingClientRect();
+  const rb = visorBase.canvas.getBoundingClientRect();
+  return Math.max(0, (rb.top + b.top) - (rm.top + a.top));
+}
+
+/* Lanza las partículas de un evento (ver PARTICULAS). Cada mermelada puede cambiarlas:
+     colorParticulas: "#hex"  ->  colores de "union" y "separar"
+     particulas: { union: { colores:[...], cantidad:60, tamano:1.5, forma:"circulo" } }  */
+function lanzar(el, evento, m){
+  const c = Object.assign({}, PARTICULAS[evento]);
+  if(m && (evento === "union" || evento === "separar")){
+    if(PARTICULAS_COLOR_TITULO) c.colores = [m.colorTitulo || COLOR_TITULO];   // color del título
+    if(m.colorParticulas) c.colores = m.colorParticulas;                       // si pusiste uno propio, manda
+  }
+  if(m && m.particulas && m.particulas[evento]) Object.assign(c, m.particulas[evento]);
+  if(!(c.cantidad > 0)) return;
+  colorParticulas = c.colores || null;
+  tamanoParticulas = c.tamano !== undefined ? c.tamano : 1;
+  formaParticulas = c.forma || "gota";
+  particulasDe(el, c.cantidad, c.fuerza);
+  colorParticulas = null; tamanoParticulas = 1; formaParticulas = "gota";
+}
+
+/* Sonidos: se precargan y se pueden solapar */
+const audios = {};
+for(const k in SONIDOS){
+  const a = new Audio(SONIDOS[k]);
+  a.preload = "auto";
+  audios[k] = a;
+}
+function sonar(nombre){
+  const base = audios[nombre];
+  if(!base) return;
+  const a = base.cloneNode();
+  a.volume = VOLUMEN_SONIDO;
+  a.play().catch(() => {});      // si falta el archivo, simplemente no suena
+}
+
+const $agregar = document.getElementById("btnAgregar");
+const $giro = document.getElementById("cartaGiro");
+const $estado = document.getElementById("estadoDorso");
+const $foto = document.getElementById("postreRespaldo");   // foto del modo optimización (sin 3D)
+let mitades = null;                                        // modo foto: { arriba: mermelada, abajo: base }
+const fotoFin = { m: 0, b: 0 };                            // dónde quedan (px) las dos mitades al unirse
+const rotCarta = g => `perspective(1400px) rotateY(${g}deg)`;
+
+/* La carta ahora es grande: las distancias de la animación (diseñadas para 340 px) se escalan */
+let ESC = 1;
+function medirEscala(){
+  ESC = Math.max(0.8, Math.min(3, ($giro.offsetWidth || 340) / 340));
+  $raiz.style.setProperty("--esc", ESC.toFixed(3));
+  $raiz.style.setProperty("--sube-tapa", (SUBE_TAPA_PX * ESC).toFixed(1));
+}
+if("ResizeObserver" in window) new ResizeObserver(medirEscala).observe($giro);
+medirEscala();
+
+/* Hace aparecer una pieza del frasco: sale desde `desdeY` px y rebota hasta su lugar */
+function mostrarPieza(visor, el, desdeY, T){
+  el.classList.add("on");
+  visor._entrada();
+  visor.squish(6, 0.4);
+  el.animate(
+    [{ transform: `translateY(${desdeY}px)`, opacity: 0 }, { opacity: 1, offset: 0.25 }, { transform: "translateY(0)", opacity: 1 }],
+    { duration: T(500), easing: "cubic-bezier(.3,1.4,.5,1)" }
+  );
+}
+/* La tapa cae girando como una tapa de alcantarilla, CHOCA y se bambolea hasta quedar quieta */
+let tokenTapa = 0;
+function caerTapa(T){
+  const id = ++tokenTapa, caida = T(300), t0 = performance.now();
+  const e = visorTapa.extra;
+  let choco = false;
+  $tapa.classList.add("on");
+  visorTapa.sy = 1; visorTapa.vy = 0;
+  $tapa.animate(
+    [{ transform: `translateY(${(-SALIDA_TAPA_PX - SUBE_TAPA_PX) * ESC}px)`, opacity: 0 }, { opacity: 1, offset: 0.2 }, { transform: `translateY(${-SUBE_TAPA_PX * ESC}px)`, opacity: 1 }],
+    { duration: caida, easing: "cubic-bezier(.55,0,.9,.6)" }
+  );
+  const paso = ahora => {
+    if(id !== tokenTapa) return;
+    const t = (ahora - t0) / 1000, tc = caida / 1000;
+    if(t < tc){
+      const k = t / tc;
+      e.y = 4 * Math.PI * (1 - k) * (1 - k);     // gira rápido mientras cae
+      e.x = 0.5 * (1 - k); e.z = 0;
+    } else {
+      if(!choco){                                  // ¡CHOQUE!
+        choco = true;
+        visorTapa.squish(11, 0.5);
+        golpeFoto(T);
+        visorJarra.squish(6, 0.3);
+        visorBase.squish(7, 0.3);
+        visorMerm.squish(5, 0.3);
+        document.querySelector(".escena").animate(
+          [{ transform: "translateY(0)" }, { transform: "translateY(8px)" }, { transform: "translateY(-4px)" }, { transform: "translateY(2px)" }, { transform: "translateY(0)" }],
+          { duration: T(320), easing: "ease-out" }
+        );
+      }
+      const s = t - tc, d = Math.exp(-s * 8);
+      e.x = 0.45 * Math.sin(s * 24) * d;           // se bambolea como moneda / tapa de alcantarilla
+      e.z = 0.3 * Math.cos(s * 19) * d;
+      e.y = 0.9 * Math.sin(s * 11) * d;
+      if(s > 0.8){ e.x = e.y = e.z = 0; return; }
+    }
+    requestAnimationFrame(paso);
+  };
+  requestAnimationFrame(paso);
+}
+/* ---------- Modo foto: la foto se parte en DOS mitades (mermelada arriba, base abajo)
+   para que se unan igual que en el 3D: la mermelada baja y el postre sube un poquito ---------- */
+const cacheCorte = {};
+function calcularCorte(){            // fracción (0-1) de la altura de la foto donde termina la mermelada y empieza la base
+  if(typeof CORTE_FOTO === "number") return CORTE_FOTO;
+  const src = $foto.currentSrc || $foto.src;
+  if(cacheCorte[src] !== undefined) return cacheCorte[src];
+  let c = null;
+  try{                               // 1) busca la franja transparente entre la mermelada y la base
+    const w = 160, h = Math.max(2, Math.round(w * $foto.naturalHeight / $foto.naturalWidth));
+    const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+    const cx = cv.getContext("2d", { willReadFrequently: true });
+    cx.drawImage($foto, 0, 0, w, h);
+    const px = cx.getImageData(0, 0, w, h).data, fil = [];
+    for(let y = 0; y < h; y++){ let n = 0; for(let x = 0; x < w; x++) if(px[(y * w + x) * 4 + 3] > 40) n++; fil.push(n); }
+    const ini = fil.findIndex(n => n > 1);
+    const fin = fil.length - 1 - [...fil].reverse().findIndex(n => n > 1);
+    let mejor = null, y = ini;
+    while(ini >= 0 && y <= fin){
+      if(fil[y] <= 1){ let z = y; while(z <= fin && fil[z] <= 1) z++; if(!mejor || z - y > mejor.largo) mejor = { ini: y, largo: z - y }; y = z; }
+      else y++;
+    }
+    if(mejor) c = (mejor.ini + mejor.largo / 2) / h;
+  }catch(e){}                        // si el navegador no deja leer la foto (abierta como archivo), se usa la geometría del 3D
+  if(c === null){
+    const a = visorMerm.limitesPx(), b = visorBase.limitesPx();
+    if(a && b){
+      const rm = visorMerm.canvas.getBoundingClientRect(), rb = visorBase.canvas.getBoundingClientRect(), rf = $foto.getBoundingClientRect();
+      c = (((rm.top + a.bot) + (rb.top + b.top)) / 2 - rf.top) / rf.height;
+    } else c = 0.4;
+  }
+  c = Math.min(0.9, Math.max(0.1, c));
+  cacheCorte[src] = c;
+  return c;
+}
+function partirFoto(corte){
+  const pct = corte * 100;
+  const mk = recorte => {
+    const im = $foto.cloneNode(false);
+    im.removeAttribute("id"); im.alt = ""; im.setAttribute("aria-hidden", "true");
+    im.classList.add("on");
+    im.style.transition = "none";
+    im.style.clipPath = recorte;
+    im.style.transformOrigin = `50% ${pct}%`;      // se aplastan justo en la línea donde se unen
+    return im;
+  };
+  const abajo = mk(`inset(${pct}% 0 0 0)`), arriba = mk(`inset(0 0 ${100 - pct}% 0)`);
+  $foto.after(abajo, arriba);                      // la mermelada queda por delante de la base
+  $foto.style.visibility = "hidden";
+  mitades = { arriba, abajo };
+}
+/* Mejor que cortar la foto: la mermelada y la base SON dos modelos distintos, así que se dibuja UNA vez cada uno
+   (mismo render del 3D, quieto) y se mueven como dos piezas separadas. Sin lag: no vuelve a dibujar nada. */
+let partesCongeladas = false;
+function congelarPartes(){
+  const lista = [visorMerm, visorBase];
+  if(lista.some(v => !v.pivote.children.length)) return false;      // si aún no cargaron los modelos, se usa el corte de la foto
+  try{
+    lista.forEach(v => {
+      v.pivote.rotation.set(POSE_FOTO.x, POSE_FOTO.y, POSE_FOTO.z);
+      v.sy = 1; v.vy = 0; v.wz = 0; v.vz = 0;
+      v.pivote.scale.set(1, 1, 1);
+      v._aplicarCamara();
+      v.renderer.render(v.scene, v.camera);
+      v.retener = true;
+    });
+  }catch(e){ lista.forEach(v => { v.retener = false; }); return false; }
+  $raiz.classList.add("partes");
+  partesCongeladas = true;
+  return true;
+}
+function descongelarPartes(){
+  [visorMerm, visorBase].forEach(v => { v.retener = false; });
+  $raiz.classList.remove("partes");
+  partesCongeladas = false;
+}
+function juntarFoto(){                             // vuelve la foto entera y quita las mitades
+  if(mitades){ mitades.arriba.remove(); mitades.abajo.remove(); mitades = null; }
+  $foto.style.visibility = "";
+}
+/* golpecito (squash) de una mitad, parada en su lugar final */
+function golpeMitad(el, y, a, dur, T){
+  if(!el || !el.animate) return;
+  el.animate([
+    { transform: `translateY(${y}px) scale(1)` },
+    { transform: `translateY(${y}px) scale(${1 + a},${1 - a * 1.4})`, offset: 0.3 },
+    { transform: `translateY(${y}px) scale(${1 - a * 0.3},${1 + a * 0.5})`, offset: 0.65 },
+    { transform: `translateY(${y}px) scale(1)` }
+  ], { duration: T(dur), easing: "ease-out" });
+}
+/* Modo foto: cuando la tapa choca, el postre da un golpecito (como el 3D) */
+function golpeFoto(T){
+  if(partesCongeladas){
+    golpeMitad($visorMerm, fotoFin.m, 0.03, 320, T);
+    golpeMitad(visorBase.el, fotoFin.b, 0.04, 320, T);
+    return;
+  }
+  if(!mitades) return;
+  golpeMitad(mitades.arriba, fotoFin.m, 0.03, 320, T);
+  golpeMitad(mitades.abajo,  fotoFin.b, 0.04, 320, T);
+}
+/* Una bolita con estela viaja desde el chulito hasta el icono del carrito; al llegar se resuelve la promesa */
+function volarAlCarrito(desde){
+  return new Promise(resolver => {
+    const cart = document.getElementById("shCartBtn");
+    const a = desde && desde.getBoundingClientRect();
+    if(!cart || sinMovimiento || !a || !a.width){ resolver(); return; }
+    const z = cart.getBoundingClientRect();
+    const x0 = a.left + a.width / 2, y0 = a.top + a.height / 2;
+    const x1 = z.left + z.width / 2, y1 = z.top + z.height / 2;
+    const cx = (x0 + x1) / 2, cy = Math.min(y0, y1) - Math.max(70, Math.abs(x1 - x0) * 0.3);   // el arco sube antes de caer al carrito
+    const R = 11, dur = 760, t0 = performance.now();
+    const base = "position:fixed;left:0;top:0;border-radius:50%;pointer-events:none;";
+    const bola = document.createElement("div");
+    bola.style.cssText = base + `z-index:10060;width:${R * 2}px;height:${R * 2}px;background:radial-gradient(circle at 35% 30%,#ffd1dc,${COLOR_AGREGAR} 60%);box-shadow:0 0 14px 4px ${COLOR_AGREGAR}88;`;
+    document.body.appendChild(bola);
+    let fin = false, ultima = 0;
+    const terminar = () => { if(fin) return; fin = true; bola.remove(); resolver(); };
+    const paso = ahora => {
+      if(fin) return;
+      const k = Math.min(1, (ahora - t0) / dur);
+      const e = 0.35 * k + 0.65 * k * k;               // sale tranquila y acelera hacia el carrito
+      const u = 1 - e;
+      const x = u * u * x0 + 2 * u * e * cx + e * e * x1;
+      const y = u * u * y0 + 2 * u * e * cy + e * e * y1;
+      bola.style.transform = `translate(${x - R}px,${y - R}px) scale(${1 - 0.45 * e})`;
+      if(ahora - ultima > 14){                          // estela: bolitas que se van desvaneciendo
+        ultima = ahora;
+        const r = R * (0.55 + 0.35 * (1 - e));
+        const p = document.createElement("div");
+        p.style.cssText = base + `z-index:10059;width:${r * 2}px;height:${r * 2}px;background:${COLOR_AGREGAR};`;
+        document.body.appendChild(p);
+        const t = `translate(${x - r}px,${y - r}px)`;
+        const an = p.animate([{ opacity: 0.55, transform: t + " scale(1)" }, { opacity: 0, transform: t + " scale(.15)" }], { duration: 420, easing: "ease-out" });
+        an.onfinish = () => p.remove();
+      }
+      if(k < 1) requestAnimationFrame(paso); else terminar();
+    };
+    requestAnimationFrame(paso);
+    setTimeout(terminar, dur + 400);                    // por si la pestaña está en segundo plano
+  });
+}
+/* El carrito da un saltito cuando el postre entra */
+function rebotarCarrito(){
+  const c = document.getElementById("shCartBtn");
+  if(c && c.animate) c.animate(
+    [{ transform: "scale(1)" }, { transform: "scale(1.35) rotate(-8deg)" }, { transform: "scale(.9)" }, { transform: "scale(1)" }],
+    { duration: 500, easing: "ease-out" }
+  );
+}
+function ocultarPiezas(){
+  descongelarPartes();
+  juntarFoto();
+  $foto.getAnimations().forEach(a => a.cancel());
+  tokenTapa++; visorTapa.extra.x = visorTapa.extra.y = visorTapa.extra.z = 0;
+  [$jarra, $tapa].forEach(el => { el.getAnimations().forEach(a => a.cancel()); el.classList.remove("on"); });
+}
+
+$agregar.onclick = async () => {
+  if(ocupado) return;
+  ocupado = true;
+  cargarFrasco();
+  document.body.classList.add("ocupado");
+
+  const T = ms => sinMovimiento ? 1 : ms;
+  medirEscala();
+  const dy = calcularDescenso() + AJUSTE_FUSION * ESC;
+  const m = mermActual(), b = BASES[iBase];
+  const precio = precioActual();          // se guarda ahora: es el precio del postre que armaste
+  const imgCarta = (window.shImgCarta && window.shImgCarta(b.id, iMerm)) || "";   // carta del catálogo de esta combinación
+  let agregado = false;                   // el carrito solo recibe el postre cuando termina el chulito
+  const enFoto = respaldo3D;              // modo optimización: se animan las dos mitades de la foto en vez del 3D
+  const fotoAnimar = (el, kf, dur, easing) => { if(el && el.animate) el.animate(kf, { duration: T(dur), easing, fill: "forwards" }); };
+  let congeladas = false;
+  if(enFoto){
+    congeladas = congelarPartes();                 // dos piezas reales: mermelada y base por separado
+    if(!congeladas && $foto.animate) partirFoto(calcularCorte());   // (plan B: cortar la foto)
+  }
+  const fM = mitades && mitades.arriba, fB = mitades && mitades.abajo;   // mermelada / base (null si no hay modo foto)
+
+  animar($agregar, "gelatina");
+  sonar("agregar");
+  $agregar.classList.add("agregando");
+  lanzar($agregar, "boton");
+
+  const baseEl = visorBase.el;
+  const subida = -SUBIDA_FUSION * ESC;
+  const girar = (de, a, dur, easing) => $giro.animate(
+    [{ transform: rotCarta(de) }, { transform: rotCarta(a) }],
+    { duration: T(dur), easing, fill: "forwards" }
+  ).finished;
+  try{
+    // 1) toma impulso hacia arriba
+    visorMerm.squish(-3, 0);
+    fotoAnimar(fM,                                 // modo foto: la mermelada toma impulso hacia arriba
+      [{ transform: "translateY(0) scale(1)" }, { transform: `translateY(${-18 * ESC}px) scale(.98,1.04)` }],
+      200, "ease-out");
+    await $visorMerm.animate(
+      [{ transform: "translateY(0)" }, { transform: `translateY(${-18 * ESC}px)` }],
+      { duration: T(200), easing: "ease-out", fill: "forwards" }
+    ).finished;
+
+    // 2) la base SUBE mientras la mermelada baja: se encuentran ya arriba
+    document.body.classList.add("fusionando");     // las flechas desaparecen
+    visorBase.seguir = visorMerm;
+    fotoFin.m = dy + subida; fotoFin.b = subida;   // modo foto: igual que el 3D, la mermelada BAJA y la base SUBE
+    fotoAnimar(fM,
+      [{ transform: `translateY(${-18 * ESC}px) scale(.98,1.04)` }, { transform: `translateY(${fotoFin.m}px) scale(1)` }],
+      320, "cubic-bezier(.5,0,.9,.5)");
+    fotoAnimar(fB,
+      [{ transform: "translateY(0) scale(1)" }, { transform: `translateY(${fotoFin.b}px) scale(1)` }],
+      320, "cubic-bezier(.3,.8,.4,1.15)");
+    await Promise.all([
+      $visorMerm.animate(
+        [{ transform: `translateY(${-18 * ESC}px)` }, { transform: `translateY(${dy + subida}px)` }],
+        { duration: T(320), easing: "cubic-bezier(.5,0,.9,.5)", fill: "forwards" }
+      ).finished,
+      baseEl.animate(
+        [{ transform: "translateY(0)" }, { transform: `translateY(${subida}px)` }],
+        { duration: T(320), easing: "cubic-bezier(.3,.8,.4,1.15)", fill: "forwards" }
+      ).finished
+    ]);
+
+    // 3) impacto: se aplastan juntos, el postre entra al carrito y salen las partículas (solo aquí)
+    visorMerm.squish(7, 0.6);
+    visorBase.squish(9, 0.6);
+    golpeMitad(congeladas ? $visorMerm : fM, fotoFin.m, 0.06, 420, T);       // modo foto: al unirse se aplastan juntas
+    golpeMitad(congeladas ? visorBase.el : fB, fotoFin.b, 0.08, 420, T);
+    vibra([12, 40, 18]);
+    decirPinky(FRASE_AGREGADO);
+    animar($precio, "gelatina");
+    sonar("unir");
+    lanzar($visorMerm, "union", m);
+    lanzar($precio, "precio", m);
+
+    await pausa(T(PAUSA_FUSION));
+
+    // 4) la base del frasco sale desde abajo, en la posición de la base del postre...
+    mostrarPieza(visorJarra, $jarra, SALIDA_BASE_PX * ESC, T);
+    await pausa(T(RETRASO_TAPA));
+    // ...y unos segundos después aparece la tapa, en la posición de la mermelada
+    caerTapa(T);
+    await pausa(T(TIEMPO_CAIDA_TAPA + PAUSA_EMPAQUE));
+
+    // 5) la carta gira y tapa todo (postre unido + base + tapa)
+    await girar(0, 90, GIRO_MITAD, "ease-in");
+    // la carta está de canto: aquí se reinicia todo sin que se vea
+    ocultarPiezas();
+    $estado.classList.remove("listo");
+    $visorMerm.getAnimations().forEach(a => a.cancel());
+    baseEl.getAnimations().forEach(a => a.cancel());
+    visorBase.seguir = null;
+    document.body.classList.remove("fusionando");
+    await girar(90, 180, GIRO_MITAD, "ease-out");
+
+    // 6) se ve el dorso rosa con el logo unos segundos
+    await pausa(T(PAUSA_CARGA));
+    $estado.classList.add("listo");            // el circulito se vuelve un chulito
+    await pausa(T(DURACION_CHULO));            // ...se espera a que termine su animación
+    // una bolita con estela sale del chulito hacia el carrito; cuando llega, ahí SÍ entra al carrito
+    const vuelo = volarAlCarrito($estado).then(() => {
+      if(agregado) return;
+      agregarAlCarrito(m, b, precio, imgCarta);
+      agregado = true;
+      rebotarCarrito();
+    });
+    await Promise.all([vuelo, pausa(T(Math.max(0, PAUSA_CHULO - DURACION_CHULO)))]);
+
+    // 7) la carta gira de nuevo y reaparecen la base y la mermelada
+    await girar(180, 270, GIRO_VUELTA, "ease-in");
+    visorBase._entrada();
+    visorMerm._entrada();
+    if(enFoto && $foto.animate) $foto.animate(     // modo foto: reaparece subiendo con un rebotito
+      [{ transform: `translateY(${14 * ESC}px) scale(.9)` }, { transform: "translateY(0) scale(1.04)", offset: 0.6 }, { transform: "none" }],
+      { duration: T(380), easing: "ease-out" });
+    await girar(270, 360, GIRO_VUELTA, "ease-out");
+  } finally {
+    if(!agregado) agregarAlCarrito(m, b, precio, imgCarta);   // por si algo interrumpió la animación: el postre no se pierde
+    $estado.classList.remove("listo");
+    $giro.getAnimations().forEach(a => a.cancel());
+    ocultarPiezas();
+    $visorMerm.getAnimations().forEach(a => a.cancel());
+    visorBase.el.getAnimations().forEach(a => a.cancel());
+    document.body.classList.remove("fusionando");
+    visorBase.seguir = null;
+    $agregar.classList.remove("agregando");
+    ocupado = false;
+    document.body.classList.remove("ocupado");
+  }
+};
+
+/* ---------- Inicio ---------- */
+$raiz.style.setProperty("--color-agregar", COLOR_AGREGAR);
+$raiz.style.setProperty("--opacidad-merm", OPACIDAD_MERM);
+$raiz.style.setProperty("--op-jarra", OPACIDAD_JARRA_BASE);
+$raiz.style.setProperty("--op-tapa", OPACIDAD_TAPA);
+$raiz.style.setProperty("--tam-titulo", TAM_TITULO);
+$raiz.style.setProperty("--tam-subtitulo", TAM_SUBTITULO);
+restaurarCombo();
+visorMerm.cargar(mermActual().archivo);
+visorBase.cargar(BASES[iBase].archivo);
+/* El frasco (base y tapa) se descarga cuando el navegador está libre, así el postre aparece antes */
+var frascoCargado = false;
+function cargarFrasco(){
+  if(frascoCargado) return;
+  frascoCargado = true;
+  visorJarra.cargar(ARCHIVO_JARRA_BASE);
+  visorTapa.cargar(ARCHIVO_JARRA_TAPA);
+}
+actualizar();
+
+/* Pausa el dibujo 3D cuando el constructor no está a la vista (ahorra batería en el celular) */
+if("IntersectionObserver" in window) new IntersectionObserver(es => { enPantalla = es[0].isIntersecting; }).observe($raiz);
+document.querySelectorAll("#armaPostre canvas").forEach(c => c.setAttribute("aria-hidden", "true"));
+setTimeout(ocultarCarga, 15000);   // por si algún modelo tarda demasiado
+
+/* =====================================================================
+   MONITOR DE FPS  —  si la página va por debajo de FPS_MIN durante
+   SEGUNDOS_LAG segundos, se apaga el 3D y se muestra la FOTO del postre
+   que está armado (carpeta postres_render, una foto por combinación,
+   tomada de tus mismos modelos .glb con la misma cámara y posiciones).
+   Si la foto no existe, el 3D NO se apaga (así nunca queda en blanco).
+   ===================================================================== */
+(function(){
+  const FPS_MIN = 30, SEGUNDOS_LAG = 3;
+  const CARPETA_FOTOS = "postres_render/";
+  /* posición y tamaño de cada foto, en % de la escena (no lo cambies) */
+  const FOTOS_POS = {"normal_fresa":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686},"normal_maracuya":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686},"normal_mora":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686},"chocolate_fresa":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686},"chocolate_milo":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686},"mixta_fresa":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686},"mixta_milo":{"left":-11.538,"top":-3.195,"width":113.462,"height":105.686}};
+  const $img = document.getElementById("postreRespaldo");
+  if(!$img) return;
+
+  function claveCombo(){
+    const b = BASES[iBase], m = mermActual();
+    const k = (m.archivo.match(/Mermelada_([a-z]+)\.glb/i) || [])[1];
+    return b.id + "_" + k;
+  }
+  function cargarFoto(k, ok, mal){
+    const pos = FOTOS_POS[k];
+    if(!pos){ mal(); return; }
+    const im = new Image();
+    im.onload = () => ok(im.src, pos);
+    im.onerror = mal;
+    im.src = CARPETA_FOTOS + k + ".png";
+  }
+  function ponerFoto(src, pos){
+    $img.src = src;
+    $img.style.left = pos.left + "%"; $img.style.top = pos.top + "%";
+    $img.style.width = pos.width + "%"; $img.style.height = pos.height + "%";
+  }
+
+  let frames = 0, ultimo = performance.now(), lag = 0, listo = false, buscando = false, claveActual = "";
+  function usarRespaldo(){
+    listo = true;
+    respaldo3D = true;
+    console.log("Modo seguro: 3D apagado por bajo rendimiento, se muestra la foto del postre.");
+    $raiz.classList.add("sin3d");
+    $carga.classList.add("fuera");
+    requestAnimationFrame(() => $img.classList.add("on"));
+    // si cambian la mermelada o la base, se cambia la foto
+    setInterval(() => {
+      const k = claveCombo();
+      if(k === claveActual) return;
+      claveActual = k;
+      cargarFoto(k, (src, pos) => { if(claveActual === k) ponerFoto(src, pos); }, () => {});
+    }, 150);
+  }
+  function activarRespaldo(){
+    if(buscando) return;
+    buscando = true;
+    const k = claveCombo();
+    cargarFoto(k,
+      (src, pos) => { ponerFoto(src, pos); claveActual = k; buscando = false; usarRespaldo(); },
+      () => { lag = 0; buscando = false; });   // sin foto no apagamos el 3D
+  }
+  function medir(ahora){
+    if(listo) return;
+    frames++;
+    if(ahora - ultimo >= 1000){
+      const fps = Math.round(frames * 1000 / (ahora - ultimo));
+      if(fps < FPS_MIN){ lag++; console.warn("Rendimiento bajo: " + fps + " FPS"); }
+      else if(lag > 0){ lag--; }
+      if(lag >= SEGUNDOS_LAG) activarRespaldo();
+      frames = 0; ultimo = ahora;
+    }
+    if(!listo) requestAnimationFrame(medir);
+  }
+  // Si la pestaña estuvo oculta, no cuenta como lag
+  document.addEventListener("visibilitychange", () => { frames = 0; ultimo = performance.now(); lag = 0; });
+  requestAnimationFrame(medir);
+})();
+
+})();
+</script>
+<script>
+/* =====================================================================
+   VENTANA EMERGENTE: CATÁLOGO COMPLETO
+   Edita aquí los postres. Campos de cada uno:
+     id, nombre, precio, img, ingredientes
+     base      -> "normal" | "chocolate" | "mixta"  (para el filtro)
+     antojo    -> nivel de antojo de 0 a 5 (admite medios)
+     insignia  -> "Más vendido", "Nuevo"... (déjalo en "" si no quieres insignia)
+     armar     -> { base:"normal", merm:0 }  a qué combinación del constructor lleva "Armarlo a tu gusto"
+   ===================================================================== */
+(function () {
+  const CATALOGO = [
+    { id:"1", nombre:"Maracuyá Tropical", precio:7500, img:"cartas_catalogo/cardmaracuyatropical.png", base:"normal", antojo:3.5, insignia:"", armar:{ base:"normal", merm:1 },
+      ingredientes:"Leche entera, leche condensada, crema de leche, bizcocho de vainilla, pulpa de maracuyá" },
+    { id:"2", nombre:"Mora Silvestre", precio:7500, img:"cartas_catalogo/cardmorasilvestre.png", base:"normal", antojo:4.5, insignia:"", armar:{ base:"normal", merm:2 },
+      ingredientes:"Leche entera, leche condensada, crema de leche, bizcocho de vainilla, mermelada de mora" },
+    { id:"3", nombre:"Fresa Tentación", precio:7500, img:"cartas_catalogo/cardfresatentacion.png", base:"normal", antojo:4, insignia:"", armar:{ base:"normal", merm:0 },
+      ingredientes:"Leche entera, leche condensada, crema de leche, bizcocho de vainilla, mermelada de fresa" },
+    { id:"4", nombre:"Chocomilo", precio:7500, img:"cartas_catalogo/cardchocomilo.png", base:"chocolate", antojo:4.5, insignia:"", armar:{ base:"chocolate", merm:1 },
+      ingredientes:"Leche entera, leche condensada, crema de leche, bizcocho de chocolate, Milo" },
+    { id:"5", nombre:"Chocofresa", precio:8000, img:"cartas_catalogo/cardchocofresa.png", base:"chocolate", antojo:4, insignia:"", armar:{ base:"chocolate", merm:0 },
+      ingredientes:"Leche entera, leche condensada, crema de leche, bizcocho de chocolate, mermelada de fresa" },
+    { id:"6", nombre:"Chocomilo Mix", precio:7500, img:"cartas_catalogo/cardchocomilomix.png", base:"mixta", antojo:5, insignia:"", armar:{ base:"mixta", merm:1 },
+      ingredientes:"Leche entera, leche condensada, crema de leche, bizcocho mixto, Milo" },
+    { id:"7", nombre:"Fresh Mix", precio:7500, img:"cartas_catalogo/cardfreshmix.png", base:"mixta", antojo:3, insignia:"", armar:{ base:"mixta", merm:0 },
+      ingredientes:"Leche entera, leche condensada, crema de leche, bizcocho mixto, mermelada de fresa" }
+  ];
+  const FILTROS = [ ["todos","Todos"], ["normal","Tradicional"], ["chocolate","Chocolate"], ["mixta","Mixto"] ];
+  const MENSAJE_SOCIAL = "💗 El 10% de tu compra se destina a kits alimentarios para familias vulnerables.";
+  const ICONOS_OSO = { lleno:"pinkydarkicon.svg", medio:"pinkyorangeicon.svg", vacio:"pinkynullicon.svg" };
+  /* Para el armador: devuelve la carta del catálogo de esa combinación (base + mermelada), o "" si no tiene carta */
+  window.shImgCarta = (base, merm) => { const p = CATALOGO.find(x => x.armar && x.armar.base === base && x.armar.merm === merm); return p ? p.img : ""; };
+
+  const fmtP = n => "$" + Number(n).toLocaleString("es-CO");
+  const ov = document.createElement("div");
+  ov.className = "cat-overlay";
+  ov.setAttribute("role", "dialog");
+  ov.setAttribute("aria-modal", "true");
+  ov.setAttribute("aria-label", "Catálogo completo");
+
+  const m = document.createElement("div");
+  m.className = "cat-modal";
+  m.innerHTML = '<button class="cat-cerrar" aria-label="Cerrar">&times;</button>' +
+    '<h2 class="cat-titulo">Catálogo completo</h2>' +
+    '<p class="cat-sub">Toca el + para agregar tu postre al carrito</p>';
+
+  /* filtros por base */
+  const barra = document.createElement("div");
+  barra.className = "cat-filtros";
+  FILTROS.forEach(([k, t], i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "cat-filtro" + (i === 0 ? " on" : ""); b.textContent = t; b.dataset.filtro = k;
+    barra.appendChild(b);
+  });
+  m.appendChild(barra);
+
+  /* ositos de nivel de antojo */
+  function ositos(nivel){
+    const n = Math.round(Math.max(0, Math.min(5, nivel)) * 2) / 2;
+    const cont = document.createElement("div");
+    cont.className = "cat-osos";
+    cont.setAttribute("aria-label", "Nivel de antojo: " + n + " de 5");
+    for(let i = 0; i < 5; i++){
+      const d = n - i;
+      const est = d >= 1 ? "lleno" : (d >= 0.5 ? "medio" : "vacio");
+      const img = new Image();
+      img.alt = "";
+      img.onerror = () => { const sp = document.createElement("span"); if(est === "vacio") sp.className = "vacio"; img.replaceWith(sp); };
+      img.src = ICONOS_OSO[est];
+      cont.appendChild(img);
+    }
+    return cont;
+  }
+
+  /* aviso "¡Agregado!" + rebote del carrito */
+  const toast = document.createElement("div");
+  toast.className = "cat-toast";
+  toast.setAttribute("role", "status");
+  let tToast = null;
+  function avisar(nombre){
+    toast.textContent = "¡Agregado! " + nombre + " 🛒";
+    toast.classList.add("show");
+    clearTimeout(tToast);
+    tToast = setTimeout(() => toast.classList.remove("show"), 1600);
+    const c = document.getElementById("shCartBtn");
+    if(c && c.animate) c.animate(
+      [{ transform: "scale(1)" }, { transform: "scale(1.35) rotate(-8deg)" }, { transform: "scale(.9)" }, { transform: "scale(1)" }],
+      { duration: 500, easing: "ease-out" }
+    );
+  }
+
+  const grid = document.createElement("div");
+  grid.className = "cat-grid";
+  CATALOGO.forEach(p => {
+    const it = document.createElement("div");
+    it.className = "cat-item";
+    it.dataset.base = p.base;
+    if(p.insignia){
+      const bd = document.createElement("span"); bd.className = "cat-badge"; bd.textContent = p.insignia;
+      it.appendChild(bd);
+    }
+    const img = document.createElement("img");
+    img.className = "cat-img"; img.src = p.img; img.alt = p.nombre;
+    const h = document.createElement("h3"); h.className = "cat-nombre"; h.textContent = p.nombre;
+    const pr = document.createElement("div"); pr.className = "cat-precio"; pr.textContent = fmtP(p.precio);
+    const an = document.createElement("div"); an.className = "cat-antojo";
+    const at = document.createElement("span"); at.textContent = "Nivel de antojo:";
+    an.append(at, ositos(p.antojo !== undefined ? p.antojo : 4));
+    const ing = document.createElement("p"); ing.className = "cat-ing";
+    const b = document.createElement("b"); b.textContent = "Ingredientes: ";
+    ing.append(b, p.ingredientes);
+    const mas = document.createElement("a");
+    mas.className = "cat-mas"; mas.href = "#"; mas.setAttribute("role", "button");
+    mas.setAttribute("aria-label", "Agregar " + p.nombre + " al carrito");
+    mas.textContent = "+";
+    mas.setAttribute("data-agregar", "");
+    mas.dataset.id = p.id; mas.dataset.nombre = p.nombre;
+    mas.dataset.precio = String(p.precio); mas.dataset.img = p.img;
+    let tMas = null;
+    mas.addEventListener("click", e => {
+      e.preventDefault();
+      mas.classList.remove("ok"); void mas.offsetWidth; mas.classList.add("ok");
+      mas.textContent = "✓";
+      clearTimeout(tMas); tMas = setTimeout(() => { mas.textContent = "+"; }, 1100);
+      avisar(p.nombre);
+    });
+    const armar = document.createElement("a");
+    armar.className = "cat-armar"; armar.href = "#"; armar.textContent = "Armarlo a tu gusto";
+    armar.addEventListener("click", e => {
+      e.preventDefault();
+      cerrar();
+      const ir = () => {
+        if(window.armaPostreIr) window.armaPostreIr(p.armar.base, p.armar.merm);
+        const el = document.getElementById("armaPostre");
+        if(el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      };
+      setTimeout(ir, 60);
+    });
+    it.append(img, h, pr, an, ing, mas, armar);
+    grid.appendChild(it);
+  });
+  m.appendChild(grid);
+
+  const soc = document.createElement("p");
+  soc.className = "cat-social"; soc.textContent = MENSAJE_SOCIAL;
+  m.appendChild(soc);
+
+  barra.addEventListener("click", e => {
+    const bt = e.target.closest(".cat-filtro"); if(!bt) return;
+    barra.querySelectorAll(".cat-filtro").forEach(x => x.classList.toggle("on", x === bt));
+    const f = bt.dataset.filtro;
+    grid.querySelectorAll(".cat-item").forEach(x => { x.style.display = (f === "todos" || x.dataset.base === f) ? "" : "none"; });
+  });
+
+  ov.append(m, toast);
+  document.body.appendChild(ov);
+
+  function abrir(){ ov.classList.add("open"); document.body.classList.add("cat-abierto"); }
+  function cerrar(){ ov.classList.remove("open"); document.body.classList.remove("cat-abierto"); toast.classList.remove("show"); }
+  document.getElementById("verCatalogo").addEventListener("click", e => { e.preventDefault(); abrir(); });
+  m.querySelector(".cat-cerrar").addEventListener("click", cerrar);
+  ov.addEventListener("click", e => { if (e.target === ov) cerrar(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") cerrar(); });
+})();
+</script>
+<script src="carrito.js"></script>
+
+<script src="cursor.js"></script>
+
+<script src="perfil.js"></script>
+<script src="responsive.js"></script>
+</body>
+</html>
