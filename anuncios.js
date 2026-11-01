@@ -1,197 +1,340 @@
-/* Sweet Help - Carrito compartido entre pestañas y páginas.
-   Los productos se guardan como JSON ({productos:[...]}) en localStorage
-   y todas las pestañas se sincronizan con el evento "storage".
-   Incluir en CADA página:  <script src="carrito.js"></script>
-   Para agregar un producto desde productos.html:
-   <button data-agregar data-id="1" data-nombre="Brownie" data-precio="8000" data-img="brownie.png">Agregar</button> */
+/* Anuncios (cinta que se desliza suave, de izquierda a derecha, sin parar) + carta escondida aleatoria + modo debug.
+   La lista de anuncios se edita en index5.html (window.ANUNCIOS). Aquí no hace falta tocar nada.
+   Modo debug: ↑ ↑ ↓ ↓ ← → ← → A N Enter (lo activa index5.html). Repetir el código lo apaga. */
 (function () {
-  // Si por error carrito.js se carga dos veces (o lo carga otro script), la segunda copia no hace nada:
-  // así nunca hay dos ventanas del carrito una encima de la otra ni productos sumados doble.
-  if (window.__shCarritoCargado) return;
-  window.__shCarritoCargado = true;
-  document.querySelectorAll('.shc-panel').forEach(p => p.remove());
+    const CFG = window.ANUNCIOS || {};
+    const lista = (CFG.anuncios || []).filter(a => a && a.imagen);
+    const carta = CFG.carta || null;
+    const TAM = CFG.tamano || { ancho: 1895, alto: 26 };
+    let VEL = CFG.velocidad || 60;                       // píxeles por segundo
+    if (VEL > 400) VEL = 60;                             // valor viejo (milisegundos): se ignora
+    const FORZAR = /[?&]carta\b/.test(location.search);  // para probar: index5.html?carta
+    const DEBUG_KEY = 'sh_debug_anuncio';
 
-  const KEY = 'sweethelp_carrito';
-  const PAGO_URL = 'pago.html'; // <- cambia por tu página de pago
-  const fmt = n => '$' + Number(n).toLocaleString('es-CO');
-
-  /* ---------- Soneditos (se generan solos, no necesitan archivos) ----------
-     Cada sonido es una lista de notas: [frecuencia Hz, duración s, tipo de onda]. */
-  const SONIDO_ACTIVO = true;   // pon false para silenciar todo
-  const VOLUMEN = 0.18;         // de 0 a 1
-  const SONIDOS = {
-    agregar: [[660, .09], [880, .14]],
-    sumar:   [[740, .09]],
-    restar:  [[520, .09]],
-    quitar:  [[520, .08], [390, .08], [293, .16]],
-    vaciar:  [[600, .08], [450, .08], [330, .08], [247, .18]],
-    abrir:   [[600, .07], [800, .11]],
-    cerrar:  [[800, .07], [600, .11]],
-    pagar:   [[523, .09], [659, .09], [784, .09], [1047, .2]]
-  };
-  let ctx = null;
-  function sonar(nombre) {
-    if (!SONIDO_ACTIVO || !SONIDOS[nombre]) return;
-    try {
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return;
-      ctx = ctx || new AC();
-      if (ctx.state === 'suspended') ctx.resume();
-      let t = ctx.currentTime;
-      SONIDOS[nombre].forEach(n => {
-        const o = ctx.createOscillator(), g = ctx.createGain();
-        o.type = n[2] || 'sine';
-        o.frequency.setValueAtTime(n[0], t);
-        g.gain.setValueAtTime(0.0001, t);
-        g.gain.exponentialRampToValueAtTime(VOLUMEN, t + 0.012);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + n[1]);
-        o.connect(g); g.connect(ctx.destination);
-        o.start(t); o.stop(t + n[1] + 0.02);
-        t += n[1] * 0.8;
-      });
-    } catch (e) {}
-  }
-
-  function leer() {
-    try {
-      const d = JSON.parse(localStorage.getItem(KEY));
-      return d && Array.isArray(d.productos) ? d : { productos: [] };
-    } catch (e) { return { productos: [] }; }
-  }
-  function guardar(d) {
-    d.actualizado = new Date().toISOString();
-    try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {}
-    render();
-  }
-  function agregar(p) {
-    const d = leer();
-    const x = d.productos.find(i => String(i.id) === String(p.id));
-    if (x) x.cantidad += 1;
-    else d.productos.push({ id: String(p.id), nombre: p.nombre, precio: Number(p.precio) || 0, img: p.img || '', cantidad: 1 });
-    guardar(d);
-  }
-  function cambiar(id, delta) {
-    const d = leer();
-    const x = d.productos.find(i => i.id === id);
-    if (!x) return;
-    x.cantidad += delta;
-    if (x.cantidad <= 0) { d.productos = d.productos.filter(i => i.id !== id); sonar('quitar'); }
-    else sonar(delta > 0 ? 'sumar' : 'restar');
-    guardar(d);
-  }
-  function vaciar() { sonar('vaciar'); guardar({ productos: [] }); }
-
-  const css = `
-  .shc-panel{position:fixed;top:150px;right:24px;width:320px;max-width:calc(100vw - 48px);background:#fff;border-radius:22px;
-    box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:10001;display:none;font-family:inherit;overflow:hidden;border:3px solid #ff9195}
-  .shc-panel.open{display:block}
-  .shc-head{background:#ff9195;color:#fff;padding:12px 16px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
-  .shc-head button{background:none;border:0;color:#fff;font-size:20px;cursor:pointer}
-  .shc-list{max-height:260px;overflow:auto;padding:8px 12px;margin:0;list-style:none}
-  .shc-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #ffe0e1;color:#864f02;font-size:14px}
-  .shc-item img{width:40px;height:40px;object-fit:cover;border-radius:8px}
-  .shc-info{flex:1}.shc-info b{display:block}
-  .shc-qty{display:flex;align-items:center;gap:4px}
-  .shc-qty button{width:24px;height:24px;border-radius:50%;border:0;background:#ff9195;color:#fff;cursor:pointer;font-weight:800}
-  .shc-vacio{padding:24px;text-align:center;color:#c0607a}
-  .shc-foot{padding:12px 16px;display:flex;flex-direction:column;gap:8px}
-  .shc-total{display:flex;justify-content:space-between;font-weight:800;color:#864f02}
-  .shc-pagar{background:#ffab00;color:#fff;border:0;border-radius:999px;padding:12px;font-weight:800;font-size:16px;cursor:pointer}
-  .shc-pagar:disabled{opacity:.5;cursor:not-allowed}
-  .shc-link{background:none;border:0;color:#c0607a;font-size:12px;cursor:pointer;text-decoration:underline}
-  .sh-badge{position:absolute;top:-2px;right:-2px;min-width:20px;height:20px;border-radius:10px;background:#ffab00;color:#fff;
-    font-size:12px;font-weight:800;display:none;align-items:center;justify-content:center;padding:0 5px}`;
-  const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
-
-  function el(tag, cls, txt) {
-    const e = document.createElement(tag);
-    if (cls) e.className = cls;
-    if (txt !== undefined) e.textContent = txt;
-    return e;
-  }
-
-  const panel = el('div', 'shc-panel');
-  document.body.appendChild(panel);
-
-  function render() {
-    const d = leer();
-    const total = d.productos.reduce((s, p) => s + p.precio * p.cantidad, 0);
-    const cant = d.productos.reduce((s, p) => s + p.cantidad, 0);
-
-    document.querySelectorAll('.sh-badge').forEach(b => {
-      b.textContent = cant;
-      b.style.display = cant ? 'flex' : 'none';
-    });
-
-    const listaVieja = panel.querySelector('.shc-list');
-    const scrollPrevio = listaVieja ? listaVieja.scrollTop : 0;
-    panel.textContent = '';
-    const head = el('div', 'shc-head');
-    head.appendChild(el('span', '', 'Tu carrito'));
-    const x = el('button', '', '✕'); x.onclick = cerrar; head.appendChild(x);
-    panel.appendChild(head);
-
-    if (!d.productos.length) {
-      panel.appendChild(el('div', 'shc-vacio', 'Aún no has elegido productos 🍰'));
-    } else {
-      const ul = el('ul', 'shc-list');
-      d.productos.forEach(p => {
-        const li = el('li', 'shc-item');
-        if (p.img) { const im = el('img'); im.src = p.img; im.alt = p.nombre; li.appendChild(im); }
-        const info = el('div', 'shc-info');
-        info.appendChild(el('b', '', p.nombre));
-        info.appendChild(el('span', '', fmt(p.precio * p.cantidad)));
-        li.appendChild(info);
-        const q = el('div', 'shc-qty');
-        const m = el('button', '', '−'); m.onclick = () => cambiar(p.id, -1);
-        const n = el('span', '', String(p.cantidad));
-        const M = el('button', '', '+'); M.onclick = () => cambiar(p.id, 1);
-        q.append(m, n, M); li.appendChild(q);
-        ul.appendChild(li);
-      });
-      panel.appendChild(ul);
-      ul.scrollTop = scrollPrevio;
+    // ---- ¿Aparece la carta en esta visita? ----
+    const sale = carta && (FORZAR || Math.random() < (carta.probabilidad != null ? carta.probabilidad : 0.3));
+    const normales = lista.map(a => ({ titulo: a.titulo || '', url: a.url || '#', imagen: a.imagen, carta: false }));
+    if (sale) {
+        const c = { titulo: carta.titulo || 'Carta escondida', imagen: carta.imagen, carta: true };
+        normales.splice(Math.floor(Math.random() * (normales.length + 1)), 0, c);
     }
 
-    const foot = el('div', 'shc-foot');
-    const t = el('div', 'shc-total'); t.append(el('span', '', 'Total'), el('span', '', fmt(total)));
-    const pay = el('button', 'shc-pagar', 'Pagar ahora');
-    pay.disabled = !d.productos.length;
-    pay.onclick = () => { sonar('pagar'); setTimeout(() => { location.href = PAGO_URL; }, 220); };
-    foot.append(t, pay);
-    if (d.productos.length) {
-      const vc = el('button', 'shc-link', 'Vaciar carrito'); vc.onclick = vaciar;
-      foot.append(vc);
+    // ---- Modo debug: anuncio elegido a mano (se recuerda hasta repetir el código) ----
+    let debug = null;
+    try { debug = JSON.parse(localStorage.getItem(DEBUG_KEY) || 'null'); } catch (e) {}
+    function deDebug(d) {
+        if (!d) return null;
+        if (d.tipo === 'carta' && carta) return [{ titulo: carta.titulo || 'Carta escondida', imagen: carta.imagen, carta: true }];
+        if (d.tipo === 'ad' && d.imagen) return [{ titulo: d.titulo || '', url: d.url || '#', imagen: d.imagen, carta: false }];
+        return null;
     }
-    panel.appendChild(foot);
-  }
+    let slides = deDebug(debug) || normales;
+    if (!deDebug(debug)) debug = null;
+    if (!slides.length) return;
 
-  function abrir() { render(); panel.classList.add('open'); sonar('abrir'); }
-  function cerrar() {
-    if (!panel.classList.contains('open')) return;
-    panel.classList.remove('open');
-    sonar('cerrar');
-  }
+    // ---- Estilos (colores de Sweet Help, sin blanco) ----
+    const st = document.createElement('style');
+    st.textContent = `
+    #shAnuncios{position:relative;width:100%;margin:0;aspect-ratio:var(--an-ratio,1895/26);min-height:30px;overflow:hidden;background:#ff4646;z-index:5}
+    #shAnuncios .sh-an-track{position:absolute;left:0;top:0;height:100%;display:flex;will-change:transform}
+    #shAnuncios .sh-an-slide{flex:0 0 auto;height:100%;aspect-ratio:var(--an-ratio,1895/26);display:block;cursor:pointer;border:0;padding:0;background:none}
+    #shAnuncios .sh-an-slide img{width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none;user-select:none}
+    #shAnWrap{position:relative;z-index:5;overflow:hidden;transition:height .5s cubic-bezier(.65,0,.35,1)}
+    #shAnWrap.oculta>*{transform:translateY(-100%);transition:transform .5s cubic-bezier(.65,0,.35,1)}
+    #shAnBarra{display:flex;align-items:center;justify-content:center;width:100%;height:12px;margin:0;padding:0;border:0;background:#823C4A;cursor:pointer;line-height:0;-webkit-tap-highlight-color:transparent}
+    #shAnBarra svg{display:block;width:14px;height:auto;transition:filter .3s ease,scale .15s ease;animation:shAnSube 1.8s ease-in-out infinite}
+    #shAnBarra:hover svg{filter:drop-shadow(0 0 4px rgba(245,240,217,.85))}
+    #shAnBarra:active svg{scale:.8}
+    @keyframes shAnSube{0%,60%,100%{transform:translateY(0)}20%{transform:translateY(-1.5px)}40%{transform:translateY(0)}50%{transform:translateY(-.8px)}}
+    #shAnModal,#shDbg{position:fixed;inset:0;z-index:2147483100;display:none;align-items:center;justify-content:center;background:rgba(60,25,32,.75);padding:16px}
+    #shAnModal.on,#shDbg.on{display:flex}
+    #shAnModal .sh-an-box,#shDbg .sh-an-box{background:#833c4a;color:#f8f3dd;border:4px solid #ff9195;border-radius:24px;padding:22px 24px;max-width:340px;width:100%;text-align:center;font-family:Arial,sans-serif;box-shadow:0 16px 40px rgba(0,0,0,.45);max-height:90vh;overflow:auto}
+    #shAnModal h3,#shDbg h3{margin:0 0 12px;font-size:20px}
+    #shAnModal .sh-an-carta{display:block;margin:0 auto 6px;max-height:210px;max-width:60%;border-radius:12px}
+    #shAnModal .sh-an-estado{margin:0 0 10px;font:700 14px Arial,sans-serif;color:#ff9195}
+    #shAnModal .sh-an-qr{display:inline-block;background:#f8f3dd;padding:12px;border-radius:14px;min-width:160px;min-height:160px}
+    #shAnModal .sh-an-qr img,#shAnModal .sh-an-qr canvas{display:block}
+    #shAnModal .sh-an-code{margin:14px 0 10px;padding:10px;border-radius:12px;background:#5a2833;font:700 18px monospace;word-break:break-all;user-select:all}
+    #shAnModal button,#shDbg button{border:0;border-radius:999px;padding:10px 18px;font:800 14px Arial,sans-serif;cursor:pointer;margin:4px}
+    #shAnModal .sh-an-copy,#shDbg .sh-dbg-ok{background:#ff9195;color:#5a2833}
+    #shAnModal .sh-an-close,#shDbg .sh-dbg-no{background:#f8f3dd;color:#833c4a}
+    #shDbg label{display:block;text-align:left;font:700 13px Arial,sans-serif;margin:10px 0 0}
+    #shDbg input[type=text],#shDbg select{display:block;width:100%;box-sizing:border-box;margin-top:4px;padding:8px 10px;border:0;border-radius:10px;background:#f8f3dd;color:#833c4a;font:14px Arial,sans-serif}
+    #shDbg input[type=file]{display:block;margin-top:4px;font:12px Arial,sans-serif;color:#f8f3dd;max-width:100%}
+    #shDbg .sh-dbg-custom{display:none}
+    #shDbg .sh-dbg-custom.on{display:block}
+    #shDbg .sh-dbg-estado{min-height:18px;margin:10px 0 0;font:700 13px Arial,sans-serif;color:#ff9195}
+    #shDbg small{display:block;margin-top:8px;font:12px Arial,sans-serif;opacity:.85}
+    #shDbgBadge{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:2147483050;display:none;padding:6px 14px;border-radius:999px;background:#833c4a;color:#f8f3dd;border:2px solid #ff9195;font:700 12px Arial,sans-serif;pointer-events:none;white-space:nowrap}
+    #shDbgBadge.on{display:block}`;
+    document.head.appendChild(st);
 
-  document.addEventListener('click', e => {
-    const add = e.target.closest('[data-agregar]');
-    if (add) {
-      // Solo agrega (y actualiza el contador); el carrito se abre únicamente al tocar el icono
-      agregar({ id: add.dataset.id, nombre: add.dataset.nombre, precio: add.dataset.precio, img: add.dataset.img });
-      sonar('agregar');
-      return;
+    // ---- Estructura ----
+    const cont = document.createElement('div');
+    cont.id = 'shAnuncios';
+    cont.style.setProperty('--an-ratio', TAM.ancho + '/' + TAM.alto);
+    const track = document.createElement('div');
+    track.className = 'sh-an-track';
+    cont.appendChild(track);
+
+    function crear(s) {
+        const el = document.createElement(s.carta ? 'button' : 'a');
+        el.className = 'sh-an-slide';
+        if (s.carta) { el.type = 'button'; el.addEventListener('click', abrirCarta); }
+        else el.href = s.url || '#';
+        if (s.titulo) el.title = s.titulo;
+        const img = document.createElement('img');
+        img.src = s.imagen; img.alt = s.titulo || ''; img.draggable = false;
+        el.appendChild(img);
+        return el;
     }
-    if (e.target.closest('#shCartBtn')) { panel.classList.contains('open') ? cerrar() : abrir(); return; }
-    // OJO: al tocar − / + / vaciar, render() reconstruye el panel y el botón tocado ya no está en la página
-    // cuando este código corre, así que closest('.shc-panel') fallaba y cerraba el carrito.
-    // composedPath() guarda el recorrido original del clic y sí incluye al panel.
-    if (e.composedPath().includes(panel)) return;
-    cerrar();
-  });
 
-  // Sincroniza el carrito entre pestañas
-  window.addEventListener('storage', e => { if (e.key === KEY) render(); });
+    const menuPerfil = document.querySelector('.menudesplegable2');
+    let raf = 0, ocultando = false;
+    const wrap = document.createElement('div');
+    wrap.id = 'shAnWrap';
+    const barra = document.createElement('button');
+    barra.id = 'shAnBarra'; barra.type = 'button';
+    barra.title = 'Ocultar anuncio'; barra.setAttribute('aria-label', 'Ocultar anuncio');
+    barra.innerHTML = '<svg viewBox="0 0 709 386" aria-hidden="true"><path d="M30 356 L354.5 32 L679 356" fill="none" stroke="#F5F0D9" stroke-width="58" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    // La flecha hacia arriba sube y oculta el anuncio (con animación); el menú del perfil sube con él
+    barra.onclick = () => {
+        if (ocultando) return;
+        ocultando = true;
+        wrap.style.height = wrap.offsetHeight + 'px';
+        void wrap.offsetHeight;
+        wrap.classList.add('oculta');
+        wrap.style.height = '0px';
+        if (menuPerfil) { menuPerfil.style.transition = 'top .5s cubic-bezier(.65,0,.35,1)'; menuPerfil.style.top = '8px'; }
+        setTimeout(() => {
+            cancelAnimationFrame(raf);
+            wrap.remove();
+            if (menuPerfil) menuPerfil.style.transition = '';
+        }, 520);
+    };
+    wrap.appendChild(cont);
+    wrap.appendChild(barra);
+    document.body.insertBefore(wrap, document.body.firstChild);
 
-  window.SweetHelpCarrito = { agregar, cambiar, vaciar, obtener: leer };
-  render();
+    // Se repiten los anuncios las veces necesarias para que nunca se vea un hueco
+    function llenar() {
+        const cw = cont.offsetWidth || window.innerWidth;
+        const sw = cont.offsetHeight * (TAM.ancho / TAM.alto) || cw;   // ancho de un anuncio
+        let n = 0;
+        while (track.children.length === 0 || (track.children.length * sw < cw + 2 * sw)) {
+            slides.forEach(s => track.appendChild(crear(s)));
+            if (++n > 40) break;
+        }
+    }
+    llenar();
+
+    function ajustarMenu() { if (menuPerfil && wrap.isConnected && !ocultando) menuPerfil.style.top = (wrap.offsetHeight + 8) + 'px'; }
+    ajustarMenu();
+    window.addEventListener('resize', () => { ajustarMenu(); llenar(); });
+
+    // ---- Movimiento suave: izquierda -> derecha, infinito ----
+    let pos = 0, pausa = false, ultimo = performance.now();
+    function paso(ahora) {
+        const dt = Math.min((ahora - ultimo) / 1000, 0.05);
+        ultimo = ahora;
+        if (!pausa) {
+            pos += VEL * dt;
+            // cuando el anuncio de la izquierda ya entró entero, se pasa el último al inicio
+            let guard = 0;
+            while (pos >= 0 && guard++ < 20) {
+                const ult = track.lastElementChild;
+                track.insertBefore(ult, track.firstElementChild);
+                pos -= ult.offsetWidth || 1;
+            }
+            track.style.transform = 'translate3d(' + pos + 'px,0,0)';
+        }
+        raf = requestAnimationFrame(paso);
+    }
+    function reiniciarPos() {
+        pos = -(track.firstElementChild.offsetWidth || 0);
+        track.style.transform = 'translate3d(' + pos + 'px,0,0)';
+    }
+    reiniciarPos();
+    cont.addEventListener('mouseenter', () => { pausa = true; });
+    cont.addEventListener('mouseleave', () => { if (!modalAbierto && !panelAbierto) pausa = false; });
+    raf = requestAnimationFrame(paso);
+
+    // Cambia la lista de anuncios que se ven (modo debug / normal)
+    function reconstruir(nueva) {
+        slides = nueva;
+        track.innerHTML = '';
+        llenar();
+        reiniciarPos();
+    }
+
+    // ---- Desbloquear la carta en el álbum de ArSweetCards / SweetCardsBattle ----
+    // Guarda en localStorage "arsweetcards_album" el índice = número de carta - 1
+    function desbloquear(num) {
+        try {
+            const KEY = 'arsweetcards_album';
+            if (localStorage.getItem('arsweetcards_orden') !== '2') {   // misma migración que usa el juego
+                const VIEJO = [22,21,20,19,6,5,4,3,2,18,17,16,15,14,13,1,7,8,9,10,11,12];
+                const o = JSON.parse(localStorage.getItem(KEY) || '[]');
+                const n = [...new Set(o.map(i => VIEJO[i] - 1).filter(v => v >= 0))];
+                localStorage.setItem(KEY, JSON.stringify(n));
+                localStorage.setItem('arsweetcards_orden', '2');
+            }
+            const a = JSON.parse(localStorage.getItem(KEY) || '[]');
+            const i = num - 1;
+            if (a.includes(i)) return false;     // ya la tenía
+            a.push(i);
+            localStorage.setItem(KEY, JSON.stringify(a));
+            return true;                          // carta nueva
+        } catch (e) { return null; }
+    }
+
+    // ---- Carta: QR + código copiable ----
+    let modal = null, qrListo = false, modalAbierto = false;
+    function cargarQR(cb) {
+        if (window.QRCode) return cb();
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+        s.onload = () => cb(); s.onerror = () => cb(true);
+        document.head.appendChild(s);
+    }
+    function abrirCarta(e) {
+        if (e) e.preventDefault();
+        const codigo = carta.codigo || '';
+        const textoQR = carta.qr || codigo;
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'shAnModal';
+            modal.innerHTML = '<div class="sh-an-box"><h3></h3><img class="sh-an-carta" alt=""><p class="sh-an-estado"></p><div class="sh-an-qr" id="shAnQr"></div><div class="sh-an-code"></div><button class="sh-an-copy" type="button">Copiar código</button><button class="sh-an-close" type="button">Cerrar</button></div>';
+            modal.querySelector('h3').textContent = carta.nombre ? '¡Conseguiste a ' + carta.nombre + '!' : (carta.titulo || '¡Encontraste una carta!');
+            const ci = modal.querySelector('.sh-an-carta');
+            if (carta.imagenCarta) { ci.src = carta.imagenCarta; ci.alt = carta.nombre || ''; ci.onerror = () => ci.remove(); }
+            else ci.remove();
+            modal.querySelector('.sh-an-code').textContent = codigo;
+            modal.addEventListener('click', ev => { if (ev.target === modal) cerrar(); });
+            modal.querySelector('.sh-an-close').onclick = cerrar;
+            modal.querySelector('.sh-an-copy').onclick = function () {
+                const b = this;
+                const ok = () => { b.textContent = '¡Copiado!'; setTimeout(() => { b.textContent = 'Copiar código'; }, 1500); };
+                const viejo = () => {
+                    const t = document.createElement('textarea');
+                    t.value = codigo; document.body.appendChild(t); t.select();
+                    try { document.execCommand('copy'); ok(); } catch (er) {}
+                    t.remove();
+                };
+                if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(codigo).then(ok, viejo);
+                else viejo();
+            };
+            document.body.appendChild(modal);
+        }
+        modal.classList.add('on');
+        modalAbierto = true; pausa = true;
+        const est = modal.querySelector('.sh-an-estado');
+        if (carta.numero) {
+            const r = desbloquear(carta.numero);
+            est.textContent = r === true ? '¡Carta nueva en tu álbum!' : r === false ? 'Ya la tenías en tu álbum.' : 'No se pudo guardar en el álbum.';
+        } else est.textContent = '';
+        if (!qrListo) {
+            cargarQR(err => {
+                const q = document.getElementById('shAnQr');
+                if (err || !window.QRCode) { q.textContent = 'No se pudo cargar el QR, usa el código.'; q.style.color = '#833c4a'; return; }
+                q.textContent = '';
+                new QRCode(q, { text: textoQR, width: 180, height: 180, colorDark: '#833c4a', colorLight: '#f8f3dd', correctLevel: QRCode.CorrectLevel.M });
+                qrListo = true;
+            });
+        }
+    }
+    function cerrar() { modal.classList.remove('on'); modalAbierto = false; pausa = false; }
+
+    // ---- Modo debug: ventana para elegir el anuncio que se ve ----
+    const badge = document.createElement('div');
+    badge.id = 'shDbgBadge';
+    badge.textContent = '🛠 Modo debug · repite el código para salir';
+    document.body.appendChild(badge);
+    if (debug) badge.classList.add('on');
+
+    let panel = null, panelAbierto = false;
+    function cerrarPanel() { if (panel) panel.classList.remove('on'); panelAbierto = false; pausa = false; }
+
+    function activarDebug(obj, aviso) {
+        debug = obj;
+        let guardado = true;
+        try { localStorage.setItem(DEBUG_KEY, JSON.stringify(obj)); } catch (e) { guardado = false; }
+        reconstruir(deDebug(obj));
+        badge.classList.add('on');
+        cerrarPanel();
+        if (!guardado && aviso) aviso();
+    }
+    function desactivarDebug() {
+        debug = null;
+        try { localStorage.removeItem(DEBUG_KEY); } catch (e) {}
+        reconstruir(normales);
+        badge.classList.remove('on');
+        cerrarPanel();
+    }
+
+    function abrirPanel() {
+        if (!panel) {
+            panel = document.createElement('div');
+            panel.id = 'shDbg';
+            panel.innerHTML =
+                '<div class="sh-an-box"><h3>🛠 Modo debug · Anuncio</h3>' +
+                '<label>Anuncio a mostrar<select class="sh-dbg-sel"></select></label>' +
+                '<div class="sh-dbg-custom">' +
+                '<label>Título<input type="text" class="sh-dbg-titulo" placeholder="Mi anuncio"></label>' +
+                '<label>URL o página a donde lleva<input type="text" class="sh-dbg-url" placeholder="productos.html"></label>' +
+                '<label>Imagen (ruta o enlace)<input type="text" class="sh-dbg-img" placeholder="anuncio2.png"></label>' +
+                '<label>…o subir una imagen<input type="file" class="sh-dbg-file" accept="image/*"></label>' +
+                '</div>' +
+                '<p class="sh-dbg-estado"></p>' +
+                '<button class="sh-dbg-ok" type="button">Mostrar</button><button class="sh-dbg-no" type="button">Cancelar</button>' +
+                '<small>Para volver todo a la normalidad repite el código ↑ ↑ ↓ ↓ ← → ← → A N Enter.</small></div>';
+            document.body.appendChild(panel);
+            const sel = panel.querySelector('.sh-dbg-sel');
+            lista.forEach((a, i) => { const o = document.createElement('option'); o.value = 'ad:' + i; o.textContent = a.titulo || ('Anuncio ' + (i + 1)); sel.appendChild(o); });
+            if (carta) { const o = document.createElement('option'); o.value = 'carta'; o.textContent = 'Carta escondida (' + (carta.nombre || 'carta') + ')'; sel.appendChild(o); }
+            const o = document.createElement('option'); o.value = 'custom'; o.textContent = 'Otro (personalizado)…'; sel.appendChild(o);
+            const custom = panel.querySelector('.sh-dbg-custom');
+            const estado = panel.querySelector('.sh-dbg-estado');
+            const mostrar = () => custom.classList.toggle('on', sel.value === 'custom');
+            sel.onchange = mostrar; mostrar();
+            panel.addEventListener('click', ev => { if (ev.target === panel) cerrarPanel(); });
+            panel.querySelector('.sh-dbg-no').onclick = cerrarPanel;
+            panel.querySelector('.sh-dbg-ok').onclick = function () {
+                estado.textContent = '';
+                const v = sel.value;
+                if (v === 'carta') return activarDebug({ tipo: 'carta' });
+                if (v.indexOf('ad:') === 0) {
+                    const a = lista[+v.slice(3)];
+                    return activarDebug({ tipo: 'ad', titulo: a.titulo || '', url: a.url || '#', imagen: a.imagen });
+                }
+                const titulo = panel.querySelector('.sh-dbg-titulo').value.trim();
+                const url = panel.querySelector('.sh-dbg-url').value.trim() || '#';
+                const ruta = panel.querySelector('.sh-dbg-img').value.trim();
+                const archivo = panel.querySelector('.sh-dbg-file').files[0];
+                const aviso = () => alert('No se pudo guardar el anuncio para después de recargar; se verá hasta que recargues la página.');
+                if (archivo) {
+                    const fr = new FileReader();
+                    fr.onload = () => activarDebug({ tipo: 'ad', titulo, url, imagen: fr.result }, aviso);
+                    fr.onerror = () => { estado.textContent = 'No se pudo leer la imagen.'; };
+                    fr.readAsDataURL(archivo);
+                } else if (ruta) {
+                    activarDebug({ tipo: 'ad', titulo, url, imagen: ruta }, aviso);
+                } else {
+                    estado.textContent = 'Escribe la ruta de la imagen o sube una.';
+                }
+            };
+        }
+        panel.classList.add('on');
+        panelAbierto = true; pausa = true;
+    }
+
+    // index5.html llama a esto con el código ↑ ↑ ↓ ↓ ← → ← → A N Enter
+    window.shAnunciosDebug = {
+        alternar: function () {
+            if (debug) desactivarDebug();
+            else if (panelAbierto) cerrarPanel();
+            else abrirPanel();
+        },
+        activo: () => !!debug
+    };
 })();
