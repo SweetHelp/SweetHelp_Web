@@ -228,6 +228,43 @@ body.rem #remote{display:flex}
 #szd .gg input,#szd .gg select{width:100%}
 #szd label.f{text-align:left}
 #szd label.f input,#szd label.f select{width:160px}
+#gtabs,#rTabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 2px}
+#gtabs button,#rTabs button{flex:1;min-width:0;border:1.5px solid var(--p);background:#fff;color:var(--p);border-radius:10px;padding:8px 6px;font-weight:700;font-size:13px}
+#gtabs button.on,#rTabs button.on{background:var(--p);color:#fff}
+#rTabs{margin:0 0 8px}#rTabs button{padding:7px 4px;font-size:12px}
+#gnames{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:#9b7e86;margin:6px 0}
+#gnames input{border:1.5px solid var(--pl);border-radius:8px;padding:5px 8px;font-family:inherit;font-size:13px;width:130px}
+#gtip{font-size:12px;color:#9b7e86;margin:4px 0}
+/* ===== Sitio web (ventana emergente) ===== */
+.webwin{display:flex;flex-direction:column;width:100%;height:100%;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px #0009;border:1px solid #0004}
+.webwin,.webwin *{cursor:default}
+.webwin button{cursor:pointer}
+.wbar{flex:none;height:36px;display:flex;align-items:center;gap:6px;padding:0 8px 0 12px;background:#2a1b20;color:#fff;font-size:14px;font-weight:600;font-family:Poppins,system-ui,sans-serif}
+.wbar .wh{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wbar button{border:0;background:#ffffff26;color:#fff;border-radius:8px;width:28px;height:26px;font-size:15px;line-height:1;padding:0}
+.wbar button:hover{background:#ffffff55}
+.wbar .wx{background:#e5484d}
+.wbody{position:relative;flex:1;min-height:0;overflow:hidden;background:#fff}
+.wbody iframe{position:absolute;left:0;top:0;width:100%;height:100%;border:0;background:#fff;transition:transform .14s linear}
+.wmsg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:#9b7e86;font-size:18px;font-family:Poppins,system-ui,sans-serif}
+.wcur{position:absolute;display:none;pointer-events:none;z-index:3;width:30px;height:30px;filter:drop-shadow(0 2px 3px #0007);transition:left .05s linear,top .05s linear}
+.wrip{position:absolute;pointer-events:none;z-index:3;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;border:4px solid var(--p);background:#bd5c7355}
+/* remoto: modos */
+#rMode{display:flex;gap:8px}
+#rMode button{flex:1;border:2px solid var(--p);background:#fff;color:var(--p);border-radius:12px;padding:10px 4px;font-weight:700;font-size:14px}
+#rMode button.on{background:var(--p);color:#fff}
+#rWeb{display:none;flex-direction:column;gap:10px}
+#remote.rm-web #rWeb{display:flex}
+#remote.rm-web #rPrevBox,#remote.rm-web #rZoom,#remote.rm-web #rHint,#remote.rm-web #rBtns,#remote.rm-web #rCol,#remote.rm-web #rPad,#remote.rm-web #rPadBig,#remote.rm-web #rList{display:none!important}
+#rWebInfo{font-size:13px;font-weight:600;color:var(--p)}
+#rWeb .wrow{display:flex;gap:8px;align-items:center}
+#rWeb .wrow button{flex:1;border:2px solid var(--p);background:#fff;color:var(--p);border-radius:12px;padding:12px 6px;font-weight:700;font-size:15px;touch-action:manipulation}
+#rWeb .wrow button.on,#rWeb #wOpen{background:var(--p);color:#fff}
+#rWeb .wrow label{font-size:13px;color:var(--p);font-weight:600;display:flex;gap:4px;align-items:center;white-space:nowrap}
+#rWeb.off .wctl{opacity:.4;pointer-events:none}
+#wPad{position:relative;aspect-ratio:var(--W)/var(--H);background:#2a1b20;border:3px solid var(--p);border-radius:12px;touch-action:none;overflow:hidden;user-select:none;-webkit-user-select:none}
+#wPadTxt{position:absolute;left:0;right:0;bottom:8px;text-align:center;color:#fff;font-size:13px;font-weight:600;text-shadow:0 1px 4px #000;pointer-events:none;padding:0 8px}
+#rWeb .wsmall{font-size:11px;color:#9b7e86;line-height:1.4}
 </style>
 </head>
 <body>
@@ -240,6 +277,7 @@ body.rem #remote{display:flex}
     <button id="bImg" title="Imagen / GIF">🖼<span class="lb"> Imagen / GIF</span></button>
     <button id="bVid" title="Video">🎬<span class="lb"> Video</span></button>
     <button id="bUrl" title="Desde URL">🔗<span class="lb"> Desde URL</span></button>
+    <button id="bWeb" title="Sitio web en ventana emergente">🌐<span class="lb"> Sitio web</span></button>
     <button id="bShape" title="Forma">⬛<span class="lb"> Forma</span></button>
     <button id="bSize" title="Tamaño de la mesa de trabajo">📐<span class="lb"> Tamaño</span></button>
     <span class="sp"></span>
@@ -290,12 +328,24 @@ body.rem #remote{display:flex}
 
 <div id="remote">
   <div id="rTop"><span id="rDot"></span><span id="rSt">Conectando…</span><span id="rCnt"></span><button id="rUnlink">Desvincular</button></div>
+  <div id="rMode"><button data-m="slide" class="on">🎞 Control diapositiva</button><button data-m="web">🌐 Control sitio web</button></div>
   <div id="rTitle"></div>
+  <div id="rWeb">
+    <div id="rWebInfo"></div>
+    <div class="wrow"><button id="wOpen">🌐 Abrir ventana</button><button id="wReload" class="wctl" style="flex:none;width:56px" title="Recargar">↻</button></div>
+    <div class="wrow wctl"><button id="wSm">− Más pequeña</button><button id="wBg">+ Más grande</button></div>
+    <div class="wrow wctl"><button id="wmScroll" class="on">↕ Desplazar</button><button id="wmCur">🖱 Solo cursor</button><label><input type="checkbox" id="wInv"> Invertir</label></div>
+    <div id="wPad" class="wctl"><span id="wPadTxt"></span><i class="pdot"></i></div>
+    <div class="wrow wctl"><button id="wTop">⤒ Inicio</button><button id="wUp">▲</button><button id="wDn">▼</button><button id="wEnd">⤓ Final</button></div>
+    <div class="wrow wctl"><button id="wClick">👆 Marcar clic (efecto visual)</button></div>
+    <div class="wrow"><button id="wPrevS">◀ Diapositiva</button><button id="wNextS">Diapositiva ▶</button></div>
+    <div class="wsmall">El celular mueve el cursor y desplaza la página, pero los navegadores no permiten hacer clic de verdad dentro de otro sitio: para hacer clic usa el mouse de la computadora sobre la ventana.</div>
+  </div>
   <div id="rPrevBox"><img id="rImg" alt=""><div id="rRect"></div><div id="rNoImg">Cargando vista previa…</div></div>
   <div id="rZoom"><button id="zOut">−</button><span id="zVal">x1.0</span><button id="zIn">+</button><button id="zReset">⟲ Quitar zoom</button></div>
   <div id="rHint">Toca la vista previa para acercar esa zona en la pantalla · pellizca para cambiar el zoom · arrastra para mover la zona</div>
   <div id="rBtns"><button id="rPrev">◀</button><button id="rNext">▶</button></div>
-  <div id="rGuion"><div class="gh"><b>📝 Guion</b><span><button id="gMinus">A−</button><button id="gPlus">A+</button></span></div><div id="rNotes"></div><div id="rNext2"></div></div>
+  <div id="rGuion"><div class="gh"><b>📝 Guion</b><span><button id="gMinus">A−</button><button id="gPlus">A+</button></span></div><div id="rTabs"></div><div id="rNotes"></div><div id="rNext2"></div></div>
   <div id="rRow"><button id="rStart">▶ Iniciar</button><button id="rBlack">⬛ Negro</button><button id="rStop">✕ Salir</button></div>
   <div id="rCol"><span>🎨 Mi puntero</span><input type="color" id="rColor"><span id="rSw"></span></div>
   <div id="rPad"><img id="pImg" alt=""><span class="ph">🔴 Puntero láser: toca y arrastra aquí</span><i class="pdot"></i></div>
@@ -306,9 +356,12 @@ body.rem #remote{display:flex}
 <div id="gmodal"><div id="gbox">
   <h3>📝 Guion de la presentación</h3>
   <div style="font-size:12px;color:#9b7e86">Lo escribes por diapositiva y lo lees en el celular mientras expones.</div>
+  <div id="gnames"><span>Nombres:</span><input id="gn1" placeholder="Persona 1" maxlength="20"><input id="gn2" placeholder="Persona 2" maxlength="20"></div>
+  <div id="gtabs"></div>
+  <div id="gtip"></div>
   <div id="glist"></div>
-  <div class="gbtns"><button id="gImport">📥 Importar .txt</button><button id="gExport">📤 Exportar .txt</button><button id="gClose" class="go">Listo</button></div>
-  <div style="font-size:11px;color:#9b7e86;margin-top:6px">En el .txt separa las diapositivas con una línea que tenga solo ---</div>
+  <div class="gbtns"><button id="gMerge">🔗 Armar completo desde las partes</button><button id="gImport">📥 Importar .txt</button><button id="gExport">📤 Exportar .txt</button><button id="gClose" class="go">Listo</button></div>
+  <div style="font-size:11px;color:#9b7e86;margin-top:6px">Importar y exportar trabajan con la pestaña actual. En el .txt separa las diapositivas con una línea que tenga solo ---</div>
 </div></div>
 <input type="file" id="fTxt" accept=".txt,text/plain" hidden>
 <div id="scan">
@@ -438,6 +491,10 @@ function elNode(e,o){
   }else if(e.type==='embed'){
     if(o.thumb||o.edit)i.appendChild(ph('▶ YouTube'));
     else{const f=document.createElement('iframe');f.src='https://www.youtube.com/embed/'+e.vid+'?rel=0'+(e.autoplay?'&autoplay=1&mute=1':'');f.allow='autoplay; fullscreen; encrypted-media';f.allowFullscreen=true;i.appendChild(f)}
+  }else if(e.type==='web'){
+    d.dataset.web='1';if(e.popup!==false)d.dataset.popup='1';
+    if(o.thumb||o.edit){const p=ph('🌐 '+(hostOf(e.url)||'Sitio web')+(e.popup!==false?'\n(ventana emergente)':''));p.style.cssText+=';white-space:pre-line;text-align:center;font-size:34px;line-height:1.3;background:#2a1b20';i.appendChild(p)}
+    else{buildWeb(d,i,e);if(e.popup!==false)d.style.display='none'}
   }else if(e.type==='shape'){
     const s=document.createElement('div');s.style.cssText=`width:100%;height:100%;background:${e.fill};border-radius:${e.shape==='circle'?'50%':(e.radius||0)+'px'}`;i.appendChild(s);
   }
@@ -585,7 +642,7 @@ function drawProps(){
     <div class="row"><button id="sL">◀ Mover</button><button id="sR">Mover ▶</button><button id="sDup">Duplicar</button><button id="sDel" class="dg">Eliminar</button></div>
     <div class="hint">Doble clic en un texto para editarlo. Arrastra miniaturas para reordenar. Suelta archivos (PDF, imágenes, videos) sobre el lienzo para agregarlos.<br><br><b>Atajos:</b> Ctrl+Z deshacer · Ctrl+Shift+Z rehacer · Ctrl+C / X / V copiar, cortar, pegar (también imágenes del portapapeles) · Supr borrar · Ctrl+D duplicar · flechas mueven (Mayús = 10 px). Mayús al arrastrar la esquina mantiene la proporción; Mayús al rotar salta de 15°.</div>`;
   }else{
-    h+=`<h4>${{text:'Texto',image:'Imagen',video:'Video',embed:'YouTube',shape:'Forma'}[e.type]}</h4>`;
+    h+=`<h4>${{text:'Texto',image:'Imagen',video:'Video',embed:'YouTube',shape:'Forma',web:'Sitio web'}[e.type]}</h4>`;
     if(e.type==='text'){
       h+=fld('Fuente',sel('font',e.font,FONTS))+fld('Tamaño',inp('size',e.size,'number','min="8" max="400"'))+fld('Color',inp('color',e.color,'color'))+
          fld('Alineación',sel('align',e.align,{left:'Izquierda',center:'Centro',right:'Derecha'}))+chk('bold',e.bold,'Negrita')+chk('italic',e.italic,'Cursiva')+`<div class="row"><button id="eEdit">✏️ Editar texto</button></div>`;
@@ -593,6 +650,7 @@ function drawProps(){
     if(e.type==='image')h+=fld('Ajuste',sel('fit',e.fit,{contain:'Ajustar',cover:'Llenar',fill:'Estirar'}))+fld('Bordes',inp('radius',e.radius||0,'number','min="0" max="400"'));
     if(e.type==='video')h+=fld('Ajuste',sel('fit',e.fit||'contain',{contain:'Ajustar',cover:'Llenar',fill:'Estirar'}))+chk('autoplay',e.autoplay,'Reproducir automático')+chk('loop',e.loop,'Repetir')+chk('muted',e.muted,'Silenciado')+chk('controls',e.controls,'Mostrar controles');
     if(e.type==='image'||e.type==='video')h+=`<div class="row"><button id="eFit" title="Ocupa toda la pantalla sin estirarse">⤢ Justificar a pantalla</button><button id="eFill" title="Llena la pantalla recortando los bordes">▣ Llenar pantalla</button>${e.type==='image'?'<button id="eCrop">✂ Recortar</button>':''}</div>`;
+    if(e.type==='web')h+=fld('Dirección',inp('url',e.url||'','text','placeholder="https://…"'))+chk('popup',e.popup!==false,'Ventana emergente (se abre con W o desde el celular)')+chk('bar',e.bar!==false,'Mostrar barra de título')+chk('tall',e.tall!==false,'Desplazar desde el celular')+fld('Largo de página (pantallas)',inp('pages',e.pages||6,'number','min="1" max="30"'))+`<div class="row"><button id="eWebOpen">↗ Probar en pestaña nueva</button></div><div class="hint">La animación de entrada (más abajo) se usa al abrir la ventana. Muchos sitios (Google, YouTube, redes sociales, bancos) bloquean que se abran dentro de otra página: si ves un error, prueba con otro sitio. Para cambiar el tamaño, arrastra la esquina; durante la presentación también puedes usar ＋ / − en la barra de la ventana o el celular.</div>`;
     if(e.type==='embed')h+=chk('autoplay',e.autoplay,'Reproducir automático (silenciado)');
     if(e.type==='shape')h+=fld('Forma',sel('shape',e.shape,{rect:'Rectángulo',circle:'Círculo'}))+fld('Color',inp('fill',e.fill,'color'))+fld('Bordes',inp('radius',e.radius||0,'number','min="0" max="400"'));
     h+=`<h4>Posición</h4>`+fld('X',inp('x',e.x))+fld('Y',inp('y',e.y))+fld('Ancho',inp('w',e.w,'number','min="24"'))+fld('Alto',inp('h',e.h,'number','min="24"'))+
@@ -613,7 +671,7 @@ function drawProps(){
   b('eBack',()=>{s.els=[e].concat(s.els.filter(x=>x!==e));afterEdit()});
   b('eFit',()=>justify(e,'fit'));b('eFill',()=>justify(e,'fill'));b('eCrop',openCrop);
   b('eRotL',()=>rotBy(e,-90));b('eRotR',()=>rotBy(e,90));b('eRot0',()=>{e.rot=0;afterEdit()});
-  b('sSize',()=>openSize('resize'));
+  b('sSize',()=>openSize('resize'));b('eWebOpen',()=>{const u=normUrl(e.url);if(u)window.open(u,'_blank','noopener');else toast('Escribe una dirección válida')});
 }
 function afterEdit(){refreshStage();updateThumb();drawProps()}
 $('#props').addEventListener('input',ev=>{
@@ -643,6 +701,14 @@ function addUrl(){
   const y=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);
   if(y)addEl(baseEl('embed',{vid:y[1],x:240,y:110,w:800,h:450,autoplay:false}));
   else if(/\.(mp4|webm|ogv|mov)(\?|$)/i.test(u))addVideo(u);else addImage(u);
+}
+function normUrl(u){u=String(u||'').trim();if(!u)return'';if(!/^[a-z][a-z0-9+.-]*:/i.test(u))u='https://'+u;return/^https?:\/\/[^\s]+$/i.test(u)?u:''}
+function hostOf(u){const n=normUrl(u);if(!n)return'';try{return new URL(n).hostname.replace(/^www\./,'')}catch(_){return''}}
+function addWeb(){
+  const raw=prompt('Dirección del sitio web (ej. wikipedia.org):');if(raw===null)return;
+  const u=normUrl(raw);if(!u){toast('Esa dirección no es válida');return}
+  const w=Math.round(W*.8),h=Math.round(H*.8);
+  addEl(baseEl('web',{url:u,popup:true,bar:true,tall:true,pages:6,anim:'zoom',adur:450,x:Math.round((W-w)/2),y:Math.round((H-h)/2),w,h}));
 }
 function addFiles(files){
   [...files].forEach(f=>{
@@ -873,6 +939,10 @@ function bump(){pres.classList.add('mv');clearTimeout(mvT);mvT=setTimeout(()=>pr
 function toggleBlack(){const b=$('#black');b.style.display=b.style.display==='block'?'none':'block';sendState()}
 function presKey(ev){
   const k=ev.key;
+  {const wn=curWeb(),wo=wn&&wn.dataset.open;
+   if(k==='w'||k==='W'){if(wn&&wn.dataset.popup){webAct('toggle');ev.preventDefault()}return}
+   if(wo&&k==='Escape'){webAct('close');ev.preventDefault();return}
+   if(wn&&webVisible(wn)&&wn._web.tall&&(k==='ArrowDown'||k==='ArrowUp')){webAct('scroll',{d:k==='ArrowDown'?.25:-.25});ev.preventDefault();return}}
   if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(k)){step(1);ev.preventDefault()}
   else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(k)){step(-1);ev.preventDefault()}
   else if(k==='Home')go(0);else if(k==='End')go(slides.length-1);
@@ -882,7 +952,7 @@ function presKey(ev){
   else if(k==='Escape'&&!document.fullscreenElement)endPresent();
 }
 pres.addEventListener('mousemove',bump);pres.addEventListener('pointerdown',bump);
-let tx=null;pres.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+let tx=null;pres.addEventListener('touchstart',e=>{tx=e.target.closest('.webwin')?null:e.touches[0].clientX},{passive:true});
 pres.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(dx)>60)step(dx<0?1:-1)},{passive:true});
 /* zoom también desde la pantalla principal: rueda del mouse y arrastrar */
 let zDragged=false,zd=null;
@@ -894,7 +964,7 @@ pres.addEventListener('wheel',e=>{
   const sx=Z.cx-.5/Z.s+px/Z.s,sy=Z.cy-.5/Z.s+py/Z.s;
   applyZoom({s:s2,cx:sx+.5/s2-px/s2,cy:sy+.5/s2-py/s2});sendZoom();
 },{passive:false});
-pres.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&Z.s>1.02&&!e.target.closest('#pbar'))zd={x:e.clientX,y:e.clientY,moved:false}});
+pres.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&Z.s>1.02&&!e.target.closest('#pbar')&&!e.target.closest('.webwin'))zd={x:e.clientX,y:e.clientY,moved:false}});
 addEventListener('pointermove',e=>{
   if(!zd)return;const sc=Math.min(innerWidth/W,innerHeight/H),dx=e.clientX-zd.x,dy=e.clientY-zd.y;
   if(!zd.moved&&Math.hypot(dx,dy)<6)return;zd.moved=true;zDragged=true;
@@ -903,7 +973,7 @@ addEventListener('pointermove',e=>{
 addEventListener('pointerup',()=>{zd=null;setTimeout(()=>{zDragged=false},0)});
 pres.addEventListener('click',ev=>{
   if(zDragged){zDragged=false;return}
-  if(ev.target.closest('#pbar')||ev.target.closest('video,iframe'))return;
+  if(ev.target.closest('#pbar')||ev.target.closest('video,iframe,.webwin'))return;
   if(ev.clientX<innerWidth*.35)step(-1);else step(1);
 });
 $('#pPrev').onclick=()=>step(-1);$('#pNext').onclick=()=>step(1);$('#pFs').onclick=toggleFs;$('#pExit').onclick=endPresent;
@@ -932,6 +1002,95 @@ function applyZoom(z,instant){
 function zoomBy(f){applyZoom({s:Z.s*f,cx:Z.cx,cy:Z.cy});sendZoom()}
 function sendZoom(except){const m={t:'z',s:Z.s,cx:Z.cx,cy:Z.cy};conns.forEach(c=>{if(c!==except&&c.open){try{c.send(m)}catch(_){}}})}
 
+
+/* ---------- Sitio web en la presentación ---------- */
+function buildWeb(d,i,e){
+  const url=normUrl(e.url),host=hostOf(e.url)||'Sitio web',popup=e.popup!==false,tall=e.tall!==false,bar=e.bar!==false;
+  const win=document.createElement('div');win.className='webwin';
+  const wb={e,url,host,popup,tall,pages:Math.max(1,Math.min(30,+e.pages||6)),barH:bar?36:0,k:1,sy:0,max:0,bh:0};
+  const body=document.createElement('div');body.className='wbody';
+  const msg=document.createElement('div');msg.className='wmsg';msg.textContent=url?'Cargando '+host+'…':'Sin dirección web';
+  const f=document.createElement('iframe');f.allow='fullscreen; autoplay; clipboard-write';f.referrerPolicy='strict-origin-when-cross-origin';f.title=host;
+  f.addEventListener('load',()=>msg.remove());
+  const cur=document.createElement('div');cur.className='wcur';cur.innerHTML='<svg viewBox="0 0 24 24" width="30" height="30"><path d="M3 2l7 19 3-8 8-3z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+  body.append(msg,f,cur);
+  if(bar){
+    const b=document.createElement('div');b.className='wbar';
+    const h=document.createElement('span');h.className='wh';h.textContent='🌐 '+host;b.appendChild(h);
+    const mk=(t,ti,fn,cls)=>{const x=document.createElement('button');x.textContent=t;x.title=ti;if(cls)x.className=cls;x.onclick=ev=>{ev.stopPropagation();fn()};b.appendChild(x)};
+    mk('−','Más pequeña',()=>{webSize(d,1/1.2);sendState()});mk('＋','Más grande',()=>{webSize(d,1.2);sendState()});
+    mk('↻','Recargar',()=>webReload(d));
+    if(popup)mk('✕','Cerrar',()=>{webShow(d,false);sendState()},'wx');
+    win.appendChild(b);
+  }
+  win.appendChild(body);i.appendChild(win);
+  wb.f=f;wb.body=body;wb.cur=cur;d._web=wb;
+  if(!popup&&url)f.src=url;
+  requestAnimationFrame(()=>layoutWeb(d));
+}
+function layoutWeb(n){
+  const w=n._web;if(!w)return;
+  const h=parseFloat(n.style.height)||w.e.h,bh=Math.max(40,h-w.barH);w.bh=bh;
+  if(w.tall){w.f.style.height=Math.round(bh*w.pages)+'px';w.max=Math.max(0,bh*(w.pages-1))}else{w.f.style.height='100%';w.max=0}
+  w.sy=Math.min(w.sy,w.max);w.f.style.transform=w.sy?`translateY(${-w.sy}px)`:'';
+}
+function webVisible(n){return!n.dataset.popup||!!n.dataset.open}
+function curWeb(){
+  const sl=[...pstage.querySelectorAll('.slide')].pop();if(!sl)return null;
+  const l=[...sl.querySelectorAll('.el[data-web]')].filter(n=>n._web);
+  return l.find(n=>n.dataset.popup)||l[0]||null;
+}
+function webShow(n,show){
+  const w=n._web;if(!w||!n.dataset.popup)return;
+  if(show&&!n.dataset.open){
+    if(w.out){w.out.cancel();w.out=null}
+    n.dataset.open='1';n.style.display='';n.style.zIndex=20;
+    if(!w.f.src&&w.url)w.f.src=w.url;
+    layoutWeb(n);
+    const kf=AK[w.e.anim&&w.e.anim!=='none'?w.e.anim:'fade'];
+    n.firstElementChild.animate(kf,{duration:w.e.adur||450,easing:'cubic-bezier(.2,.8,.2,1)'});
+  }else if(!show&&n.dataset.open){
+    delete n.dataset.open;
+    const a=n.animate([{opacity:getComputedStyle(n).opacity},{opacity:0}],{duration:220,fill:'forwards'});w.out=a;
+    a.onfinish=()=>{if(!n.dataset.open)n.style.display='none';a.cancel();if(w.out===a)w.out=null};
+  }
+}
+function webSize(n,f){
+  const w=n._web;if(!w)return;const e=w.e;
+  w.k=f==='reset'?1:Math.max(.3,Math.min(Math.max(1,Math.min(W/e.w,H/e.h)),w.k*f));
+  const nw=Math.round(e.w*w.k),nh=Math.round(e.h*w.k),cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+  n.style.transition='left .25s,top .25s,width .25s,height .25s';
+  Object.assign(n.style,{width:nw+'px',height:nh+'px',left:cl(Math.round(e.x+e.w/2-nw/2),Math.min(0,W-nw),Math.max(0,W-nw))+'px',top:cl(Math.round(e.y+e.h/2-nh/2),Math.min(0,H-nh),Math.max(0,H-nh))+'px'});
+  layoutWeb(n);
+}
+function webScroll(n,dpx,abs){
+  const w=n._web;if(!w||!w.tall||!webVisible(n))return;
+  w.sy=Math.max(0,Math.min(w.max,abs?dpx:w.sy+dpx));w.f.style.transform=w.sy?`translateY(${-w.sy}px)`:'';
+}
+function webReload(n){const w=n._web;if(!w||!w.url)return;w.f.src='about:blank';setTimeout(()=>{w.f.src=w.url},60);w.sy=0;layoutWeb(n)}
+function webCursor(n,x,y){const w=n._web;if(!w||!webVisible(n))return;w.cx=x;w.cy=y;const c=w.cur.style;c.display='block';c.left=(x*100)+'%';c.top=(y*100)+'%'}
+function webClick(n){
+  const w=n._web;if(!w||!webVisible(n))return;
+  const r=document.createElement('div');r.className='wrip';r.style.left=((w.cx??.5)*100)+'%';r.style.top=((w.cy??.5)*100)+'%';w.body.appendChild(r);
+  r.animate([{transform:'scale(.3)',opacity:1},{transform:'scale(1.6)',opacity:0}],{duration:550,easing:'ease-out'}).onfinish=()=>r.remove();
+}
+function webAct(a,m={}){
+  const n=curWeb();if(!n)return;
+  switch(a){
+    case'open':webShow(n,true);break;
+    case'close':webShow(n,false);break;
+    case'toggle':webShow(n,!n.dataset.open);break;
+    case'size':webSize(n,m.f);break;
+    case'scroll':if(Number.isFinite(+m.d))webScroll(n,(+m.d)*n._web.bh);break;
+    case'to':webScroll(n,+m.v?1e9:0,true);break;
+    case'cur':if(Number.isFinite(+m.x)&&Number.isFinite(+m.y))webCursor(n,Math.max(0,Math.min(1,+m.x)),Math.max(0,Math.min(1,+m.y)));return;
+    case'click':webClick(n);return;
+    case'reload':webReload(n);break;
+  }
+  sendState();
+}
+function webInfo(){const n=presenting?curWeb():null;if(!n)return{has:false};const w=n._web;return{has:true,open:!!n.dataset.open,host:w.host,popup:!!n.dataset.popup,tall:w.tall}}
+
 /* ---------- Vistas previas (se dibujan en canvas y se mandan al control) ---------- */
 function rrPath(x,px,py,w,h,r){r=Math.max(0,Math.min(r,w/2,h/2));x.beginPath();x.moveTo(px+r,py);x.arcTo(px+w,py,px+w,py+h,r);x.arcTo(px+w,py+h,px,py+h,r);x.arcTo(px,py+h,px,py,r);x.arcTo(px,py,px+w,py,r);x.closePath()}
 const loadImgC=src=>new Promise(res=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src});
@@ -950,8 +1109,8 @@ async function slideToDataURL(s,tw=480){
           if(e.fit==='contain'){const r=Math.min(w/iw,h/ih);dw=iw*r;dh=ih*r;dx=(w-dw)/2;dy=(h-dh)/2}
           else if(e.fit==='cover'){const r=Math.max(w/iw,h/ih);dw=iw*r;dh=ih*r;dx=(w-dw)/2;dy=(h-dh)/2}
           rrPath(x,0,0,w,h,(e.radius||0)*k);x.clip();x.drawImage(im,dx,dy,dw,dh)}
-      }else if(e.type==='video'||e.type==='embed'){
-        x.fillStyle='#222';rrPath(x,0,0,w,h,12*k);x.fill();x.fillStyle='#fff';x.font=`${Math.min(w,h)*.4}px sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText(e.type==='video'?'🎬':'▶',w/2,h/2);
+      }else if(e.type==='video'||e.type==='embed'||e.type==='web'){
+        x.fillStyle='#222';rrPath(x,0,0,w,h,12*k);x.fill();x.fillStyle='#fff';x.font=`${Math.min(w,h)*.4}px sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText(e.type==='video'?'🎬':e.type==='web'?'🌐':'▶',w/2,h/2);
       }else if(e.type==='text'){
         x.font=`${e.italic?'italic ':''}${e.bold?800:400} ${e.size*k}px '${e.font}',sans-serif`;x.fillStyle=e.color;x.textBaseline='top';x.textAlign=e.align;
         const pad=6*k,mw=w-2*pad,lh=e.size*1.2*k,ax=e.align==='center'?w/2:e.align==='right'?w-pad:pad;let y=pad;
@@ -992,27 +1151,45 @@ function schedSync(){schedSave();if(!conns.length)return;clearTimeout(syncT);syn
 function sendStateSoon(){schedSave();clearTimeout(ssT);ssT=setTimeout(sendState,400)}
 
 /* ---------- Guion ---------- */
+const GF={full:'notes',p1:'p1',p2:'p2',nt:'nt'};
+let gTab='full';
+const getNames=()=>{const s=slides.find(x=>x.pn);return s?s.pn:['Parte 1','Parte 2']};
+const setNames=(a,b)=>slides.forEach(s=>{s.pn=[a,b]});
+const gLabels=()=>{const n=getNames();return{full:'📖 Completo',p1:'🧑 '+(n[0]||'Parte 1'),p2:'🧑 '+(n[1]||'Parte 2'),nt:'🗒 Notas'}};
+const GTIPS={full:'Todo lo que se dice en la diapositiva (lo lee quien quiera ver el guion entero).',p1:'Solo lo que dice la primera persona en cada diapositiva.',p2:'Solo lo que dice la segunda persona en cada diapositiva.',nt:'Notas privadas: ideas, tiempos, recordatorios.'};
 function openGuion(){
-  const L=$('#glist');L.innerHTML='';
+  const n=getNames();$('#gn1').value=n[0]==='Parte 1'?'':n[0];$('#gn2').value=n[1]==='Parte 2'?'':n[1];
+  const T=$('#gtabs'),lb=gLabels();T.innerHTML='';
+  Object.keys(GF).forEach(k=>{const b=document.createElement('button');b.textContent=lb[k];b.className=k===gTab?'on':'';b.onclick=()=>{gTab=k;openGuion()};T.appendChild(b)});
+  $('#gtip').textContent=GTIPS[gTab];$('#gMerge').style.display=gTab==='full'?'':'none';
+  const f=GF[gTab],L=$('#glist');L.innerHTML='';
   slides.forEach((s,i)=>{
     const r=document.createElement('div');r.className='gr';
-    const n=document.createElement('b');n.textContent=i+1;
+    const nn=document.createElement('b');nn.textContent=i+1;
     const t=document.createElement('div');t.className='gt';t.appendChild(thumbInner(s));
-    const a=document.createElement('textarea');a.value=s.notes||'';a.placeholder=`Guion de la diapositiva ${i+1}…`;
-    a.oninput=()=>{s.notes=a.value;sendStateSoon()};
-    r.append(n,t,a);L.appendChild(r);
+    const a=document.createElement('textarea');a.value=s[f]||'';a.placeholder=`${lb[gTab].replace(/^\S+\s/,'')} · diapositiva ${i+1}…`;
+    a.oninput=()=>{s[f]=a.value;schedSave();sendStateSoon()};
+    r.append(nn,t,a);L.appendChild(r);
   });
   $('#gmodal').classList.add('on');
 }
+['gn1','gn2'].forEach(id=>$('#'+id).oninput=()=>{setNames($('#gn1').value.trim()||'Parte 1',$('#gn2').value.trim()||'Parte 2');
+  const lb=gLabels();[...$('#gtabs').children].forEach((b,i)=>b.textContent=Object.values(lb)[i]);schedSave();sendStateSoon()});
+$('#gMerge').onclick=()=>{
+  if(!confirm('Esto reemplaza el texto de la pestaña Completo con las partes de cada persona. ¿Continuar?'))return;
+  const n=getNames();
+  slides.forEach(s=>{const a=(s.p1||'').trim(),b=(s.p2||'').trim();s.notes=[a&&`[${n[0]}]\n${a}`,b&&`[${n[1]}]\n${b}`].filter(Boolean).join('\n\n')});
+  schedSave();sendStateSoon();openGuion();toast('Guion completo armado');
+};
 $('#bGuion').onclick=openGuion;
 $('#gClose').onclick=()=>{$('#gmodal').classList.remove('on');drawProps()};
 $('#gmodal').addEventListener('click',e=>{if(e.target.id==='gmodal'){$('#gmodal').classList.remove('on');drawProps()}});
 $('#gImport').onclick=()=>$('#fTxt').click();
-$('#gExport').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([slides.map(s=>s.notes||'').join('\n---\n')],{type:'text/plain'}));a.download='guion.txt';a.click()};
+$('#gExport').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([slides.map(s=>s[GF[gTab]]||'').join('\n---\n')],{type:'text/plain'}));a.download='guion-'+gTab+'.txt';a.click()};
 $('#fTxt').onchange=async e=>{
   const f=e.target.files[0];e.target.value='';if(!f)return;
   const parts=(await f.text()).split(/^\s*---+\s*$/m).map(x=>x.trim());
-  parts.forEach((p,i)=>{if(!slides[i])slides.push(newSlide());slides[i].notes=p});
+  parts.forEach((p,i)=>{if(!slides[i])slides.push(newSlide());slides[i][GF[gTab]]=p});
   drawList();refreshStage();openGuion();sendStateSoon();toast('Guion importado ('+parts.length+' partes)');
 };
 
@@ -1024,7 +1201,7 @@ const PEER_OPTS={debug:0,config:{iceServers:[{urls:'stun:stun.l.google.com:19302
 const CH='ABCDEFGHJKMNPQRSTUVWXYZ23456789',genId=()=>'shp-'+Array.from({length:6},()=>CH[Math.floor(Math.random()*CH.length)]).join('');
 let peer=null,conns=[],hostId=null;
 const stateMsg=()=>({t:'state',i:presenting?pi:cur,n:slides.length,on:presenting,black:$('#black').style.display==='block',
-  sz:[W,H],titles:slides.map(titleOf),notes:slides.map(s=>s.notes||''),ids:slides.map(s=>s.id),z:Z,ctl:conns.length});
+  sz:[W,H],web:webInfo(),titles:slides.map(titleOf),notes:slides.map(s=>s.notes||''),g:{full:slides.map(s=>s.notes||''),p1:slides.map(s=>s.p1||''),p2:slides.map(s=>s.p2||''),nt:slides.map(s=>s.nt||'')},pn:getNames(),ids:slides.map(s=>s.id),z:Z,ctl:conns.length});
 function sendState(){const m=stateMsg();conns.forEach(c=>{try{c.open&&c.send(m)}catch(_){}})}
 function updCount(){$('#mcount').textContent=conns.length?`✅ ${conns.length} celular${conns.length>1?'es':''} conectado${conns.length>1?'s':''}`:'Esperando celular… (puedes vincular 2)'}
 function onRemote(m,c){
@@ -1037,6 +1214,7 @@ function onRemote(m,c){
     case'black':if(presenting)toggleBlack();break;
     case'ptr':if(presenting)laser(m.x,m.y,m.on,c.peer,m.c);break;
     case'zoom':if(presenting){applyZoom(m);sendZoom(c)}break;
+    case'web':if(presenting)webAct(m.a,m);break;
   }
 }
 function startPeer(){
@@ -1127,20 +1305,28 @@ function initRemote(id){
     r.style.display='block';r.style.width=(100/Zr.s)+'%';r.style.height=(100/Zr.s)+'%';
     r.style.left=((Zr.cx-.5/Zr.s)*100)+'%';r.style.top=((Zr.cy-.5/Zr.s)*100)+'%';
   }
+  let RT=LS.get('rtab')||'full';
+  function rTabs(m){
+    const n=m.pn||['Parte 1','Parte 2'],lb={full:'📖 Completo',p1:'🧑 '+n[0],p2:'🧑 '+n[1],nt:'🗒 Notas'},T=$('#rTabs');
+    const sig=Object.values(lb).join('|')+RT;if(T.dataset.sig===sig)return;T.dataset.sig=sig;T.innerHTML='';
+    Object.keys(lb).forEach(k=>{const b=document.createElement('button');b.textContent=lb[k];b.className=k===RT?'on':'';b.onclick=()=>{RT=k;LS.set('rtab',k);if(ST){rTabs(ST);rState()}};T.appendChild(b)});
+  }
   function rState(){
     const m=ST;if(!m)return;
     if($('#rDot').className==='ok')$('#rSt').textContent=okTxt();
     $('#rCnt').textContent=`${m.i+1} / ${m.n}`;
     $('#rTitle').textContent=m.on?(m.titles[m.i]||''):'Presentación en espera';
-    $('#rNotes').textContent=m.notes[m.i]||'Sin guion para esta diapositiva. Escríbelo en el editor, en 📝 Guion.';
+    rTabs(m);const G=(m.g&&m.g[RT])||m.notes;
+    $('#rNotes').textContent=G[m.i]||'Sin texto en esta pestaña para esta diapositiva. Escríbelo en el editor, en 📝 Guion.';
     if(lastI!==m.i){$('#rNotes').scrollTop=0}
-    $('#rNext2').textContent=m.i+1<m.n?'Siguiente: '+(m.titles[m.i+1]||'')+(m.notes[m.i+1]?' — '+m.notes[m.i+1].split('\n')[0].slice(0,90):''):'Es la última diapositiva';
+    $('#rNext2').textContent=m.i+1<m.n?'Siguiente: '+(m.titles[m.i+1]||'')+(G[m.i+1]?' — '+G[m.i+1].split('\n')[0].slice(0,90):''):'Es la última diapositiva';
     $('#rStart').textContent=m.on?'⏮ Inicio':'▶ Iniciar';
     $('#rBlack').textContent=m.black?'💡 Mostrar':'⬛ Negro';
     const sig=m.ids.join(',');
     if(sig!==listSig){listSig=sig;$('#rList').innerHTML=m.ids.map((d,i)=>`<div class="rt" data-i="${i}" data-id="${d}"><img ${th[d]?`src="${th[d]}"`:''} alt=""><b>${i+1}</b></div>`).join('')}
     [...$('#rList').children].forEach((d,i)=>d.classList.toggle('on',i===m.i));
     
+    rWebState(m);
     lastI=m.i;window._rOn=m.on;
     paintPrev();if(!gest)paintZoom();
   }
@@ -1201,6 +1387,39 @@ function initRemote(id){
     el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);mv(e)});
     el.addEventListener('pointermove',e=>{if(e.buttons||e.pressure)mv(e)});
     el.addEventListener('pointerup',off);el.addEventListener('pointercancel',off);
+  }
+  /* ---- control del sitio web ---- */
+  let WM=LS.get('shp_wm')||'scroll',RM=LS.get('shp_rm')||'slide',inv=LS.get('shp_inv')==='1';
+  const setRM=v=>{RM=v;LS.set('shp_rm',v);$('#remote').classList.toggle('rm-web',v==='web');document.querySelectorAll('#rMode button').forEach(b=>b.classList.toggle('on',b.dataset.m===v))};
+  document.querySelectorAll('#rMode button').forEach(b=>b.onclick=()=>{vib();setRM(b.dataset.m)});setRM(RM);
+  const setWM=v=>{WM=v;LS.set('shp_wm',v);$('#wmScroll').classList.toggle('on',v==='scroll');$('#wmCur').classList.toggle('on',v==='cur');$('#wPadTxt').textContent=v==='scroll'?'Arrastra: al bajar el dedo baja la página':'Arrastra: solo mueve el cursor'};
+  $('#wmScroll').onclick=()=>{vib();setWM('scroll')};$('#wmCur').onclick=()=>{vib();setWM('cur')};setWM(WM);
+  $('#wInv').checked=inv;$('#wInv').onchange=e=>{inv=e.target.checked;LS.set('shp_inv',inv?'1':'0')};
+  const WS=(a,o={})=>send({t:'web',a,...o});
+  $('#wOpen').onclick=()=>{vib();WS('toggle')};$('#wReload').onclick=()=>{vib();WS('reload')};
+  $('#wSm').onclick=()=>{vib();WS('size',{f:1/1.2})};$('#wBg').onclick=()=>{vib();WS('size',{f:1.2})};
+  $('#wTop').onclick=()=>{vib();WS('to',{v:0})};$('#wEnd').onclick=()=>{vib();WS('to',{v:1})};
+  $('#wClick').onclick=()=>{vib();WS('click')};
+  $('#wPrevS').onclick=()=>{vib();send({t:'prev'})};$('#wNextS').onclick=()=>{vib();send({t:'next'})};
+  const hold=(id,d)=>{const b=$('#'+id);let iv=null;const go=()=>WS('scroll',{d}),stop=()=>{clearInterval(iv);iv=null};
+    b.addEventListener('pointerdown',e=>{e.preventDefault();vib();go();stop();iv=setInterval(go,90)});
+    ['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,stop))};
+  hold('wUp',-.08);hold('wDn',.08);
+  {const pad=$('#wPad'),dot=pad.querySelector('.pdot');let lastY=null,acc=0,lastS=0;
+   const xy=e=>{const r=pad.getBoundingClientRect();return[Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))]};
+   const show=(x,y)=>{dot.style.display='block';dot.style.left=(x*100)+'%';dot.style.top=(y*100)+'%'};
+   pad.addEventListener('pointerdown',e=>{pad.setPointerCapture(e.pointerId);const[x,y]=xy(e);lastY=y;acc=0;show(x,y);WS('cur',{x,y})});
+   pad.addEventListener('pointermove',e=>{if(lastY===null)return;const[x,y]=xy(e),now=Date.now();
+     if(WM==='scroll')acc+=(y-lastY)*1.6*(inv?-1:1);lastY=y;show(x,y);
+     if(now-lastS>40){lastS=now;if(acc){WS('scroll',{d:acc});acc=0}WS('cur',{x,y})}});
+   const end=e=>{if(lastY===null)return;if(acc){WS('scroll',{d:acc});acc=0}lastY=null;dot.style.display='none'};
+   pad.addEventListener('pointerup',end);pad.addEventListener('pointercancel',end)}
+  function rWebState(m){
+    const w=m.web||{has:false},ok=m.on&&w.has&&(w.open||!w.popup);
+    $('#rWebInfo').textContent=!m.on?'Inicia la presentación (▶ Iniciar) para controlar el sitio web.':!w.has?'Esta diapositiva no tiene un sitio web. Agrégalo en el editor con 🌐 Sitio web.':'🌐 '+w.host+(w.popup?(w.open?' · ventana abierta':' · ventana cerrada'):' · siempre visible')+(w.tall?'':' · sin desplazamiento desde el celular');
+    $('#wOpen').textContent=w.open?'✕ Cerrar ventana':'🌐 Abrir ventana';
+    $('#wOpen').style.display=m.on&&w.has&&w.popup?'':'none';
+    $('#rWeb').classList.toggle('off',!ok);
   }
   bindPad($('#rPad'));bindPad($('#rPad2'));
   $('#rPadBig').onclick=()=>{$('#rBig').classList.add('on');paintPad()};
@@ -1504,7 +1723,7 @@ function initEditor(){
   $('#bImg').onclick=()=>$('#fImg').click();
   $('#bVid').onclick=()=>$('#fVid').click();
   $('#bLoad').onclick=()=>$('#fProj').click();
-  $('#bText').onclick=addText;$('#bShape').onclick=addShape;$('#bUrl').onclick=addUrl;
+  $('#bText').onclick=addText;$('#bWeb').onclick=addWeb;$('#bShape').onclick=addShape;$('#bUrl').onclick=addUrl;
   $('#bRemote').onclick=openRemote;$('#addSlide').onclick=addSlide;
   $('#bPlay').onclick=()=>startPresent(cur,true);
   ['fPdf','fImg','fVid'].forEach(id=>$('#'+id).onchange=e=>{addFiles(e.target.files);e.target.value=''});
