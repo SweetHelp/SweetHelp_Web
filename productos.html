@@ -366,11 +366,11 @@ main.grid-container{max-width:none;padding:40px clamp(8px,2vw,36px) 20px}
 }
 /* FONDO GENERAL de toda la página: crema (teñido por el sabor) con olas vino y gotas rosa arriba y abajo */
 html{--color-titulo:#8b5e3c;transition:--color-titulo .45s ease}
-body{position:relative;min-height:100vh;padding-bottom:110px;overflow-x:hidden;
+body{position:relative;min-height:100vh;padding-bottom:130px;overflow-x:hidden;
   background:#f8f2dc;background:color-mix(in srgb,var(--color-titulo) 7%,#f8f2dc)}
 body::before,body::after{content:"";position:absolute;left:0;right:0;z-index:0;pointer-events:none;background-repeat:no-repeat;background-size:100% 100%}
-body::before{top:0;height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M80 30V88a13 13 0 0 0 26 0V30Z' fill='%23f28f95'/%3E%3Cpath d='M230 30V100a13 13 0 0 0 26 0V30Z' fill='%23f28f95'/%3E%3Cpath d='M420 30V84a13 13 0 0 0 26 0V30Z' fill='%23f28f95'/%3E%3Cpath d='M640 30V104a13 13 0 0 0 26 0V30Z' fill='%23f28f95'/%3E%3Cpath d='M860 30V90a13 13 0 0 0 26 0V30Z' fill='%23f28f95'/%3E%3Cpath d='M1040 30V98a13 13 0 0 0 26 0V30Z' fill='%23f28f95'/%3E%3Cpath d='M0 0H1200V46C1140 84 1085 38 1025 58C965 78 915 36 850 56C785 76 735 34 670 54C605 74 555 34 490 54C425 74 375 36 310 56C245 76 195 38 130 58C75 76 35 52 0 66Z' fill='%23833c4a'/%3E%3C/svg%3E")}
-body::after{bottom:0;height:90px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 90' preserveAspectRatio='none'%3E%3Cpath d='M0 90V34C70 4 140 44 210 24C280 4 350 46 420 26C490 6 560 48 630 28C700 8 770 46 840 26C910 6 980 46 1050 28C1110 12 1160 24 1200 14V90Z' fill='%23f28f95'/%3E%3Cpath d='M0 90V50C70 20 140 60 210 40C280 20 350 62 420 42C490 22 560 64 630 44C700 24 770 62 840 42C910 22 980 62 1050 44C1110 28 1160 40 1200 30V90Z' fill='%23833c4a'/%3E%3C/svg%3E")}
+body::before{top:0;height:170px;background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%201200%20190'%20preserveAspectRatio='none'%3E%3Cpath%20d='M0%200H1200V70C1170%20112%201138%20150%201104%20138S1062%2092%201020%20100S968%20146%20928%20176S862%20190%20826%20148S782%2096%20740%20108S690%20150%20650%20132S596%2088%20548%20102S488%20150%20440%20172S384%20176%20350%20140S300%20100%20262%20118S214%20170%20170%20184S96%20170%2062%20134S20%20108%200%20118Z'%20fill='%23ff9c92'/%3E%3Cpath%20d='M0%200H1200V40C1160%2056%201128%2064%201090%2050S1020%2028%20972%2044S900%2086%20846%2070S770%2030%20716%2042S640%2078%20590%2062S516%2026%20460%2040S380%2084%20322%2066S240%2030%20186%2048S96%2084%2044%2066S12%2054%200%2058Z'%20fill='%23874448'/%3E%3C/svg%3E")}
+body::after{bottom:0;height:110px;background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%201200%20110'%20preserveAspectRatio='none'%3E%3Cpath%20d='M0%20110V58C34%2026%2090%2010%20148%2030S240%2070%20316%2046S420%206%20496%2024S590%2078%20676%2058S790%2014%20868%2032S968%2074%201046%2050S1146%2014%201200%2036V110Z'%20fill='%23ff9c92'/%3E%3Cpath%20d='M0%20110V82C52%2062%20104%2084%20170%2072S286%2046%20350%2066S466%20100%20548%2078S676%2050%20752%2070S872%20102%20954%2082S1096%2058%201200%2078V110Z'%20fill='%23874448'/%3E%3C/svg%3E")}
 
 /* --- izquierda: la carta --- */
 #armaPostre .ap-izq{grid-area:izq;position:relative;isolation:isolate;min-width:0;display:flex;flex-direction:column;align-items:center;padding:0 clamp(56px,5vw,90px)}
@@ -416,6 +416,11 @@ body::after{bottom:0;height:90px;background-image:url("data:image/svg+xml,%3Csvg
 #armaPostre .ap-der .ic-social{width:min(520px,100%);margin:0;padding:14px 22px;border-radius:26px;background:#f5a31a;color:#fff;
     font-size:1.1rem;line-height:1.4;font-weight:700;text-align:center;box-shadow:0 6px 0 #c9800c}
 #armaPostre .ap-der .ic-kit{height:2.2em}
+/* botoncito del 10%: cuánta plata de este postre va a los kits (mismo estilo del botón Agregar) */
+#armaPostre .ic-diez{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 8px;max-width:100%;box-sizing:border-box;
+    padding:10px 22px;border-radius:999px;background:var(--rosa-carta);color:#fff;font-family:"Lilita One",system-ui,sans-serif;
+    font-size:1.15rem;line-height:1.25;letter-spacing:.02em;text-align:center;box-shadow:0 5px 0 var(--flecha);user-select:none}
+#armaPostre .ic-diez b{font-weight:400;background:#fff;color:var(--flecha);border-radius:999px;padding:1px 12px}
 
 #armaPostre .ap-der .acciones{width:min(520px,100%);flex-wrap:nowrap;justify-content:center;gap:10px}
 #armaPostre .ap-der .ic-btn{font-size:1.1rem;padding:10px 16px;white-space:nowrap;border-width:3px;color:var(--flecha);border-color:var(--rosa-carta);box-shadow:0 5px 0 rgba(188,93,117,.28)}
@@ -442,10 +447,10 @@ body::after{bottom:0;height:90px;background-image:url("data:image/svg+xml,%3Csvg
 /* --- tablet: una columna --- */
 @media (max-width:980px){
   #armaPostre.ap-panel{grid-template-columns:minmax(0,1fr);grid-template-areas:"izq" "pinky" "der";justify-items:center;row-gap:16px;
-    padding:90px 14px 40px}
-  body::before{height:96px}
-  body::after{height:76px}
-  body{padding-bottom:90px}
+    padding:124px 14px 40px}
+  body::before{height:136px}
+  body::after{height:92px}
+  body{padding-bottom:110px}
   #armaPostre .ap-izq{padding:0 0 6px;width:100%}
   #armaPostre .ap-izq .carta-giro{width:min(560px,calc(100vw - 170px))}
   #armaPostre .pinky-flota{width:auto;margin-top:0;justify-self:center}
@@ -461,15 +466,16 @@ body::after{bottom:0;height:90px;background-image:url("data:image/svg+xml,%3Csvg
 }
 /* --- celular --- */
 @media (max-width:700px){
-  #armaPostre.ap-panel{--borde:10px;--mitad-pill:24px;padding:80px 6px 30px}
-  body::before{height:76px}
-  body::after{height:64px}
-  body{padding-bottom:70px}
+  #armaPostre.ap-panel{--borde:10px;--mitad-pill:24px;padding:104px 6px 30px}
+  body::before{height:108px}
+  body::after{height:78px}
+  body{padding-bottom:90px}
   #armaPostre .ap-izq .carta-giro{width:min(340px,calc(100vw - 104px))}
   #armaPostre .carta .precio{font-size:1.3rem;min-width:130px;padding:4px 22px}
   #armaPostre .ap-der .info-combo{font-size:1rem;padding:16px 18px}
   #armaPostre .ap-der .ic-ing{font-size:1rem}
   #armaPostre .ap-der .ic-desglose{font-size:1.1rem}
+  #armaPostre .ic-diez{font-size:1rem;padding:9px 16px}
   #armaPostre .ap-der .agregar{font-size:1.8rem;padding:12px 20px}
   #armaPostre .ap-der .ic-social{font-size:1rem}
   #armaPostre .ap-der .ic-btn{font-size:.78rem;padding:7px 9px;gap:4px}
@@ -507,7 +513,6 @@ body::after{bottom:0;height:90px;background-image:url("data:image/svg+xml,%3Csvg
 </style>
     <title>Productos Sh</title>
     <link rel="icon" href="favicon.ico">
-    <link rel="stylesheet" href="movil.css">
 <link rel="stylesheet" href="responsive.css">
 </head>
 <body>
@@ -580,6 +585,7 @@ body::after{bottom:0;height:90px;background-image:url("data:image/svg+xml,%3Csvg
     <h1 class="titulo-combo" id="tituloCombo"></h1>
     <div class="info-combo" id="infoCombo">
       <div class="ic-desglose" id="icDesglose"></div>
+      <div class="ic-diez" id="icDiez" role="status"></div>
       <p class="ic-ing"><b>Ingredientes:</b> <span id="icIngT"></span></p>
       <div class="antojo"><span>Nivel de antojo:</span><div id="osos"></div></div>
     </div>
@@ -787,7 +793,7 @@ const PORCENTAJE_SOCIAL = 0.10;      // 10% de cada postre va a kits alimentario
 const CLAVE_COMBO = "sh_combo";      // última combinación (localStorage)
 const CLAVE_FAVS  = "sh_favs";       // favoritos
 const CLAVE_PISTA = "sh_pista";      // si ya se mostró la pista de "arrástralo"
-const PIXEL_MAX = (matchMedia("(pointer:coarse)").matches || (navigator.hardwareConcurrency || 8) <= 4) ? 1.5 : 2;  // celulares: menos carga
+const PIXEL_MAX = (matchMedia("(pointer:coarse)").matches || (navigator.hardwareConcurrency || 8) <= 4) ? 1 : 2;  // celulares: menos carga (1 = una pasada por píxel, mucho más fluido)
 
 /* ----- DOMICILIO (mapa) -----
    tienda    -> punto central del mapa y de donde sale el domicilio. Pega aquí tus coordenadas de Google Maps
@@ -990,7 +996,7 @@ class Visor {
     this.renderer.toneMapping = LUZ.tono === "aces" ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping;
     this.renderer.toneMappingExposure = LUZ.exposicion;
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.shadowMap.type = matchMedia("(pointer:coarse)").matches ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap;   // sombra más ligera en teléfono
 
     this._luces(sombra);
 
@@ -1481,6 +1487,7 @@ function actualizar(){
 const $icDesglose = document.getElementById("icDesglose");
 const $icIngT = document.getElementById("icIngT");
 const $icSocial = document.getElementById("icSocial");
+const $icDiez = document.getElementById("icDiez");
 const $voz = document.getElementById("apVoz");
 const $btnFav = document.getElementById("btnFav");
 const $btnSorpresa = document.getElementById("btnSorpresa");
@@ -1538,6 +1545,9 @@ function pintarInfo(){
   const total = precioActual();
   $icDesglose.textContent = `Base ${b.titulo} ${fmt(b.precio)} + ${m.titulo} ${fmt(m.precio)}`;
   $icIngT.textContent = [ib.ing, im.ing].filter(Boolean).join(", ");
+  const aporte = Math.round(total * PORCENTAJE_SOCIAL);
+  $icDiez.textContent = Math.round(PORCENTAJE_SOCIAL * 100) + "%   >";
+  const monto = document.createElement("b"); monto.textContent = fmt(aporte); $icDiez.appendChild(monto);
   $icSocial.textContent = `El ${Math.round(PORCENTAJE_SOCIAL * 100)}% de tu compra va destinado a un kit alimenticio `;
   const kit = new Image();
   kit.src = "kitmini.svg"; kit.alt = ""; kit.className = "ic-kit";
@@ -2417,7 +2427,7 @@ setTimeout(ocultarCarga, 15000);   // por si algún modelo tarda demasiado
       ingredientes:"Leche entera, leche condensada, crema de leche, bizcocho mixto, mermelada de fresa" }
   ];
   const FILTROS = [ ["todos","Todos"], ["normal","Tradicional"], ["chocolate","Chocolate"], ["mixta","Mixto"] ];
-  const MENSAJE_SOCIAL = "💗 El 10% de tu compra se destina a kits alimentarios para familias vulnerables.";
+  const MENSAJE_SOCIAL = " El 10% de tu compra se destina a kits alimentarios para familias vulnerables.";
   const ICONOS_OSO = { lleno:"pinkydarkicon.svg", medio:"pinkyorangeicon.svg", vacio:"pinkynullicon.svg" };
   /* Para el armador: devuelve la carta del catálogo de esa combinación (base + mermelada), o "" si no tiene carta */
   window.shImgCarta = (base, merm) => { const p = CATALOGO.find(x => x.armar && x.armar.base === base && x.armar.merm === merm); return p ? p.img : ""; };
