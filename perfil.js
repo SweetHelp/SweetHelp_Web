@@ -18,6 +18,8 @@
     var AUMENTO = 1.3;        // el ícono de perfil se ve 30 % más grande (pon 1 para el tamaño de antes)
     var COLOR = '#823C4A';    // mismo color de la línea de la flecha
     var ZOOM_MAX = 4;         // hasta cuántas veces se puede acercar
+    var K_TAM = 'sh_perfil_tam';   // tamaño del ícono medido en el HOME (index5): las demás páginas lo copian
+    var TAM_DEFECTO = 56;          // si aún no se ha visitado el home en este navegador
 
     function leer(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
     function guardar(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
@@ -38,8 +40,17 @@
         imagenes().forEach(function (img) {
             if (!img.dataset.shOrig) {
                 img.dataset.shOrig = img.getAttribute('src');
+                /* El tamaño de referencia es el del home (index5). Ahí se mide y se guarda;
+                   en las demás páginas (productos, equipo, información) se usa ese mismo valor.
+                   En teléfono responsive.css ya iguala el tamaño en todas las páginas. */
                 var r = img.getBoundingClientRect();
-                img.dataset.shTam = Math.round(Math.min(r.width, r.height)) || 84;
+                var medido = Math.round(Math.min(r.width, r.height)) || 0;
+                var movil = window.matchMedia('(max-width:768px)').matches;
+                var esHome = !!img.closest('.menudesplegable2');
+                var tam = medido || TAM_DEFECTO;
+                if (esHome) { if (medido && !movil) guardar(K_TAM, String(medido)); }
+                else if (!movil) tam = parseInt(leer(K_TAM), 10) || TAM_DEFECTO;
+                img.dataset.shTam = tam;
             }
             /* tamaño (más grande); con !important para ganarle al responsive.css del teléfono */
             var t = Math.round(img.dataset.shTam * AUMENTO) + 'px';
