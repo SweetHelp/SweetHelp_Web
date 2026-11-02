@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seguimiento de tu pedido · Sweet Help</title>
+<style>
+  :root{--rosa:#ff9195;--rosa-claro:#ffe0e1;--naranja:#ffab00;--cafe:#864f02;--rosa-txt:#c0607a;--verde:#3cb371}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#fff6f1;color:var(--cafe)}
+  .wrap{max-width:760px;margin:0 auto;padding:16px 14px 40px}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  header a{color:var(--rosa-txt);font-weight:700;text-decoration:none;font-size:14px}
+  h1{font-size:20px;margin:0}
+  .card{background:#fff;border:3px solid var(--rosa);border-radius:22px;padding:16px;margin-bottom:14px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+  .eta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .eta small{display:block;color:var(--rosa-txt);font-weight:700}
+  .eta .hora{font-size:26px;font-weight:800}
+  .eta .min{background:var(--naranja);color:#fff;border-radius:999px;padding:8px 14px;font-weight:800;white-space:nowrap}
+  #estado{margin:12px 0 0;font-weight:800;font-size:17px}
+  h2{font-size:15px;margin:0 0 12px;color:var(--rosa-txt);text-transform:uppercase;letter-spacing:.5px}
+  /* Líneas de tiempo */
+  .tl{display:flex;gap:6px}
+  .tl .paso{flex:1;text-align:center;font-size:12px;font-weight:700;color:#d9a8b3}
+  .tl .barra{height:8px;border-radius:99px;background:var(--rosa-claro);overflow:hidden;margin-bottom:8px}
+  .tl .barra i{display:block;height:100%;width:0;background:var(--rosa);border-radius:99px}
+  .tl .paso.hecho,.tl .paso.activo{color:var(--cafe)}
+  .tl .paso.hecho .barra i{background:var(--verde)}
+  .tl .paso .ico{font-size:20px;display:block;margin-bottom:2px;filter:grayscale(1);opacity:.45}
+  .tl .paso.hecho .ico,.tl .paso.activo .ico{filter:none;opacity:1}
+  .tl .paso.activo .ico{animation:salto 1s infinite}
+  @keyframes salto{50%{transform:translateY(-4px)}}
+  .tl.dos .paso:first-child{flex:3}.tl.dos .paso:last-child{flex:1}
+  /* Mapa */
+  #mapa{width:100%;display:block;border-radius:16px;background:#eaf3e3}
+  .leyenda{display:flex;justify-content:space-between;font-size:12px;color:var(--rosa-txt);font-weight:700;margin-top:8px}
+  /* Resumen */
+  .item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--rosa-claro);font-size:14px}
+  .item:last-child{border:0}
+  .tot{display:flex;justify-content:space-between;font-weight:800;margin-top:8px}
+  .vacio{text-align:center;padding:30px 10px}
+  .btn{display:inline-block;background:var(--naranja);color:#fff;border:0;border-radius:999px;padding:12px 22px;font-weight:800;font-size:15px;cursor:pointer;text-decoration:none}
+  /* Notificación de llegada */
+  #aviso{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:99;padding:20px}
+  #aviso.open{display:flex}
+  #aviso .caja{background:#fff;border:4px solid var(--rosa);border-radius:26px;padding:28px 24px;text-align:center;max-width:340px;animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+  #aviso .big{font-size:64px}
+  #aviso h3{margin:6px 0 6px;font-size:22px}
+  #aviso p{margin:0 0 16px;color:var(--rosa-txt)}
+  @keyframes pop{from{transform:scale(.6);opacity:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Tu pedido 🍰</h1>
+    <a href="productos.html">← Seguir comprando</a>
+  </header>
+
+  <div id="vacio" class="card vacio" style="display:none">
+    <p>No tienes ningún pedido en curso.</p>
+    <a class="btn" href="productos.html">Ir a productos</a>
+  </div>
+
+  <div id="contenido">
+    <div class="card">
+      <div class="eta">
+        <div><small id="etaTit">Llegada aproximada</small><span class="hora" id="hora">--:--</span></div>
+        <div class="min" id="min">-- min</div>
+      </div>
+      <p id="estado"></p>
+    </div>
+
+    <div class="card">
+      <h2>Preparación</h2>
+      <div class="tl" id="tl1">
+        <div class="paso"><div class="barra"><i></i></div><span class="ico">✅</span>Aprobación</div>
+        <div class="paso"><div class="barra"><i></i></div><span class="ico">👩‍🍳</span>En cocina</div>
+        <div class="paso"><div class="barra"><i></i></div><span class="ico">📦</span>Repartidor recoge</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Entrega</h2>
+      <div class="tl dos" id="tl2">
+        <div class="paso"><div class="barra"><i></i></div><span class="ico">🛵</span>En camino a tu casa</div>
+        <div class="paso"><div class="barra"><i></i></div><span class="ico">🏠</span>Entregado</div>
+      </div>
+      <svg id="mapa" viewBox="0 0 600 400" role="img" aria-label="Mapa con el recorrido del repartidor"></svg>
+      <div class="leyenda"><span>🏪 Sweet Help</span><span id="dist">—</span><span>🏠 Tu casa</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Resumen del pedido</h2>
+      <div id="items"></div>
+      <div class="tot"><span>Total</span><span id="total"></span></div>
+    </div>
+  </div>
+</div>
+
+<div id="aviso">
+  <div class="caja">
+    <div class="big">🎉</div>
+    <h3>¡Tu pedido ha llegado!</h3>
+    <p>Que lo disfrutes. Gracias por ayudar con cada compra 💗</p>
+    <button class="btn" id="avisoOk">¡Gracias!</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  const KEY = 'sweethelp_pedido';
+  const fmt = n => '$' + Number(n).toLocaleString('es-CO');
+  const $ = id => document.getElementById(id);
+
+  /* ---- Duración de la SIMULACIÓN (segundos reales de cada fase) ---- */
+  const DUR = [8, 18, 8, 40];                 // aprobación, cocina, repartidor recoge, en camino
+  const FIN = [8, 26, 34, 74];                // tiempos acumulados
+  const TOTAL = FIN[3];
+  const MIN_SIMULADOS = 25;                   // minutos "de mentira" que se muestran al inicio
+
+  function leer() {
+    try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; }
+  }
+  function guardar(p) { try { localStorage.setItem(KEY, JSON.stringify(p)); } catch (e) {} }
+
+  const pedido = leer();
+  if (!pedido || !pedido.inicio) {
+    $('contenido').style.display = 'none';
+    $('vacio').style.display = 'block';
+    return;
+  }
+
+  /* ---- Resumen ---- */
+  (pedido.productos || []).forEach(p => {
+    const d = document.createElement('div'); d.className = 'item';
+    const a = document.createElement('span'); a.textContent = p.cantidad + ' × ' + p.nombre;
+    const b = document.createElement('b'); b.textContent = fmt(p.precio * p.cantidad);
+    d.append(a, b); $('items').appendChild(d);
+  });
+  $('total').textContent = fmt(pedido.total || 0);
+
+  /* ---- Mapa (simulado, dibujado en SVG: no necesita internet ni claves) ---- */
+  const NS = 'http://www.w3.org/2000/svg';
+  const mapa = $('mapa');
+  function s(tag, attrs, parent) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    (parent || mapa).appendChild(e); return e;
+  }
+  // manzanas / parques
+  [[110,100,140,30],[280,100,140,30],[440,150,70,60],[110,240,140,60],[280,240,140,60],[440,240,70,60],[20,100,60,100],[20,240,60,60],
+   [110,330,140,50],[280,330,230,50],[530,100,60,200],[110,20,140,45],[280,20,140,45],[440,20,70,45]]
+    .forEach((r, i) => s('rect', { x: r[0], y: r[1], width: r[2], height: r[3], rx: 8, fill: i % 4 === 0 ? '#cfe8c4' : '#f4e9df' }));
+  // calles
+  [80, 140, 220, 310].forEach(y => { s('line', { x1: 0, y1: y, x2: 600, y2: y, stroke: '#fff', 'stroke-width': 16 }); });
+  [90, 260, 430, 520].forEach(x => { s('line', { x1: x, y1: 0, x2: x, y2: 400, stroke: '#fff', 'stroke-width': 16 }); });
+
+  const RUTA = 'M90 310 L90 220 L260 220 L260 140 L430 140 L430 80 L520 80';
+  const base = s('path', { d: RUTA, fill: 'none', stroke: '#e3b5bd', 'stroke-width': 7, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-dasharray': '2 12' });
+  const recorrido = s('path', { d: RUTA, fill: 'none', stroke: '#ff9195', 'stroke-width': 7, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+  const LEN = recorrido.getTotalLength();
+  recorrido.setAttribute('stroke-dasharray', '0 ' + LEN);
+
+  function emoji(txt, x, y, size) {
+    const t = s('text', { x: x, y: y, 'font-size': size, 'text-anchor': 'middle', 'dominant-baseline': 'central' });
+    t.textContent = txt; return t;
+  }
+  s('circle', { cx: 90, cy: 310, r: 22, fill: '#fff', stroke: '#ff9195', 'stroke-width': 3 });
+  emoji('🏪', 90, 310, 24);
+  s('circle', { cx: 520, cy: 80, r: 22, fill: '#fff', stroke: '#ffab00', 'stroke-width': 3 });
+  emoji('🏠', 520, 80, 24);
+
+  const rep = s('g', {});
+  const halo = s('circle', { r: 20, fill: 'rgba(255,145,149,.35)' }, rep);
+  const repEmoji = document.createElementNS(NS, 'text');
+  repEmoji.setAttribute('font-size', 28); repEmoji.setAttribute('text-anchor', 'middle'); repEmoji.setAttribute('dominant-baseline', 'central');
+  repEmoji.textContent = '🛵'; rep.appendChild(repEmoji);
+  const haloAnim = document.createElementNS(NS, 'animate');
+  haloAnim.setAttribute('attributeName', 'r'); haloAnim.setAttribute('values', '16;26;16'); haloAnim.setAttribute('dur', '1.4s'); haloAnim.setAttribute('repeatCount', 'indefinite');
+  halo.appendChild(haloAnim);
+
+  /* ---- Sonido y notificación de llegada ---- */
+  function sonido() {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+      const c = new AC(); let t = c.currentTime;
+      [[523, .12], [659, .12], [784, .12], [1047, .3]].forEach(n => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.frequency.value = n[0]; g.gain.setValueAtTime(.0001, t);
+        g.gain.exponentialRampToValueAtTime(.2, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + n[1]);
+        o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + n[1] + .02); t += n[1] * .85;
+      });
+    } catch (e) {}
+  }
+  function notificarLlegada() {
+    $('aviso').classList.add('open');
+    sonido();
+    try {
+      if ('Notification' in window && Notification.permission === 'granted')
+        new Notification('Sweet Help', { body: '¡Tu pedido ha llegado! 🎉' });
+    } catch (e) {}
+    try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) {}
+  }
+  $('avisoOk').onclick = () => $('aviso').classList.remove('open');
+  try { if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission(); } catch (e) {}
+
+  /* ---- Simulación ---- */
+  const ESTADOS = [
+    'Esperando la aprobación de tu pedido…',
+    'Estamos preparando tu pedido en cocina 🍰',
+    'El repartidor está recogiendo tu pedido 📦',
+    'Tu pedido va en camino 🛵',
+    '¡Tu pedido ha llegado! 🎉'
+  ];
+  const pasos1 = $('tl1').querySelectorAll('.paso');
+  const pasos2 = $('tl2').querySelectorAll('.paso');
+  let avisado = !!pedido.notificado;
+  let yaLlego = false;
+
+  function marcar(paso, estado, pct) {
+    paso.classList.toggle('hecho', estado === 'hecho');
+    paso.classList.toggle('activo', estado === 'activo');
+    paso.querySelector('i').style.width = (estado === 'hecho' ? 100 : estado === 'activo' ? pct : 0) + '%';
+  }
+  function hh(d) { return d.toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' }); }
+
+  function tick() {
+    const el = (Date.now() - pedido.inicio) / 1000;
+    const etapa = el < FIN[0] ? 0 : el < FIN[1] ? 1 : el < FIN[2] ? 2 : el < FIN[3] ? 3 : 4;
+    const ini = [0, FIN[0], FIN[1], FIN[2]];
+
+    for (let i = 0; i < 3; i++) {
+      if (etapa > i) marcar(pasos1[i], 'hecho');
+      else if (etapa === i) marcar(pasos1[i], 'activo', (el - ini[i]) / DUR[i] * 100);
+      else marcar(pasos1[i], 'pend');
+    }
+    const pEnt = Math.max(0, Math.min(1, (el - FIN[2]) / DUR[3]));
+    if (etapa >= 4) { marcar(pasos2[0], 'hecho'); marcar(pasos2[1], 'hecho'); }
+    else if (etapa === 3) { marcar(pasos2[0], 'activo', pEnt * 100); marcar(pasos2[1], 'pend'); }
+    else { marcar(pasos2[0], 'pend'); marcar(pasos2[1], 'pend'); }
+
+    // repartidor sobre la ruta: está en el local hasta que sale
+    const pt = recorrido.getPointAtLength(LEN * pEnt);
+    rep.setAttribute('transform', 'translate(' + pt.x + ',' + pt.y + ')');
+    recorrido.setAttribute('stroke-dasharray', (LEN * pEnt) + ' ' + LEN);
+
+    $('estado').textContent = ESTADOS[etapa];
+    if (etapa < 4) {
+      const restSeg = TOTAL - el;
+      const restMin = Math.max(1, Math.ceil(restSeg / TOTAL * MIN_SIMULADOS));
+      $('min').textContent = restMin + ' min';
+      $('hora').textContent = hh(new Date(Date.now() + restMin * 60000));
+      $('etaTit').textContent = 'Llegada aproximada';
+      $('dist').textContent = etapa === 3 ? Math.max(0, Math.round((1 - pEnt) * 1.8 * 10) / 10) + ' km restantes' : 'Preparando…';
+    } else {
+      $('min').textContent = '¡Llegó!';
+      $('hora').textContent = hh(new Date(pedido.inicio + TOTAL * 1000));
+      $('etaTit').textContent = 'Entregado a las';
+      $('dist').textContent = '0 km';
+      halo.style.display = 'none';
+      if (!yaLlego) {
+        yaLlego = true;
+        document.title = '¡Tu pedido ha llegado! · Sweet Help';
+        if (!avisado) { avisado = true; pedido.notificado = true; guardar(pedido); notificarLlegada(); }
+      }
+    }
+  }
+  tick();
+  setInterval(tick, 100);
+})();
+</script>
+</body>
+</html>

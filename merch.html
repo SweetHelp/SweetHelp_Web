@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tienda Sweet Help</title>
+<link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lobster&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+:root{--rosa:#ff9195;--rosa2:#f28f95;--crema:#f8f2dc;--marron:#8b5e3c;--vino:#823C4A;--agregar:#e0527a;--texto:#2a1408;--suave:#c0607a}
+*{box-sizing:border-box}
+html,body{margin:0;overscroll-behavior-y:none}   /* sin rebote: la página no sube más allá del tope, solo baja y vuelve hasta el límite */
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#faf6ec;color:var(--texto);min-height:100vh}
+body.bloq{overflow:hidden}
+button{font-family:inherit}
+
+/* ===== PANTALLA DE CARGA: spinner al centro y logo abajito ===== */
+#cargaInicial{position:fixed;inset:0;z-index:20000;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s,visibility .5s}
+#cargaInicial.fuera{opacity:0;visibility:hidden}
+.ci-rueda{width:54px;height:54px;border-radius:50%;border:6px solid #ffe0e1;border-top-color:var(--rosa);animation:gira .8s linear infinite;margin-top:34px}
+@keyframes gira{to{transform:rotate(360deg)}}
+.ci-logo{display:flex;justify-content:center}
+.ci-logo img{width:min(84vw,560px);max-height:58vh;height:auto;object-fit:contain;display:block;animation:latido 1.8s ease-in-out infinite}
+@keyframes latido{50%{transform:scale(1.06)}}
+
+/* ===== ENCABEZADO tipo Mercado Libre ===== */
+/* El menú (arriba a la derecha) y el perfil (arriba a la izquierda) ocupan los primeros ~118px: el título y el buscador
+   empiezan debajo de esa franja, así nunca chocan. El carrito queda en el costado derecho (por eso el padding derecho). */
+.top{background:var(--rosa);padding:118px 16px 14px;position:relative;z-index:1;box-shadow:0 3px 10px rgba(0,0,0,.15)}
+.top-in{max-width:1100px;margin:0 auto;padding:0 96px;display:flex;flex-direction:column;gap:10px}
+.top h1{margin:0;text-align:center;font-family:"Lobster","Lilita One",cursive;font-weight:400;font-size:1.9rem;color:#fff;line-height:1}
+.buscar-bajo{position:fixed;left:0;right:0;bottom:0;z-index:900;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:var(--rosa);box-shadow:0 -3px 10px rgba(0,0,0,.15)}
+.buscar-bajo .buscar{max-width:640px;margin:0 auto}
+.buscar{display:flex;background:#fff;border-radius:999px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.buscar input{flex:1;border:0;outline:none;padding:11px 18px;font-size:1rem;font-family:inherit;color:var(--texto);min-width:0}
+.buscar span{padding:0 16px;display:flex;align-items:center;font-size:1.1rem}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:2px}
+.chip{flex:none;border:2px solid #fff;background:transparent;color:#fff;border-radius:999px;padding:5px 15px;font-family:"Lilita One",system-ui,sans-serif;font-size:.9rem;cursor:pointer;transition:background .15s,color .15s}
+.chip.on{background:#fff;color:var(--agregar)}
+
+/* ===== REJILLA DE PREVISUALIZACIONES ===== */
+main{max-width:1100px;margin:0 auto;padding:22px 14px 90px}
+.cuenta{margin:0 0 14px;font-size:.9rem;color:var(--suave);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.card{background:#fff;border-radius:16px;overflow:hidden;cursor:pointer;border:0;padding:0;text-align:left;display:flex;flex-direction:column;box-shadow:0 1px 4px rgba(0,0,0,.12);
+  transition:transform .2s,box-shadow .2s;animation:entra .45s ease-out backwards;animation-delay:var(--d,0s)}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.18)}
+@keyframes entra{from{opacity:0;transform:translateY(16px)}}
+.card-img{position:relative;aspect-ratio:1;background:var(--crema);display:flex;align-items:center;justify-content:center;border-bottom:1px solid #eee;overflow:hidden}
+.card-img img{width:88%;height:88%;object-fit:contain;display:block}
+.sin-img{font-size:3rem}
+.badge{position:absolute;top:8px;left:8px;background:#f39c12;color:#fff;font-family:"Lilita One",system-ui,sans-serif;font-size:.72rem;padding:3px 10px;border-radius:999px;transform:rotate(-4deg)}
+.card-info{padding:10px 12px 14px;display:flex;flex-direction:column;gap:3px}
+.antes{font-size:.8rem;color:#999;text-decoration:line-through;min-height:1em}
+.precio{font-family:"Lilita One",system-ui,sans-serif;font-size:1.4rem;color:var(--texto);line-height:1.1}
+.nombre{font-size:.92rem;color:#444;line-height:1.25}
+.kit{font-size:.74rem;color:#1f9d55;font-weight:700;margin-top:2px}
+.vacio{grid-column:1/-1;text-align:center;padding:50px 10px;color:var(--suave);font-weight:700}
+
+/* ===== VENTANITA (MODAL) DE PRODUCTO ===== */
+.ov{position:fixed;inset:0;z-index:10050;background:rgba(42,20,8,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.ov.open{display:flex;animation:fade .25s ease-out}
+@keyframes fade{from{opacity:0}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.04)}100%{transform:scale(1);opacity:1}}
+.modal{position:relative;width:min(860px,100%);max-height:92vh;overflow:auto;background:#fff;border:5px solid var(--rosa2);border-radius:28px;padding:22px;
+  display:grid;grid-template-columns:1fr 1fr;gap:22px;box-shadow:0 18px 50px rgba(0,0,0,.35);animation:pop .4s ease-out;overscroll-behavior:contain}
+.x{position:absolute;top:10px;right:12px;width:38px;height:38px;border-radius:50%;border:0;background:var(--rosa2);color:#fff;font-size:1.2rem;cursor:pointer;z-index:2}
+.galeria{display:flex;flex-direction:column;gap:10px;min-width:0}
+.principal{position:relative;aspect-ratio:1;background:var(--crema);border-radius:20px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.principal img{width:92%;height:92%;object-fit:contain;display:block}
+.miniaturas{display:flex;gap:8px;flex-wrap:wrap}
+.mini{width:60px;height:60px;border-radius:12px;border:3px solid #eee;background:var(--crema);padding:2px;cursor:pointer}
+.mini.on{border-color:var(--agregar)}
+.mini img{width:100%;height:100%;object-fit:contain;display:block}
+.detalle{display:flex;flex-direction:column;gap:10px;padding-right:30px;min-width:0}
+.d-cat{font-size:.78rem;font-weight:700;color:var(--suave);text-transform:uppercase;letter-spacing:.5px}
+.d-nombre{margin:0;font-family:"Lobster","Lilita One",cursive;font-weight:400;font-size:2.1rem;color:var(--marron);line-height:1.05}
+.d-antes{font-size:.95rem;color:#999;text-decoration:line-through;min-height:1em}
+.d-precio{font-family:"Lilita One",system-ui,sans-serif;font-size:2.3rem;color:var(--texto);line-height:1}
+.d-desc{margin:0;font-size:.98rem;line-height:1.45;color:#444}
+.d-kit{background:#e9f8ef;border:2px solid #3cb371;color:#1f7a47;border-radius:14px;padding:8px 12px;font-size:.85rem;font-weight:700}
+.btns{display:flex;flex-direction:column;gap:8px;margin-top:auto}
+.btn{border:0;border-radius:999px;padding:13px;font-family:"Lilita One",system-ui,sans-serif;font-size:1.1rem;cursor:pointer;transition:transform .2s cubic-bezier(.3,1.8,.5,1),background .15s}
+.btn:hover{transform:scale(1.03)}
+.btn.agregar{background:var(--agregar);color:#fff}
+.btn.agregar.ok{background:#3cb371}
+.btn.sec{background:#fff;color:var(--agregar);border:3px solid var(--agregar)}
+.btn:disabled{background:#bbb;color:#fff;cursor:not-allowed;transform:none}
+
+/* ===== AGOTADOS (Sold out) ===== */
+.card.agotado .card-img{background:#e4e4e4}
+.card.agotado .card-img img,.principal.agotado img{filter:grayscale(1);opacity:.5}
+.card.agotado .precio,.card.agotado .nombre,.card.agotado .antes{color:#999}
+.principal.agotado{background:#e4e4e4}
+.sello{position:absolute;top:50%;left:50%;width:150%;transform:translate(-50%,-50%) rotate(-25deg);
+  background:rgba(90,90,90,.88);color:#fff;text-align:center;padding:5px 0;
+  font-family:"Lilita One",system-ui,sans-serif;font-size:1.15rem;letter-spacing:3px;text-transform:uppercase;
+  pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+
+@media (max-width:700px){
+  .top-in{padding:0 84px 0 0}
+  .top{padding-top:96px}
+  .top h1{font-size:1.6rem}
+  .chip{padding:4px 12px;font-size:.82rem}
+  .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .ov{padding:0;align-items:flex-end}
+  .modal{grid-template-columns:1fr;width:100%;max-height:94vh;border-radius:28px 28px 0 0;border-bottom:0;padding:18px 16px 22px;gap:14px}
+  .detalle{padding-right:0}
+  .d-nombre{font-size:1.8rem}
+  .principal{max-height:46vh;aspect-ratio:auto;height:46vw}
+}
+
+/* En teléfono el botón de Pinky flota abajo a la derecha: la barra de búsqueda le deja su espacio */
+@media (max-width:768px){ .buscar-bajo{padding-right:80px} }
+
+/* ===== Elementos globales de Sweet Help: carrito y perfil ===== */
+.sh-cart-wrap{position:fixed;top:124px;right:33px;z-index:10000}
+.sh-ibtn{position:relative;background:none;border:0;padding:0;cursor:pointer;line-height:0}
+.sh-ibtn img{width:64px;height:64px}
+.sh-perfil{position:fixed;top:8px;left:8px;z-index:10000}
+.sh-perfil-btn{background:none;border:0;padding:0;cursor:pointer;line-height:0}
+.sh-perfil-btn img{width:84px;height:84px;display:block}
+.sh-perfil-menu{display:none;list-style:none;margin:6px 0 0;padding:6px;background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.sh-perfil-menu.open{display:block}
+.sh-perfil-menu a{display:block;padding:8px 16px;color:#bd5c73;font-weight:700;text-decoration:none;border-radius:10px;font-family:inherit}
+.sh-perfil-menu a:hover{background:#ffe0e1}
+</style>
+</head>
+<body>
+
+<!-- ===== CARGA INICIAL ===== -->
+<div id="cargaInicial" role="status" aria-label="Cargando">
+  <div class="ci-logo"><img src="logooutline.svg" alt="Sweet Help"></div>
+  <div class="ci-rueda"></div>
+</div>
+<script>
+/* Seguro: aunque algo falle más abajo, la pantalla de carga siempre se quita */
+setTimeout(function(){ var c=document.getElementById("cargaInicial"); if(c) c.classList.add("fuera"); }, 4000);
+</script>
+
+<header class="top">
+  <div class="top-in">
+    <h1>Tienda Sweet Help</h1>
+    <div class="chips" id="chips"></div>
+  </div>
+</header>
+
+<main>
+  <p class="cuenta" id="cuenta"></p>
+  <div class="grid" id="grid"></div>
+</main>
+
+<!-- Barra de búsqueda: abajo de todo, fija al borde inferior para que siempre esté a mano y no choque con el menú -->
+<div class="buscar-bajo">
+  <div class="buscar"><input id="q" type="search" placeholder="Buscar productos…" autocomplete="off"><span>🔍</span></div>
+</div>
+
+<!-- ===== VENTANITA DE PRODUCTO (se rellena sola desde PRODUCTOS) ===== -->
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-label="Detalle del producto">
+  <div class="modal" id="modal">
+    <button class="x" id="cerrar" aria-label="Cerrar">✕</button>
+    <div class="galeria">
+      <div class="principal" id="principal"></div>
+      <div class="miniaturas" id="minis"></div>
+    </div>
+    <div class="detalle">
+      <span class="d-cat" id="dCat"></span>
+      <h2 class="d-nombre" id="dNombre"></h2>
+      <div class="d-antes" id="dAntes"></div>
+      <div class="d-precio" id="dPrecio"></div>
+      <p class="d-desc" id="dDesc"></p>
+      <div class="d-kit">💗 El 10% de tu compra se destina a kits alimentarios para familias vulnerables.</div>
+      <div class="btns">
+        <button type="button" class="btn agregar" id="btnAgregar" data-agregar data-id="" data-nombre="" data-precio="" data-img="">Agregar al carrito</button>
+        <button type="button" class="btn sec" id="btnCarrito">Ir al carrito 🛒</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Carrito (icono) y perfil -->
+<div class="sh-cart-wrap">
+  <button class="sh-ibtn" id="shCartBtn" aria-label="Carrito"><img src="carrito.svg" alt="carrito"><span class="sh-badge">0</span></button>
+</div>
+<div class="sh-perfil">
+  <button class="sh-perfil-btn" id="shPerfilBtn" aria-label="Perfil"><img src="iconoperfil.png" alt="iconperfil"></button>
+  <ul class="sh-perfil-menu" id="shPerfilMenu"><li><a href="">Editar</a></li><li><a href="iniciaroregistrarse.html">Salir</a></li></ul>
+</div>
+
+<script>
+/* =====================================================================
+   PRODUCTOS  —  EDITA AQUÍ
+   Para agregar un producto, copia un bloque { ... } y cámbiale los datos.
+   Campos:
+     id          -> único, sin repetirse (ej. "p7")
+     nombre      -> título del producto
+     precio      -> número, sin puntos (7500)
+     precioAntes -> (opcional) precio tachado, para mostrar descuento. Déjalo en 0 si no hay
+     categoria   -> sirve para los botones de filtro (se crean solos)
+     insignia    -> (opcional) etiqueta naranja: "Nuevo", "Más vendido"… Vacío "" = ninguna
+     agotado     -> (opcional) true = sin stock: sale en gris con "SOLD OUT" en diagonal,
+                    no se puede agregar al carrito y aparece en el filtro "Agotados".
+                    false o no ponerlo = hay stock.
+     imagenes    -> lista de imágenes. La 1ª es la miniatura de la tienda;
+                    si pones varias, en la ventanita salen como galería
+     descripcion -> texto corto que se ve en la ventanita
+     cocina      -> (opcional) false o no ponerlo = producto ya listo: el pedido NO pasa por cocina
+                    (va de Aprobación directo al repartidor). true = hay que prepararlo en cocina.
+                    Si el carrito mezcla un producto con cocina y otro sin cocina, el pedido pasa por cocina.
+   ===================================================================== */
+const PRODUCTOS = [
+  /* ---- Peluches y coleccionables (PRECIOS DE EJEMPLO: cámbialos por los reales) ---- */
+  { id:"m1", nombre:"Peluche Pinky", precio:45000, precioAntes:0, categoria:"Peluches", insignia:"Favorito",
+    imagenes:["pinky_Peluche.png"],
+    descripcion:"Pinky, la cerdita de Sweet Help, sentadita con su delantal y su pedacito de torta en la cabeza. Suave y perfecta para abrazar." },
+  { id:"m2", nombre:"PinkyChiky Sandia", precio:42000, precioAntes:0, categoria:"Peluches", insignia:"",
+    imagenes:["PinkyChiky.png"],
+    descripcion:"Pinky con su torta en la cabeza y una rebanada de sandía entre las manos. Redondita, suave y feliz." },
+  { id:"m3", nombre:"Llavero Pinky", precio:15000, precioAntes:0, categoria:"Llaveros", insignia:"Nuevo",
+    imagenes:["LLaverito_peluche_Pinky.png"],
+    descripcion:"Mini Pinky con su sandía, lista para acompañarte en las llaves o en la maleta." },
+
+  { id:"m4", nombre:"Frambuesa Peluche", precio:48000, precioAntes:0, categoria:"Peluches", insignia:"",
+    imagenes:["Frambuesa_Peluche.png"],
+    descripcion:"Serpiente de peluche color fresa con lunares y una tortica sobre la cabeza. Ideal para decorar y abrazar." },
+
+  { id:"m5", nombre:"Mandariana Peluche", precio:48000, precioAntes:0, categoria:"Peluches", insignia:"",
+    imagenes:["Mandarina_Peluche.png"],
+    descripcion:"Serpiente naranja de peluche con un guiño coqueto y su tortica. Una compañera muy alegre." },
+
+  { id:"m6", nombre:"Merenguita Peluche", precio:38000, precioAntes:0, categoria:"Peluches", insignia:"",
+    imagenes:["Merenguita_Peluche.png"],
+    descripcion:"Serpiente durazno de ojos grandes y rayita rosada. Pequeña, tierna y fácil de llevar a todas partes." },
+
+  { id:"m7", nombre:"kit Peluche", precio:40000, precioAntes:0, categoria:"Peluches", insignia:"",
+    imagenes:["kit__Peluche.png"],
+    descripcion:"Nuestro Kit con ojitos y bracitos, con la tapa entreabierta y sorpresa adentro." },
+
+  /* Ejemplo de producto AGOTADO: quita agotado:true cuando vuelva a haber stock */
+  { id:"m8", nombre:"Peluche Vasito", precio:40000, precioAntes:0, categoria:"Peluches", insignia:"", agotado:false,
+    imagenes:["postre_Peluche.png"],
+    descripcion:"Nuestros postre de peluche con tapa y cinta decorada, tímido y muy abrazable." },
+
+  { id:"m10", nombre:"Pinky NG", precio:45000, precioAntes:0, categoria:"Peluches", insignia:"", agotado:true,
+    imagenes:["pinky_ng.png"],
+    descripcion:"Peluche Pinky NG de la colaboracion de Sweet Help con NgArtStudio. Por ahora está agotado." },
+
+  { id:"m11", nombre:"Pinki Vikki", precio:45000, precioAntes:0, categoria:"Peluches", insignia:"", agotado:true,
+    imagenes:["Pinki_Vikki.png"],
+    descripcion:"Peluche Pinki Vikki de Sweet Help. Por ahora está agotado." },
+
+  { id:"m9", nombre:"Álbum Sweet Cards 2026", precio:18000, precioAntes:0, categoria:"Coleccionables", insignia:"2026",
+    imagenes:["Album_SweetCard_2026.png"],
+    descripcion:"El álbum oficial de Sweet Cards 2026 para guardar y coleccionar todas tus stickers." }
+  // Ejemplo con varias imágenes y descuento (quita las barras // del inicio de cada línea para activarlo,
+  // y pon una coma después del producto anterior):
+  // ,{ id:"m10", nombre:"Combo Pinky", precio:55000, precioAntes:60000, categoria:"Combos", insignia:"Oferta",
+  //   imagenes:["peluche-pinky.png","llavero-pinky.png"],
+  //   descripcion:"Peluche Pinky más su llavero." }
+];
+/* ===================================================================== */
+
+const $ = id => document.getElementById(id);
+const fmt = n => "$" + Number(n).toLocaleString("es-CO");
+let filtro = "Todos", texto = "";
+
+/* ---------- Carga inicial ---------- */
+(function(){
+  const c = $("cargaInicial");
+  let listo = false;
+  const quitar = () => { if(listo) return; listo = true; c.classList.add("fuera"); setTimeout(() => c.remove(), 600); };
+  window.addEventListener("load", () => setTimeout(quitar, 1500));
+  setTimeout(quitar, 5000);   // por si algo tarda de más
+})();
+
+/* ---------- Imagen con respaldo ---------- */
+function imagen(src, alt){
+  const im = new Image();
+  im.alt = alt || ""; im.src = src; im.decoding = "async";
+  im.onerror = () => { const s = document.createElement("span"); s.className = "sin-img"; s.textContent = "🍰"; im.replaceWith(s); };
+  return im;
+}
+function el(tag, cls, txt){ const e = document.createElement(tag); if(cls) e.className = cls; if(txt !== undefined) e.textContent = txt; return e; }
+
+/* ---------- Filtros y rejilla ---------- */
+const categorias = ["Todos", ...new Set(PRODUCTOS.map(p => p.categoria).filter(Boolean))];
+if(PRODUCTOS.some(p => p.agotado)) categorias.push("Agotados");   // apartado de no stock
+categorias.forEach(c => {
+  const b = el("button", "chip" + (c === "Todos" ? " on" : ""), c);
+  b.type = "button";
+  b.onclick = () => { filtro = c; document.querySelectorAll(".chip").forEach(x => x.classList.toggle("on", x === b)); pintar(); };
+  $("chips").appendChild(b);
+});
+$("q").addEventListener("input", e => { texto = e.target.value.trim().toLowerCase(); pintar(); });
+
+function pintar(){
+  const g = $("grid"); g.textContent = "";
+  const lista = PRODUCTOS.filter(p =>
+    (filtro === "Todos" || (filtro === "Agotados" ? p.agotado : p.categoria === filtro)) &&
+    (!texto || (p.nombre + " " + (p.descripcion || "") + " " + (p.categoria || "")).toLowerCase().includes(texto)));
+  $("cuenta").textContent = lista.length + (lista.length === 1 ? " producto" : " productos");
+  if(!lista.length){ g.appendChild(el("div", "vacio", "No encontramos productos 🍰")); return; }
+  lista.forEach((p, i) => {
+    const card = el("button", "card" + (p.agotado ? " agotado" : "")); card.type = "button";
+    card.style.setProperty("--d", (i * 0.05) + "s");
+    const wrap = el("div", "card-img");
+    if(p.imagenes && p.imagenes[0]) wrap.appendChild(imagen(p.imagenes[0], p.nombre));
+    else wrap.appendChild(el("span", "sin-img", "🍰"));
+    if(p.agotado) wrap.appendChild(el("span", "sello", "Sold out"));
+    else if(p.insignia) wrap.appendChild(el("span", "badge", p.insignia));
+    const info = el("div", "card-info");
+    info.append(el("div", "antes", p.precioAntes ? fmt(p.precioAntes) : ""), el("div", "precio", fmt(p.precio)),
+                el("div", "nombre", p.nombre));
+    if(!p.agotado) info.append(el("div", "kit", "💗 10% va a kits alimentarios"));
+    card.append(wrap, info);
+    card.onclick = () => abrir(p);
+    g.appendChild(card);
+  });
+}
+
+/* ---------- Ventanita de producto ---------- */
+let tBoton = 0;
+function abrir(p){
+  $("dCat").textContent = p.categoria || "";
+  $("dNombre").textContent = p.nombre;
+  $("dAntes").textContent = p.precioAntes ? fmt(p.precioAntes) : "";
+  $("dPrecio").textContent = fmt(p.precio);
+  $("dDesc").textContent = p.descripcion || "";
+
+  const imgs = (p.imagenes && p.imagenes.length) ? p.imagenes : [""];
+  const pintarPrincipal = s => {
+    const w = $("principal"); w.textContent = "";
+    w.classList.toggle("agotado", !!p.agotado);
+    w.appendChild(s ? imagen(s, p.nombre) : el("span", "sin-img", "🍰"));
+    if(p.agotado) w.appendChild(el("span", "sello", "Sold out"));
+  };
+  pintarPrincipal(imgs[0]);
+  const m = $("minis"); m.textContent = "";
+  if(imgs.length > 1){
+    imgs.forEach((s, i) => {
+      const b = el("button", "mini" + (i === 0 ? " on" : "")); b.type = "button"; b.appendChild(imagen(s, ""));
+      b.onclick = () => { pintarPrincipal(s); m.querySelectorAll(".mini").forEach(x => x.classList.toggle("on", x === b)); };
+      m.appendChild(b);
+    });
+  }
+
+  // datos que lee carrito.js al presionar "Agregar"
+  const bt = $("btnAgregar");
+  bt.dataset.sinCocina = p.cocina === true ? "false" : "true";   // carrito.js: "true" = no pasa por cocina
+  bt.dataset.id = p.id; bt.dataset.nombre = p.nombre; bt.dataset.precio = String(p.precio); bt.dataset.img = (p.imagenes && p.imagenes[0]) || "";
+  bt.classList.remove("ok");
+  bt.disabled = !!p.agotado;                                      // sin stock: no se puede agregar
+  bt.textContent = p.agotado ? "Agotado" : "Agregar al carrito";
+
+  $("ov").classList.add("open"); document.body.classList.add("bloq");
+}
+function cerrar(){ $("ov").classList.remove("open"); document.body.classList.remove("bloq"); }
+$("cerrar").onclick = cerrar;
+$("ov").addEventListener("click", e => { if(e.target === $("ov")) cerrar(); });
+document.addEventListener("keydown", e => { if(e.key === "Escape") cerrar(); });
+
+$("btnAgregar").addEventListener("click", () => {          // carrito.js ya suma el producto; aquí solo el aviso
+  const b = $("btnAgregar");
+  if(b.disabled) return;
+  b.textContent = "¡Agregado! ✓"; b.classList.add("ok");
+  clearTimeout(tBoton);
+  tBoton = setTimeout(() => { b.textContent = "Agregar al carrito"; b.classList.remove("ok"); }, 1400);
+});
+$("btnCarrito").onclick = () => { cerrar(); setTimeout(() => $("shCartBtn").click(), 50); };
+
+/* Perfil */
+$("shPerfilBtn").onclick = e => { e.stopPropagation(); $("shPerfilMenu").classList.toggle("open"); };
+document.addEventListener("click", e => { if(!e.target.closest(".sh-perfil")) $("shPerfilMenu").classList.remove("open"); });
+
+pintar();
+</script>
+
+<!-- MENÚ, CARRITO, PERFIL Y CURSOR de Sweet Help -->
+<script src="menu.js"></script>
+<script src="carrito.js"></script>
+<script src="cursor.js"></script>
+
+<!-- ANUNCIOS: anuncios.js lee esta lista (la misma idea que en index5.html) -->
+<script>
+window.ANUNCIOS = {
+  tamano: { ancho:1895, alto:26 },   // proporción de las imágenes de la cinta
+  velocidad: 60,                      // píxeles por segundo
+  anuncios: [
+    /* Copia aquí los mismos anuncios que tienes en index5.html */
+    { titulo:"Productos", url:"productos.html", imagen:"anuncio1.png" }
+  ]
+};
+</script>
+<script src="anuncios.js"></script>
+<script>
+/* El perfil baja junto con la cinta de anuncios y vuelve a subir cuando se oculta */
+(function(){
+  const w = document.getElementById("shAnWrap"), p = document.querySelector(".sh-perfil");
+  if(!w || !p || !window.ResizeObserver) return;
+  const ajustar = () => p.style.setProperty("top", (w.isConnected ? w.offsetHeight + 8 : 8) + "px", "important");
+  ajustar();
+  new ResizeObserver(ajustar).observe(w);
+})();
+</script>
+<script src="perfil.js"></script>
+<link rel="stylesheet" href="responsive.css">
+<script src="responsive.js"></script>
+</body>
+</html>
