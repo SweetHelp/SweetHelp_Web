@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#bd5c73">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script>
 <title>Presentador</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Pacifico&family=Bebas+Neue&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -598,6 +601,9 @@ async function loadProject(f){
   try{const o=JSON.parse(await f.text());if(!o.slides?.length)throw 0;slides=o.slides;Object.keys(pdfs).forEach(k=>delete pdfs[k]);cur=0;selId=null;drawList();refreshStage();drawProps();toast('Proyecto abierto')}
   catch(_){toast('Archivo de proyecto no válido')}
 }
+
+/* Al abrir un .sh con doble clic (app instalada) */
+if('launchQueue' in window)launchQueue.setConsumer(async lp=>{if(!lp.files||!lp.files.length)return;try{loadProject(await lp.files[0].getFile())}catch(_){toast('No se pudo abrir el archivo')}});
 
 /* ---------- Guardado en el editor (IndexedDB) ---------- */
 const idb=()=>new Promise((ok,no)=>{const r=indexedDB.open('presentador',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
