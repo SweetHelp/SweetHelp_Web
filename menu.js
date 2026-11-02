@@ -15,6 +15,7 @@
     const ENLACES = [
         { href: 'index5.html',        img: 'inicio.svg',         alt: 'Inicio' },
         { href: 'productos.html',     img: 'productosicono.svg', alt: 'Productos' },
+        { href: 'merch.html',         img: 'newiconmenu.svg',    alt: 'Merch' },
         { img: 'infosh.svg', alt: 'Sobre Nosotros', href: '#',
           sub: [
               { href: 'informacion.html', texto: 'Informacion' },
@@ -36,13 +37,15 @@
     mask:radial-gradient(circle 49px at calc(100% - 5px) 50%,transparent 48px,#000 49px)}
 .sh-pill>li{opacity:0;transform:translateX(70px);transition:transform .25s ease,opacity .2s ease}
 .sh-pill.open>li{opacity:1;transform:none;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .35s ease}
-.sh-pill.open>li:nth-child(7){transition-delay:.10s}
-.sh-pill.open>li:nth-child(6){transition-delay:.16s}
-.sh-pill.open>li:nth-child(5){transition-delay:.22s}
-.sh-pill.open>li:nth-child(4){transition-delay:.28s}
-.sh-pill.open>li:nth-child(3){transition-delay:.34s}
-.sh-pill.open>li:nth-child(2){transition-delay:.40s}
-.sh-pill.open>li:nth-child(1){transition-delay:.46s}
+.sh-pill.open>li:nth-child(9){transition-delay:.10s}
+.sh-pill.open>li:nth-child(8){transition-delay:.16s}
+.sh-pill.open>li:nth-child(7){transition-delay:.22s}
+.sh-pill.open>li:nth-child(6){transition-delay:.28s}
+.sh-pill.open>li:nth-child(5){transition-delay:.34s}
+.sh-pill.open>li:nth-child(4){transition-delay:.40s}
+.sh-pill.open>li:nth-child(3){transition-delay:.46s}
+.sh-pill.open>li:nth-child(2){transition-delay:.52s}
+.sh-pill.open>li:nth-child(1){transition-delay:.58s}
 .sh-pill a{display:flex;align-items:center}
 .sh-pill img{height:40px;width:auto;transition:transform .2s ease}
 .sh-pill a:hover img{transform:scale(1.15)}
