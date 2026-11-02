@@ -75,11 +75,11 @@ body{
 .reloj-grande{text-align:center;margin:2.2em 0 1.6em;text-shadow:0 2px 8px rgba(40,10,20,.45)}
 .reloj-grande b{display:block;font-family:"Lilita One",system-ui,sans-serif;font-weight:400;font-size:3.6em;line-height:1;letter-spacing:.03em;color:var(--crema)}
 .reloj-grande span{font-size:1em;opacity:.9}
-.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.3em .2em;justify-items:center;align-content:start;flex:1}
+.apps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6em .4em;justify-items:center;align-content:start;flex:1}
 .app{
   display:flex;flex-direction:column;align-items:center;gap:.55em;
   background:none;border:0;color:var(--crema);cursor:pointer;
-  font-family:"Lilita One",sans-serif;font-size:.72em;letter-spacing:.02em;
+  font-family:"Lilita One",sans-serif;font-size:.8em;letter-spacing:.02em;
   text-shadow:0 1px 4px rgba(40,10,20,.7);
   transition:transform .18s cubic-bezier(.3,1.6,.5,1);
   width:100%;
@@ -87,7 +87,7 @@ body{
 .app:active .icono{transform:scale(.86);filter:brightness(.9);transition-duration:.08s}
 .app span{transition:transform .25s,letter-spacing .25s}
 .icono{
-  width:4.5em;height:4.5em;border-radius:1.1em;overflow:hidden;
+  width:7.4em;height:7.4em;border-radius:1.7em;overflow:hidden;
   display:flex;align-items:center;justify-content:center;
   background:var(--rosa-carta);
   position:relative;
@@ -99,10 +99,10 @@ body{
   background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.38) 50%,transparent 70%);
   transform:translateX(-120%);transition:transform .6s ease;
 }
-.emo{font-size:1.8em;line-height:1}
+.emo{font-size:3.2em;line-height:1}
 .app span{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .icono img{width:100%;height:100%;object-fit:cover;display:block}
-.icono svg{width:62%;height:62%}
+.icono svg{width:64%;height:64%}
 .dock{
   display:flex;justify-content:center;gap:1.4em;
   background:rgba(58,24,36,.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
@@ -247,6 +247,33 @@ body{
 .btn.principal:hover{background:#ee6a90;border-color:#ee6a90;color:var(--crema)}
 #archivo{display:none}
 
+
+/* ===== Clave de Presentación ===== */
+.clave{
+  position:absolute;inset:0;z-index:8;background:linear-gradient(180deg,#4a1f2c,#3a1824);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.1em;padding:2em 1.4em;
+  opacity:0;pointer-events:none;transform:scale(1.06);transition:opacity .3s ease,transform .3s ease;
+}
+.clave.abierta{opacity:1;pointer-events:auto;transform:none}
+.clave h2{font-family:"Choco Taste Trial","Lilita One",cursive;font-weight:400;font-size:2.2em;color:var(--rosa);text-align:center;line-height:1}
+.clave p{font-size:.9em;opacity:.85;text-align:center}
+.puntos-clave{display:flex;gap:.7em;margin:.4em 0 .6em}
+.puntos-clave i{width:1em;height:1em;border-radius:50%;border:.15em solid var(--crema);transition:background .15s,transform .15s}
+.puntos-clave i.on{background:var(--crema);transform:scale(1.1)}
+.puntos-clave.error{animation:sacude .45s}
+.puntos-clave.error i{border-color:#ff6b81;background:#ff6b81}
+@keyframes sacude{0%,100%{transform:none}20%{transform:translateX(-.7em)}40%{transform:translateX(.7em)}60%{transform:translateX(-.5em)}80%{transform:translateX(.5em)}}
+.teclado{display:grid;grid-template-columns:repeat(3,1fr);gap:.8em;width:min(100%,17em)}
+.tecla{
+  aspect-ratio:1;border-radius:50%;border:0;cursor:pointer;
+  background:rgba(248,242,220,.14);color:var(--crema);
+  font-family:"Lilita One",sans-serif;font-size:1.9em;
+  transition:background .15s,transform .1s;
+}
+.tecla:active{background:rgba(248,242,220,.35);transform:scale(.92)}
+.tecla.vacia{background:none;pointer-events:none}
+.tecla.txt{font-size:1em;background:none}
+
 /* ===== Aviso (toast) ===== */
 .toast{position:absolute;left:50%;bottom:3.2em;transform:translate(-50%,20px);opacity:0;z-index:9;pointer-events:none;
   background:#e0527a;color:var(--crema);font-family:"Lilita One",sans-serif;font-size:1em;padding:.6em 1.3em;border-radius:999px;transition:.3s;white-space:nowrap}
@@ -275,7 +302,7 @@ body{
   .volver{top:auto;bottom:calc(10px + env(safe-area-inset-bottom));left:12px;font-size:.85rem}
 }
 @media (pointer:coarse){
-  .app{min-height:6.4em}
+  .app{min-height:9em}
   .btn{padding:.85em 1em}
 }
 </style>
@@ -307,6 +334,14 @@ body{
         <button class="btn" id="cerrarPanel" type="button">Listo</button>
       </div>
 
+      <!-- Clave de Presentación -->
+      <div class="clave" id="clave">
+        <h2>Candado</h2>
+        <p>Ingresa la clave para desbloquear la presentación</p>
+        <div class="puntos-clave" id="puntosClave"></div>
+        <div class="teclado" id="teclado"></div>
+      </div>
+
       <div class="toast" id="toast"></div>
       <button class="indicador" id="indicador" aria-label="Inicio"></button>
 
@@ -331,15 +366,17 @@ body{
 <script>
 /* ---------- Apps (cambia aquí nombres, iconos y páginas) ---------- */
 const SVG_MERCH = '<svg viewBox="0 0 48 48" fill="none" stroke="#f8f2dc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8 8 13l3 8 5-2v21h16V19l5 2 3-8-9-5c-1 3-4 5-7 5s-6-2-7-5z"/></svg>';
-const SVG_GALERIA = '<svg viewBox="0 0 48 48" fill="none" stroke="#f8f2dc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="9" width="36" height="30" rx="5"/><circle cx="17" cy="20" r="3.5"/><path d="m8 36 11-10 8 7 5-5 9 8"/></svg>';
+const SVG_CANDADO = '<svg viewBox="0 0 48 48" fill="none" stroke="#f8f2dc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="21" width="30" height="20" rx="4.5"/><path d="M16 21v-6a8 8 0 0 1 16 0v6"/><circle cx="24" cy="30" r="2.2"/><path d="M24 32.5v3.5"/></svg>';
+const SVG_PREZ = '<svg viewBox="0 0 48 48" fill="none" stroke="#f8f2dc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="7" width="36" height="25" rx="3.5"/><path d="m13 26 6-7 5 4 8-9M24 32v7M16 40h16"/></svg>';
 const SVG_AJUSTES = '<svg viewBox="0 0 48 48" fill="none" stroke="#f8f2dc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="6"/><path d="M24 6v6M24 36v6M6 24h6M36 24h6M11 11l4 4M33 33l4 4M37 11l-4 4M15 33l-4 4"/></svg>';
 
 const APPS = [
   { nombre:"ArSweetCards", icono:"ArSweetcard.svg", emoji:"🃏", titulo:["AR SWEET","CARDS"], url:"ArSweetCards.html" },
   { nombre:"Sugar Snake",  icono:"SugarSnake.svg",  emoji:"🐍", titulo:["SUGAR","SNAKE"], url:"sigueelpostre.html" },
   { nombre:"Sweet Battle", icono:"SBattle.svg",     emoji:"⚔️", titulo:["SWEET","BATTLE"], url:"SweetCardsBattle.html" },
-  { nombre:"Merch",        svg:SVG_MERCH,   fondo:"linear-gradient(145deg,#e0527a,#bc5d75)", titulo:["MERCH"], url:"merch.html" },
-  { nombre:"Galería",      svg:SVG_GALERIA, fondo:"linear-gradient(145deg,#f39c12,#c4741f)", titulo:["GALERÍA"], url:"galeria.html" },
+  { nombre:"Merch",        icono:"Merch.svg", svg:SVG_MERCH, fondo:"linear-gradient(145deg,#e0527a,#bc5d75)", titulo:["MERCH"], url:"merch.html" },
+  { nombre:"Candado",      svg:SVG_CANDADO, fondo:"linear-gradient(145deg,#8b5e3c,#5a3a22)", accion:"clave" },
+  { nombre:"Presentación", svg:SVG_PREZ,    fondo:"linear-gradient(145deg,#f39c12,#c4741f)", titulo:["PRESENTACIÓN"], url:"miprez.html", oculta:true },
   { nombre:"Ajustes",      svg:SVG_AJUSTES, fondo:"linear-gradient(145deg,#8a3f55,#5a2538)", accion:"ajustes" }
 ];
 
@@ -363,21 +400,26 @@ let ocupado = false;
 function crearApp(a, i){
   const b = document.createElement("button");
   b.style.setProperty("--i", i);
-  b.className = "app"; b.type = "button"; b.setAttribute("aria-label", a.nombre);
+  b.className = "app"; b.type = "button"; b.dataset.accion = a.accion || ""; b.setAttribute("aria-label", a.nombre);
   const ic = document.createElement("div"); ic.className = "icono";
   if(a.icono){
     const img = new Image(); img.alt = ""; img.src = a.icono;
-    img.onerror = () => { img.remove(); ic.innerHTML = '<span class="emo">' + a.emoji + '</span>'; };
+    img.onerror = () => { img.remove(); if(a.svg){ ic.style.background = a.fondo; ic.innerHTML = a.svg; } else { ic.innerHTML = '<span class="emo">' + a.emoji + '</span>'; } };
     ic.appendChild(img);
   } else {
     ic.style.background = a.fondo; ic.innerHTML = a.svg;
   }
   const t = document.createElement("span"); t.textContent = a.nombre;
   b.append(ic, t);
-  b.onclick = () => a.accion === "ajustes" ? abrirPanel() : abrirApp(a);
+  b.onclick = () => a.accion === "ajustes" ? abrirPanel() : a.accion === "clave" ? abrirClave() : abrirApp(a);
   return b;
 }
-APPS.forEach((a, i) => $("apps").appendChild(crearApp(a, i)));
+function prezDesbloqueada(){ try{ return sessionStorage.getItem("sh_prez") === "1"; }catch(e){ return false; } }
+APPS.forEach((a, i) => {
+  if(a.accion === "clave" && prezDesbloqueada()) return;   // ya desbloqueada: sin candado
+  if(a.oculta && !prezDesbloqueada()) return;               // bloqueada: no se ve
+  $("apps").appendChild(crearApp(a, i));
+});
 
 /* ---------- Reloj ---------- */
 function reloj(){
@@ -493,8 +535,8 @@ $("quitarFondo").onclick = () => { const f = {tipo:"preset", i:0}; aplicarFondo(
 function abrirPanel(){ $("panel").classList.add("abierto"); }
 function cerrarPanel(){ $("panel").classList.remove("abierto"); }
 $("cerrarPanel").onclick = cerrarPanel;
-$("indicador").onclick = cerrarPanel;
-addEventListener("keydown", e => { if(e.key === "Escape") cerrarPanel(); });
+$("indicador").onclick = () => { cerrarPanel(); cerrarClave(); };
+addEventListener("keydown", e => { if(e.key === "Escape"){ cerrarPanel(); cerrarClave(); } });
 
 /* mantener presionado el fondo abre los ajustes */
 let tPress;
@@ -503,6 +545,54 @@ $("home").addEventListener("contextmenu", e => e.preventDefault());
 ["pointerup","pointerleave","pointercancel"].forEach(ev => $("home").addEventListener(ev, () => clearTimeout(tPress)));
 
 function aviso(t){ const el = $("toast"); el.textContent = t; el.classList.add("ver"); setTimeout(() => el.classList.remove("ver"), 1800); }
+
+
+/* ---------- Clave de Presentación ---------- */
+const CLAVE_PREZ = "29052212";
+let tecleada = "";
+const puntosClave = $("puntosClave");
+for(let i = 0; i < CLAVE_PREZ.length; i++) puntosClave.appendChild(document.createElement("i"));
+["1","2","3","4","5","6","7","8","9","","0","⌫"].forEach(t => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "tecla" + (t === "" ? " vacia" : t === "⌫" ? " txt" : "");
+  b.textContent = t;
+  if(t === "⌫") b.onclick = () => { tecleada = tecleada.slice(0, -1); pintarClave(); };
+  else if(t !== "") b.onclick = () => teclear(t);
+  $("teclado").appendChild(b);
+});
+function pintarClave(){ [...puntosClave.children].forEach((p, i) => p.classList.toggle("on", i < tecleada.length)); }
+function abrirClave(){ if(ocupado) return; tecleada = ""; pintarClave(); $("clave").classList.add("abierta"); }
+function cerrarClave(){ $("clave").classList.remove("abierta"); tecleada = ""; pintarClave(); }
+function desbloquearPrez(){
+  try{ sessionStorage.setItem("sh_prez", "1"); }catch(e){}
+  cerrarClave();
+  const candado = document.querySelector('.app[data-accion="clave"]');
+  const prez = APPS.find(x => x.oculta);
+  if(candado && prez){
+    const nuevo = crearApp(prez, APPS.indexOf(prez));
+    nuevo.style.animationDelay = "0s";
+    candado.replaceWith(nuevo);
+  }
+  aviso("Presentación desbloqueada");
+}
+function teclear(d){
+  if(tecleada.length >= CLAVE_PREZ.length) return;
+  tecleada += d; pintarClave();
+  if(tecleada.length < CLAVE_PREZ.length) return;
+  if(tecleada === CLAVE_PREZ){
+    setTimeout(desbloquearPrez, 200);
+  } else {
+    puntosClave.classList.add("error");
+    aviso("Clave incorrecta");
+    setTimeout(() => { puntosClave.classList.remove("error"); tecleada = ""; pintarClave(); }, 500);
+  }
+}
+addEventListener("keydown", e => {
+  if(!$("clave").classList.contains("abierta")) return;
+  if(/^[0-9]$/.test(e.key)) teclear(e.key);
+  else if(e.key === "Backspace"){ tecleada = tecleada.slice(0, -1); pintarClave(); }
+});
 
 aplicarFondo(leerFondo());
 arrancar();
