@@ -1086,8 +1086,8 @@ async function cpuTurno(){
 /* ---------- Interacción: arrastrar o tocar ---------- */
 function puede(src){
   if(!G || G.over || G.anim || G.intro || !src) return false;
+  if(G.pend.me) return src.t === "bench" && !G.me.act;   // si a mí me toca reponer carta, puedo hacerlo aunque el rival también deba reponer (muerte mutua online)
   if(G.pend.op) return false;
-  if(G.pend.me) return src.t === "bench" && !G.me.act;
   if(G.turn !== "me") return false;
   if(src.t === "bench") return !!G.me.bench[src.k];
   return !!(G.me.act && G.me.act.acts > 0 && G.op.act);
