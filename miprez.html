@@ -245,9 +245,9 @@ body.rem #remote{display:flex}
 .wbar button:hover{background:#ffffff55}
 .wbar .wx{background:#e5484d}
 .wbody{position:relative;flex:1;min-height:0;overflow:hidden;background:#fff}
-.wbody iframe{position:absolute;left:0;top:0;width:100%;height:100%;border:0;background:#fff;transition:transform .14s linear}
+.wbody iframe{position:absolute;left:0;top:0;width:100%;height:100%;border:0;background:#fff}
 .wmsg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:#9b7e86;font-size:18px;font-family:Poppins,system-ui,sans-serif}
-.wcur{position:absolute;display:none;pointer-events:none;z-index:3;width:30px;height:30px;filter:drop-shadow(0 2px 3px #0007);transition:left .05s linear,top .05s linear}
+.wcur{position:absolute;display:none;pointer-events:none;z-index:3;width:30px;height:30px;filter:drop-shadow(0 2px 3px #0007)}
 .wrip{position:absolute;pointer-events:none;z-index:3;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;border:4px solid var(--p);background:#bd5c7355}
 /* remoto: modos */
 #rMode{display:flex;gap:8px}
@@ -337,7 +337,7 @@ body.rem #remote{display:flex}
     <div class="wrow wctl"><button id="wmScroll" class="on">↕ Desplazar</button><button id="wmCur">🖱 Solo cursor</button><label><input type="checkbox" id="wInv"> Invertir</label></div>
     <div id="wPad" class="wctl"><span id="wPadTxt"></span><i class="pdot"></i></div>
     <div class="wrow wctl"><button id="wTop">⤒ Inicio</button><button id="wUp">▲</button><button id="wDn">▼</button><button id="wEnd">⤓ Final</button></div>
-    <div class="wrow wctl"><button id="wClick">👆 Marcar clic (efecto visual)</button></div>
+    <div class="wrow wctl"><button id="wClick">👆 Clic</button><button id="wBack">◀ Atrás</button></div>
     <div class="wrow"><button id="wPrevS">◀ Diapositiva</button><button id="wNextS">Diapositiva ▶</button></div>
     <div class="wsmall">El celular mueve el cursor y desplaza la página, pero los navegadores no permiten hacer clic de verdad dentro de otro sitio: para hacer clic usa el mouse de la computadora sobre la ventana.</div>
   </div>
@@ -1028,11 +1028,25 @@ function buildWeb(d,i,e){
   if(!popup&&url)f.src=url;
   requestAnimationFrame(()=>layoutWeb(d));
 }
+function webKick(w){if(!w.raf)w.raf=requestAnimationFrame(()=>webAnim(w))}
+function webAnim(w){
+  w.raf=0;let more=false;
+  if(w.cx!==undefined){
+    if(w.dx===undefined){w.dx=w.cx;w.dy=w.cy}
+    const ax=w.cx-w.dx,ay=w.cy-w.dy;
+    if(Math.abs(ax)>.0003||Math.abs(ay)>.0003){w.dx+=ax*.3;w.dy+=ay*.3;more=true}else{w.dx=w.cx;w.dy=w.cy}
+    w.cur.style.left=(w.dx*100)+'%';w.cur.style.top=(w.dy*100)+'%';
+  }
+  const as=w.sy-(w.vy||0);
+  if(Math.abs(as)>.5){w.vy=(w.vy||0)+as*.25;more=true}else w.vy=w.sy;
+  w.f.style.transform=w.vy?`translateY(${-w.vy}px)`:'';
+  if(more)webKick(w);
+}
 function layoutWeb(n){
   const w=n._web;if(!w)return;
   const h=parseFloat(n.style.height)||w.e.h,bh=Math.max(40,h-w.barH);w.bh=bh;
   if(w.tall){w.f.style.height=Math.round(bh*w.pages)+'px';w.max=Math.max(0,bh*(w.pages-1))}else{w.f.style.height='100%';w.max=0}
-  w.sy=Math.min(w.sy,w.max);w.f.style.transform=w.sy?`translateY(${-w.sy}px)`:'';
+  w.sy=Math.min(w.sy,w.max);w.vy=w.sy;w.f.style.transform=w.sy?`translateY(${-w.sy}px)`:'';
 }
 function webVisible(n){return!n.dataset.popup||!!n.dataset.open}
 function curWeb(){
@@ -1065,14 +1079,24 @@ function webSize(n,f){
 }
 function webScroll(n,dpx,abs){
   const w=n._web;if(!w||!w.tall||!webVisible(n))return;
-  w.sy=Math.max(0,Math.min(w.max,abs?dpx:w.sy+dpx));w.f.style.transform=w.sy?`translateY(${-w.sy}px)`:'';
+  w.sy=Math.max(0,Math.min(w.max,abs?dpx:w.sy+dpx));webKick(w);
 }
 function webReload(n){const w=n._web;if(!w||!w.url)return;w.f.src='about:blank';setTimeout(()=>{w.f.src=w.url},60);w.sy=0;layoutWeb(n)}
-function webCursor(n,x,y){const w=n._web;if(!w||!webVisible(n))return;w.cx=x;w.cy=y;const c=w.cur.style;c.display='block';c.left=(x*100)+'%';c.top=(y*100)+'%'}
+function webCursor(n,x,y){const w=n._web;if(!w||!webVisible(n))return;w.cx=x;w.cy=y;w.cur.style.display='block';webKick(w)}
 function webClick(n){
   const w=n._web;if(!w||!webVisible(n))return;
   const r=document.createElement('div');r.className='wrip';r.style.left=((w.cx??.5)*100)+'%';r.style.top=((w.cy??.5)*100)+'%';w.body.appendChild(r);
   r.animate([{transform:'scale(.3)',opacity:1},{transform:'scale(1.6)',opacity:0}],{duration:550,easing:'ease-out'}).onfinish=()=>r.remove();
+}
+function webSame(n){const w=n._web;try{return!!(w&&w.f.contentDocument&&w.f.contentDocument.body)}catch(_){return false}}
+function webRealClick(n){
+  const w=n._web;if(!w||!webVisible(n))return;
+  let d;try{d=w.f.contentDocument;if(!d||!d.body)throw 0}catch(_){toast('Este sitio es de otro dominio: el clic es solo visual');return}
+  const xx=(w.cx??.5)*w.f.clientWidth,yy=(w.cy??.5)*w.bh+w.sy;
+  const el=d.elementFromPoint(xx,yy);if(!el)return;
+  const t=el.closest('a,button,input,select,textarea,label,summary,[role=button],[onclick]')||el;
+  try{t.focus&&t.focus()}catch(_){}
+  t.click();
 }
 function webAct(a,m={}){
   const n=curWeb();if(!n)return;
@@ -1084,12 +1108,13 @@ function webAct(a,m={}){
     case'scroll':if(Number.isFinite(+m.d))webScroll(n,(+m.d)*n._web.bh);break;
     case'to':webScroll(n,+m.v?1e9:0,true);break;
     case'cur':if(Number.isFinite(+m.x)&&Number.isFinite(+m.y))webCursor(n,Math.max(0,Math.min(1,+m.x)),Math.max(0,Math.min(1,+m.y)));return;
-    case'click':webClick(n);return;
+    case'click':webClick(n);webRealClick(n);return;
+    case'back':try{n._web.f.contentWindow.history.back()}catch(_){toast('Este sitio no permite volver desde aquí')}break;
     case'reload':webReload(n);break;
   }
   sendState();
 }
-function webInfo(){const n=presenting?curWeb():null;if(!n)return{has:false};const w=n._web;return{has:true,open:!!n.dataset.open,host:w.host,popup:!!n.dataset.popup,tall:w.tall}}
+function webInfo(){const n=presenting?curWeb():null;if(!n)return{has:false};const w=n._web;return{has:true,open:!!n.dataset.open,host:w.host,popup:!!n.dataset.popup,tall:w.tall,real:webSame(n)}}
 
 /* ---------- Vistas previas (se dibujan en canvas y se mandan al control) ---------- */
 function rrPath(x,px,py,w,h,r){r=Math.max(0,Math.min(r,w/2,h/2));x.beginPath();x.moveTo(px+r,py);x.arcTo(px+w,py,px+w,py+h,r);x.arcTo(px+w,py+h,px,py+h,r);x.arcTo(px,py+h,px,py,r);x.arcTo(px,py,px+w,py,r);x.closePath()}
@@ -1399,24 +1424,26 @@ function initRemote(id){
   $('#wOpen').onclick=()=>{vib();WS('toggle')};$('#wReload').onclick=()=>{vib();WS('reload')};
   $('#wSm').onclick=()=>{vib();WS('size',{f:1/1.2})};$('#wBg').onclick=()=>{vib();WS('size',{f:1.2})};
   $('#wTop').onclick=()=>{vib();WS('to',{v:0})};$('#wEnd').onclick=()=>{vib();WS('to',{v:1})};
-  $('#wClick').onclick=()=>{vib();WS('click')};
+  $('#wClick').onclick=()=>{vib();WS('click')};$('#wBack').onclick=()=>{vib();WS('back')};
   $('#wPrevS').onclick=()=>{vib();send({t:'prev'})};$('#wNextS').onclick=()=>{vib();send({t:'next'})};
   const hold=(id,d)=>{const b=$('#'+id);let iv=null;const go=()=>WS('scroll',{d}),stop=()=>{clearInterval(iv);iv=null};
     b.addEventListener('pointerdown',e=>{e.preventDefault();vib();go();stop();iv=setInterval(go,90)});
     ['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,stop))};
   hold('wUp',-.08);hold('wDn',.08);
-  {const pad=$('#wPad'),dot=pad.querySelector('.pdot');let lastY=null,acc=0,lastS=0;
+  {const pad=$('#wPad'),dot=pad.querySelector('.pdot');let lastY=null,acc=0,lastS=0,t0=0,p0=[0,0];
    const xy=e=>{const r=pad.getBoundingClientRect();return[Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))]};
    const show=(x,y)=>{dot.style.display='block';dot.style.left=(x*100)+'%';dot.style.top=(y*100)+'%'};
-   pad.addEventListener('pointerdown',e=>{pad.setPointerCapture(e.pointerId);const[x,y]=xy(e);lastY=y;acc=0;show(x,y);WS('cur',{x,y})});
+   pad.addEventListener('pointerdown',e=>{pad.setPointerCapture(e.pointerId);const[x,y]=xy(e);lastY=y;acc=0;t0=Date.now();p0=[x,y];show(x,y);WS('cur',{x,y})});
    pad.addEventListener('pointermove',e=>{if(lastY===null)return;const[x,y]=xy(e),now=Date.now();
      if(WM==='scroll')acc+=(y-lastY)*1.6*(inv?-1:1);lastY=y;show(x,y);
-     if(now-lastS>40){lastS=now;if(acc){WS('scroll',{d:acc});acc=0}WS('cur',{x,y})}});
-   const end=e=>{if(lastY===null)return;if(acc){WS('scroll',{d:acc});acc=0}lastY=null;dot.style.display='none'};
+     if(now-lastS>16){lastS=now;if(acc){WS('scroll',{d:acc});acc=0}WS('cur',{x,y})}});
+   const end=e=>{if(lastY===null)return;if(acc){WS('scroll',{d:acc});acc=0}
+     if(e.type==='pointerup'&&WM==='cur'&&Date.now()-t0<300){const[x,y]=xy(e);if(Math.hypot(x-p0[0],y-p0[1])<.03){WS('cur',{x,y});WS('click')}}
+     lastY=null;dot.style.display='none'};
    pad.addEventListener('pointerup',end);pad.addEventListener('pointercancel',end)}
   function rWebState(m){
     const w=m.web||{has:false},ok=m.on&&w.has&&(w.open||!w.popup);
-    $('#rWebInfo').textContent=!m.on?'Inicia la presentación (▶ Iniciar) para controlar el sitio web.':!w.has?'Esta diapositiva no tiene un sitio web. Agrégalo en el editor con 🌐 Sitio web.':'🌐 '+w.host+(w.popup?(w.open?' · ventana abierta':' · ventana cerrada'):' · siempre visible')+(w.tall?'':' · sin desplazamiento desde el celular');
+    $('#rWebInfo').textContent=!m.on?'Inicia la presentación (▶ Iniciar) para controlar el sitio web.':!w.has?'Esta diapositiva no tiene un sitio web. Agrégalo en el editor con 🌐 Sitio web.':'🌐 '+w.host+(w.popup?(w.open?' · ventana abierta':' · ventana cerrada'):' · siempre visible')+(w.tall?'':' · sin desplazamiento desde el celular')+(w.real?' · ✅ clic real':' · ⚠ clic solo visual (otro dominio)');
     $('#wOpen').textContent=w.open?'✕ Cerrar ventana':'🌐 Abrir ventana';
     $('#wOpen').style.display=m.on&&w.has&&w.popup?'':'none';
     $('#rWeb').classList.toggle('off',!ok);
