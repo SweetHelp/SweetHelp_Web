@@ -708,7 +708,7 @@ function addWeb(){
   const raw=prompt('Dirección del sitio web (ej. wikipedia.org):');if(raw===null)return;
   const u=normUrl(raw);if(!u){toast('Esa dirección no es válida');return}
   const w=Math.round(W*.8),h=Math.round(H*.8);
-  addEl(baseEl('web',{url:u,popup:true,bar:true,tall:true,pages:6,anim:'zoom',adur:450,x:Math.round((W-w)/2),y:Math.round((H-h)/2),w,h}));
+  addEl(baseEl('web',{url:u,popup:true,bar:true,tall:false,pages:3,anim:'zoom',adur:450,x:Math.round((W-w)/2),y:Math.round((H-h)/2),w,h}));
 }
 function addFiles(files){
   [...files].forEach(f=>{
@@ -1011,7 +1011,7 @@ function buildWeb(d,i,e){
   const body=document.createElement('div');body.className='wbody';
   const msg=document.createElement('div');msg.className='wmsg';msg.textContent=url?'Cargando '+host+'…':'Sin dirección web';
   const f=document.createElement('iframe');f.allow='fullscreen; autoplay; clipboard-write';f.referrerPolicy='strict-origin-when-cross-origin';f.title=host;
-  f.addEventListener('load',()=>msg.remove());
+  f.addEventListener('load',()=>{msg.remove();const s=webSame(d);if(s!==!!wb.same){wb.same=s;layoutWeb(d);sendState()}});
   const cur=document.createElement('div');cur.className='wcur';cur.innerHTML='<svg viewBox="0 0 24 24" width="30" height="30"><path d="M3 2l7 19 3-8 8-3z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
   body.append(msg,f,cur);
   if(bar){
@@ -1048,7 +1048,7 @@ function layoutWeb(n){
   const bw=parseFloat(n.style.width)||w.e.w,h=parseFloat(n.style.height)||w.e.h,bh=Math.max(40,h-w.barH);w.bh=bh;
   const vw=Math.max(w.vw,bw),sc=bw/vw;w.sc=sc;
   w.f.style.width=vw+'px';w.f.style.transformOrigin='0 0';
-  if(w.tall){w.f.style.height=Math.round(bh*w.pages/sc)+'px';w.max=Math.max(0,bh*(w.pages-1))}else{w.f.style.height=Math.round(bh/sc)+'px';w.max=0}
+  if(w.tall&&!w.same){w.f.style.height=Math.round(bh*w.pages/sc)+'px';w.max=Math.max(0,bh*(w.pages-1))}else{w.f.style.height=Math.round(bh/sc)+'px';w.max=0}
   w.sy=Math.min(w.sy,w.max);w.vy=w.sy;w.f.style.transform=webTf(w,w.sy);
 }
 function webVisible(n){return!n.dataset.popup||!!n.dataset.open}
@@ -1081,7 +1081,9 @@ function webSize(n,f){
   layoutWeb(n);
 }
 function webScroll(n,dpx,abs){
-  const w=n._web;if(!w||!w.tall||!webVisible(n))return;
+  const w=n._web;if(!w||!webVisible(n))return;
+  if(w.same){try{const x=w.f.contentWindow;x.scrollTo({top:abs?dpx:x.scrollY+dpx/(w.sc||1)});return}catch(_){}}
+  if(!w.tall)return;
   w.sy=Math.max(0,Math.min(w.max,abs?dpx:w.sy+dpx));webKick(w);
 }
 function webReload(n){const w=n._web;if(!w||!w.url)return;w.f.src='about:blank';setTimeout(()=>{w.f.src=w.url},60);w.sy=0;layoutWeb(n)}
@@ -1091,7 +1093,7 @@ function webClick(n){
   const r=document.createElement('div');r.className='wrip';r.style.left=((w.cx??.5)*100)+'%';r.style.top=((w.cy??.5)*100)+'%';w.body.appendChild(r);
   r.animate([{transform:'scale(.3)',opacity:1},{transform:'scale(1.6)',opacity:0}],{duration:550,easing:'ease-out'}).onfinish=()=>r.remove();
 }
-function webSame(n){const w=n._web;try{return!!(w&&w.f.contentDocument&&w.f.contentDocument.body)}catch(_){return false}}
+function webSame(n){const w=n._web;try{const d=w&&w.f.contentDocument;return!!(d&&d.body&&d.location.href!=='about:blank')}catch(_){return false}}
 function webRealClick(n){
   const w=n._web;if(!w||!webVisible(n))return;
   let d;try{d=w.f.contentDocument;if(!d||!d.body)throw 0}catch(_){toast('Este sitio es de otro dominio: el clic es solo visual');return}
@@ -1446,7 +1448,7 @@ function initRemote(id){
    pad.addEventListener('pointerup',end);pad.addEventListener('pointercancel',end)}
   function rWebState(m){
     const w=m.web||{has:false},ok=m.on&&w.has&&(w.open||!w.popup);
-    $('#rWebInfo').textContent=!m.on?'Inicia la presentación (▶ Iniciar) para controlar el sitio web.':!w.has?'Esta diapositiva no tiene un sitio web. Agrégalo en el editor con 🌐 Sitio web.':'🌐 '+w.host+(w.popup?(w.open?' · ventana abierta':' · ventana cerrada'):' · siempre visible')+(w.tall?'':' · sin desplazamiento desde el celular')+(w.real?' · ✅ clic real':' · ⚠ clic solo visual (otro dominio)');
+    $('#rWebInfo').textContent=!m.on?'Inicia la presentación (▶ Iniciar) para controlar el sitio web.':!w.has?'Esta diapositiva no tiene un sitio web. Agrégalo en el editor con 🌐 Sitio web.':'🌐 '+w.host+(w.popup?(w.open?' · ventana abierta':' · ventana cerrada'):' · siempre visible')+(w.tall||w.real?'':' · sin desplazamiento desde el celular')+(w.real?' · ✅ clic real':' · ⚠ clic solo visual (otro dominio)');
     $('#wOpen').textContent=w.open?'✕ Cerrar ventana':'🌐 Abrir ventana';
     $('#wOpen').style.display=m.on&&w.has&&w.popup?'':'none';
     $('#rWeb').classList.toggle('off',!ok);
