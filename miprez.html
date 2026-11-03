@@ -650,7 +650,7 @@ function drawProps(){
     if(e.type==='image')h+=fld('Ajuste',sel('fit',e.fit,{contain:'Ajustar',cover:'Llenar',fill:'Estirar'}))+fld('Bordes',inp('radius',e.radius||0,'number','min="0" max="400"'));
     if(e.type==='video')h+=fld('Ajuste',sel('fit',e.fit||'contain',{contain:'Ajustar',cover:'Llenar',fill:'Estirar'}))+chk('autoplay',e.autoplay,'Reproducir automático')+chk('loop',e.loop,'Repetir')+chk('muted',e.muted,'Silenciado')+chk('controls',e.controls,'Mostrar controles');
     if(e.type==='image'||e.type==='video')h+=`<div class="row"><button id="eFit" title="Ocupa toda la pantalla sin estirarse">⤢ Justificar a pantalla</button><button id="eFill" title="Llena la pantalla recortando los bordes">▣ Llenar pantalla</button>${e.type==='image'?'<button id="eCrop">✂ Recortar</button>':''}</div>`;
-    if(e.type==='web')h+=fld('Dirección',inp('url',e.url||'','text','placeholder="https://…"'))+chk('popup',e.popup!==false,'Ventana emergente (se abre con W o desde el celular)')+chk('bar',e.bar!==false,'Mostrar barra de título')+chk('tall',e.tall!==false,'Desplazar desde el celular')+fld('Largo de página (pantallas)',inp('pages',e.pages||6,'number','min="1" max="30"'))+`<div class="row"><button id="eWebOpen">↗ Probar en pestaña nueva</button></div><div class="hint">La animación de entrada (más abajo) se usa al abrir la ventana. Muchos sitios (Google, YouTube, redes sociales, bancos) bloquean que se abran dentro de otra página: si ves un error, prueba con otro sitio. Para cambiar el tamaño, arrastra la esquina; durante la presentación también puedes usar ＋ / − en la barra de la ventana o el celular.</div>`;
+    if(e.type==='web')h+=fld('Dirección',inp('url',e.url||'','text','placeholder="https://…"'))+chk('popup',e.popup!==false,'Ventana emergente (se abre con W o desde el celular)')+chk('bar',e.bar!==false,'Mostrar barra de título')+chk('tall',e.tall!==false,'Desplazar desde el celular')+fld('Ancho de pantalla virtual (px)',inp('vw',e.vw||1440,'number','min="600" max="3000" step="20"'))+fld('Largo de página (pantallas)',inp('pages',e.pages||6,'number','min="1" max="30"'))+`<div class="row"><button id="eWebOpen">↗ Probar en pestaña nueva</button></div><div class="hint">La animación de entrada (más abajo) se usa al abrir la ventana. Muchos sitios (Google, YouTube, redes sociales, bancos) bloquean que se abran dentro de otra página: si ves un error, prueba con otro sitio. Para cambiar el tamaño, arrastra la esquina; durante la presentación también puedes usar ＋ / − en la barra de la ventana o el celular.</div>`;
     if(e.type==='embed')h+=chk('autoplay',e.autoplay,'Reproducir automático (silenciado)');
     if(e.type==='shape')h+=fld('Forma',sel('shape',e.shape,{rect:'Rectángulo',circle:'Círculo'}))+fld('Color',inp('fill',e.fill,'color'))+fld('Bordes',inp('radius',e.radius||0,'number','min="0" max="400"'));
     h+=`<h4>Posición</h4>`+fld('X',inp('x',e.x))+fld('Y',inp('y',e.y))+fld('Ancho',inp('w',e.w,'number','min="24"'))+fld('Alto',inp('h',e.h,'number','min="24"'))+
@@ -1007,7 +1007,7 @@ function sendZoom(except){const m={t:'z',s:Z.s,cx:Z.cx,cy:Z.cy};conns.forEach(c=
 function buildWeb(d,i,e){
   const url=normUrl(e.url),host=hostOf(e.url)||'Sitio web',popup=e.popup!==false,tall=e.tall!==false,bar=e.bar!==false;
   const win=document.createElement('div');win.className='webwin';
-  const wb={e,url,host,popup,tall,pages:Math.max(1,Math.min(30,+e.pages||6)),barH:bar?36:0,k:1,sy:0,max:0,bh:0};
+  const wb={e,url,host,popup,tall,pages:Math.max(1,Math.min(30,+e.pages||6)),barH:bar?36:0,k:1,sy:0,max:0,bh:0,sc:1,vw:Math.max(600,Math.min(3000,+e.vw||1440))};
   const body=document.createElement('div');body.className='wbody';
   const msg=document.createElement('div');msg.className='wmsg';msg.textContent=url?'Cargando '+host+'…':'Sin dirección web';
   const f=document.createElement('iframe');f.allow='fullscreen; autoplay; clipboard-write';f.referrerPolicy='strict-origin-when-cross-origin';f.title=host;
@@ -1039,14 +1039,17 @@ function webAnim(w){
   }
   const as=w.sy-(w.vy||0);
   if(Math.abs(as)>.5){w.vy=(w.vy||0)+as*.25;more=true}else w.vy=w.sy;
-  w.f.style.transform=w.vy?`translateY(${-w.vy}px)`:'';
+  w.f.style.transform=webTf(w,w.vy);
   if(more)webKick(w);
 }
+function webTf(w,y){const s=w.sc||1;return(s!==1||y)?`scale(${s}) translateY(${-y/s}px)`:''}
 function layoutWeb(n){
   const w=n._web;if(!w)return;
-  const h=parseFloat(n.style.height)||w.e.h,bh=Math.max(40,h-w.barH);w.bh=bh;
-  if(w.tall){w.f.style.height=Math.round(bh*w.pages)+'px';w.max=Math.max(0,bh*(w.pages-1))}else{w.f.style.height='100%';w.max=0}
-  w.sy=Math.min(w.sy,w.max);w.vy=w.sy;w.f.style.transform=w.sy?`translateY(${-w.sy}px)`:'';
+  const bw=parseFloat(n.style.width)||w.e.w,h=parseFloat(n.style.height)||w.e.h,bh=Math.max(40,h-w.barH);w.bh=bh;
+  const vw=Math.max(w.vw,bw),sc=bw/vw;w.sc=sc;
+  w.f.style.width=vw+'px';w.f.style.transformOrigin='0 0';
+  if(w.tall){w.f.style.height=Math.round(bh*w.pages/sc)+'px';w.max=Math.max(0,bh*(w.pages-1))}else{w.f.style.height=Math.round(bh/sc)+'px';w.max=0}
+  w.sy=Math.min(w.sy,w.max);w.vy=w.sy;w.f.style.transform=webTf(w,w.sy);
 }
 function webVisible(n){return!n.dataset.popup||!!n.dataset.open}
 function curWeb(){
@@ -1092,7 +1095,7 @@ function webSame(n){const w=n._web;try{return!!(w&&w.f.contentDocument&&w.f.cont
 function webRealClick(n){
   const w=n._web;if(!w||!webVisible(n))return;
   let d;try{d=w.f.contentDocument;if(!d||!d.body)throw 0}catch(_){toast('Este sitio es de otro dominio: el clic es solo visual');return}
-  const xx=(w.cx??.5)*w.f.clientWidth,yy=(w.cy??.5)*w.bh+w.sy;
+  const xx=(w.cx??.5)*w.f.clientWidth,yy=((w.cy??.5)*w.bh+w.sy)/(w.sc||1);
   const el=d.elementFromPoint(xx,yy);if(!el)return;
   const t=el.closest('a,button,input,select,textarea,label,summary,[role=button],[onclick]')||el;
   try{t.focus&&t.focus()}catch(_){}
